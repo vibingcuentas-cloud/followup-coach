@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "../../../lib/supabaseClient";
 import QuickLogModal from "../../../components/QuickLogModal";
+import AddContactSheet from "../../../components/AddContactSheet";
 
 export const dynamic = "force-dynamic";
 
@@ -46,9 +47,7 @@ type Interaction = {
 const AREAS: Area[] = ["Marketing", "R&D", "Procurement", "Commercial", "Directors"];
 
 function isUuid(v: string) {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-    v
-  );
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
 }
 
 function fmtMoney(n: number | null) {
@@ -64,7 +63,7 @@ function fmtMoney(n: number | null) {
   }
 }
 
-function daysSince(iso: string | null) {
+function daysSince(iso: string | null | undefined) {
   if (!iso) return null;
   const d = new Date(iso).getTime();
   const now = Date.now();
@@ -101,9 +100,7 @@ function computeIntimacyScore(account: Account, contacts: Contact[]) {
 
   const coveredAreas = AREAS.reduce((acc, ar) => acc + ((counts[ar] ?? 0) > 0 ? 1 : 0), 0);
   const coverage = Math.round((coveredAreas / AREAS.length) * 40);
-
   const total = Math.max(0, Math.min(100, Math.round(recency + coverage)));
-
   const label = total >= 80 ? "Strong" : total >= 55 ? "Ok" : "Risk";
   const tone = total >= 80 ? "good" : total >= 55 ? "neutral" : "warn";
 
@@ -123,9 +120,7 @@ function computeIntimacyScore(account: Account, contacts: Contact[]) {
 
 function channelLabel(ch: Channel | null) {
   if (!ch) return "—";
-  if (ch === "call") return "call";
-  if (ch === "whatsapp") return "whatsapp";
-  return "email";
+  return ch;
 }
 
 function areaShort(a: Area) {
@@ -136,15 +131,7 @@ function areaShort(a: Area) {
   return "Dir";
 }
 
-function ScorePill({
-  total,
-  label,
-  tone,
-}: {
-  total: number;
-  label: string;
-  tone: "good" | "neutral" | "warn";
-}) {
+function ScorePill({ total, label, tone }: { total: number; label: string; tone: "good" | "neutral" | "warn" }) {
   const styles =
     tone === "good"
       ? { borderColor: "rgba(80,220,160,0.35)", background: "rgba(80,220,160,0.08)" }
@@ -175,7 +162,7 @@ function CoverageChips({ counts }: { counts: Record<Area, number> }) {
               background: ok ? "rgba(80,220,160,0.08)" : "rgba(255,120,120,0.08)",
               color: "rgba(255,255,255,0.92)",
             }}
-            title={ok ? `${ar}: ${n}` : `${ar}: missing`}
+            title={ok ? `${ar}: ${n}` : `${ar}: falta`}
           >
             {areaShort(ar)} {n}
           </span>
@@ -197,18 +184,10 @@ export default function AccountDetailPage() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [interactions, setInteractions] = useState<Interaction[]>([]);
 
-  // Contacts form
-  const [cName, setCName] = useState("");
-  const [cEmail, setCEmail] = useState("");
-  const [cArea, setCArea] = useState<Area>("Marketing");
-  const [cPreferred, setCPreferred] = useState<Channel>("whatsapp");
-  const [cHook, setCHook] = useState("");
-
-  // Edit contact
-  const [editing, setEditing] = useState<Contact | null>(null);
-
-  // Quick log modal
+  // Modals
   const [logOpen, setLogOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [editingContact, setEditingContact] = useState<Contact | null>(null);
 
   async function requireUser() {
     const { data, error } = await supabase.auth.getUser();
@@ -241,8 +220,7 @@ export default function AccountDetailPage() {
 
       const contactsQ = supabase
         .from("contacts")
-        // pedimos last_touch_at si existe en tu tabla (si no existe, supabase ignora y lanza error; por eso lo dejamos fuera del select original)
-        .select("id,account_id,name,email,area,preferred_channel,personal_hook,created_at")
+        .select("id,account_id,name,email,area,preferred_channel,personal_hook,last_touch_at,created_at")
         .eq("account_id", accountId)
         .order("created_at", { ascending: false });
 
@@ -285,78 +263,6 @@ export default function AccountDetailPage() {
     router.push("/login");
   }
 
-  async function addContact() {
-    setMsg(null);
-
-    if (!accountId || !isUuid(accountId)) return setMsg("Invalid account id.");
-    const nm = cName.trim();
-    if (!nm) return setMsg("Contact name is required.");
-
-    const email = cEmail.trim() ? cEmail.trim() : null;
-    const hook = cHook.trim() ? cHook.trim() : null;
-
-    setLoading(true);
-    try {
-      await requireUser();
-
-      const { error } = await supabase.from("contacts").insert({
-        account_id: accountId,
-        name: nm,
-        email,
-        area: cArea,
-        preferred_channel: cPreferred,
-        personal_hook: hook,
-      });
-
-      if (error) throw error;
-
-      setCName("");
-      setCEmail("");
-      setCArea("Marketing");
-      setCPreferred("whatsapp");
-      setCHook("");
-
-      await loadAll();
-    } catch (e: any) {
-      setMsg(e?.message ?? "Could not add contact");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function saveEdit() {
-    if (!editing) return;
-    setMsg(null);
-
-    const nm = editing.name.trim();
-    if (!nm) return setMsg("Contact name is required.");
-
-    setLoading(true);
-    try {
-      await requireUser();
-
-      const { error } = await supabase
-        .from("contacts")
-        .update({
-          name: nm,
-          email: editing.email?.trim() ? editing.email.trim() : null,
-          area: editing.area,
-          preferred_channel: editing.preferred_channel,
-          personal_hook: editing.personal_hook?.trim() ? editing.personal_hook.trim() : null,
-        })
-        .eq("id", editing.id);
-
-      if (error) throw error;
-
-      setEditing(null);
-      await loadAll();
-    } catch (e: any) {
-      setMsg(e?.message ?? "Could not update contact");
-    } finally {
-      setLoading(false);
-    }
-  }
-
   async function deleteContact(id: string) {
     setMsg(null);
     setLoading(true);
@@ -366,10 +272,20 @@ export default function AccountDetailPage() {
       if (error) throw error;
       await loadAll();
     } catch (e: any) {
-      setMsg(e?.message ?? "Could not delete contact");
+      setMsg(e?.message ?? "No se pudo eliminar el contacto.");
     } finally {
       setLoading(false);
     }
+  }
+
+  function openAddContact() {
+    setEditingContact(null);
+    setSheetOpen(true);
+  }
+
+  function openEditContact(c: Contact) {
+    setEditingContact(c);
+    setSheetOpen(true);
   }
 
   const headerActions = (
@@ -409,7 +325,6 @@ export default function AccountDetailPage() {
           </div>
           {headerActions}
         </div>
-
         <div className="card">
           <div style={{ fontSize: 13, opacity: 0.9 }}>No account id found. Go back to Accounts.</div>
           <div style={{ height: 12 }} />
@@ -425,8 +340,18 @@ export default function AccountDetailPage() {
     <main>
       <div className="topbar">
         <div style={{ minWidth: 0 }}>
-          <h1 className="h1" style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-            <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          <h1
+            className="h1"
+            style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}
+          >
+            <span
+              style={{
+                minWidth: 0,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
               {account?.name ?? "Account"}
             </span>
             {score ? <ScorePill total={score.total} label={score.label} tone={score.tone} /> : null}
@@ -439,8 +364,8 @@ export default function AccountDetailPage() {
                 {score ? (
                   <>
                     {" "}
-                    • last touch: {score.d == null ? "never" : `${score.d}d`} • cadence: {score.cadence}d •{" "}
-                    coverage: {score.coveredAreas}/{AREAS.length}
+                    • last touch: {score.d == null ? "never" : `${score.d}d`} • cadence:{" "}
+                    {score.cadence}d • coverage: {score.coveredAreas}/{AREAS.length}
                   </>
                 ) : null}
               </>
@@ -459,15 +384,22 @@ export default function AccountDetailPage() {
         </div>
       )}
 
-      {/* Intimacy Summary */}
+      {/* Intimacy Score */}
       {score ? (
         <div className="card" style={{ padding: 16 }}>
-          <div className="row" style={{ justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+          <div
+            className="row"
+            style={{ justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}
+          >
             <div>
-              <div style={{ fontWeight: 950, fontSize: 16, letterSpacing: -0.2 }}>Intimacy score</div>
+              <div style={{ fontWeight: 950, fontSize: 16, letterSpacing: -0.2 }}>
+                Intimacy score
+              </div>
               <div className="subtle" style={{ marginTop: 4 }}>
                 Recency: {score.recency}/60 • Coverage: {score.coverage}/40
-                {score.missing.length > 0 ? ` • Missing: ${score.missing.join(", ")}` : " • Coverage: full"}
+                {score.missing.length > 0
+                  ? ` • Missing: ${score.missing.join(", ")}`
+                  : " • Coverage: full"}
               </div>
             </div>
 
@@ -481,7 +413,7 @@ export default function AccountDetailPage() {
         </div>
       ) : (
         <div className="card" style={{ padding: 16 }}>
-          <div className="subtle">Score loading…</div>
+          <div className="subtle">Cargando score…</div>
         </div>
       )}
 
@@ -493,139 +425,69 @@ export default function AccountDetailPage() {
           <div>
             <div style={{ fontWeight: 900, fontSize: 16 }}>Contacts ({contacts.length})</div>
             <div className="subtle" style={{ marginTop: 4 }}>
-              Hooks are per contact. Keep it short and useful.
+              Cubre todas las áreas. Hooks cortos y útiles.
             </div>
           </div>
-          <button
-            className="btn btnPrimary"
-            onClick={() => {
-              const el = document.getElementById("add-contact");
-              el?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
-          >
+          <button className="btn btnPrimary" onClick={openAddContact}>
             Add contact
           </button>
         </div>
 
         <div style={{ height: 12 }} />
 
-        <div id="add-contact" className="card" style={{ padding: 14 }}>
-          <div
-            style={{
-              display: "grid",
-              gap: 10,
-              gridTemplateColumns: "1.2fr 1.2fr 160px 160px 1.2fr auto",
-              alignItems: "end",
-            }}
-          >
-            <label style={{ display: "grid", gap: 6 }}>
-              <div className="label">Name</div>
-              <input
-                className="field"
-                value={cName}
-                onChange={(e) => setCName(e.target.value)}
-                placeholder="e.g., Gonzalo Brenner"
-              />
-            </label>
-
-            <label style={{ display: "grid", gap: 6 }}>
-              <div className="label">Email (optional)</div>
-              <input
-                className="field"
-                value={cEmail}
-                onChange={(e) => setCEmail(e.target.value)}
-                placeholder="name@company.com"
-              />
-            </label>
-
-            <label style={{ display: "grid", gap: 6 }}>
-              <div className="label">Area</div>
-              <select className="field" value={cArea} onChange={(e) => setCArea(e.target.value as Area)}>
-                <option value="Marketing">Marketing</option>
-                <option value="R&D">R&amp;D</option>
-                <option value="Procurement">Procurement</option>
-                <option value="Commercial">Commercial</option>
-                <option value="Directors">Directors</option>
-              </select>
-            </label>
-
-            <label style={{ display: "grid", gap: 6 }}>
-              <div className="label">Preferred</div>
-              <select
-                className="field"
-                value={cPreferred}
-                onChange={(e) => setCPreferred(e.target.value as Channel)}
-              >
-                <option value="call">call</option>
-                <option value="whatsapp">whatsapp</option>
-                <option value="email">email</option>
-              </select>
-            </label>
-
-            <label style={{ display: "grid", gap: 6 }}>
-              <div className="label">Personal hook (optional)</div>
-              <input
-                className="field"
-                value={cHook}
-                onChange={(e) => setCHook(e.target.value)}
-                placeholder="e.g., likes tennis"
-              />
-            </label>
-
-            <button
-              className="btn btnPrimary"
-              onClick={addContact}
-              disabled={loading}
-              style={{ height: 44, borderRadius: 16, padding: "0 16px" }}
-            >
-              Add
-            </button>
-          </div>
-        </div>
-
-        <div style={{ height: 12 }} />
-
         {contacts.length === 0 ? (
           <div className="subtle" style={{ fontSize: 13 }}>
-            No contacts yet. Add at least one per area.
+            Sin contactos aún. Agrega al menos uno por área.
           </div>
         ) : (
           <div style={{ display: "grid", gap: 10 }}>
-            {contacts.map((c) => (
-              <div key={c.id} className="card" style={{ padding: 14 }}>
-                <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontWeight: 900, fontSize: 16 }}>
-                      {c.name}{" "}
-                      <span style={{ opacity: 0.7, fontWeight: 700, fontSize: 13 }}>
-                        {c.area} • {channelLabel(c.preferred_channel)}
-                      </span>
+            {contacts.map((c) => {
+              const d = daysSince(c.last_touch_at);
+              const lastTouch = d == null ? "nunca" : d === 0 ? "hoy" : `${d}d`;
+              return (
+                <div key={c.id} className="card" style={{ padding: 14 }}>
+                  <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontWeight: 900, fontSize: 16 }}>
+                        {c.name}{" "}
+                        <span style={{ opacity: 0.7, fontWeight: 700, fontSize: 13 }}>
+                          {c.area} • {channelLabel(c.preferred_channel)} • {lastTouch}
+                        </span>
+                      </div>
+
+                      {c.personal_hook ? (
+                        <div style={{ marginTop: 6, fontSize: 13, opacity: 0.9 }}>
+                          Hook: {c.personal_hook}
+                        </div>
+                      ) : (
+                        <div style={{ marginTop: 6, fontSize: 13, opacity: 0.5 }}>Hook: —</div>
+                      )}
+
+                      {c.email ? (
+                        <div style={{ marginTop: 4, fontSize: 12, opacity: 0.6 }}>{c.email}</div>
+                      ) : null}
                     </div>
 
-                    {c.personal_hook ? (
-                      <div style={{ marginTop: 6, fontSize: 13, opacity: 0.9 }}>
-                        Hook: {c.personal_hook}
-                      </div>
-                    ) : (
-                      <div style={{ marginTop: 6, fontSize: 13, opacity: 0.6 }}>Hook: —</div>
-                    )}
-
-                    {c.email ? (
-                      <div style={{ marginTop: 4, fontSize: 12, opacity: 0.6 }}>{c.email}</div>
-                    ) : null}
-                  </div>
-
-                  <div className="row" style={{ gap: 10 }}>
-                    <button className="btn" onClick={() => setEditing(c)} style={{ height: 40 }}>
-                      Edit
-                    </button>
-                    <button className="btn" onClick={() => deleteContact(c.id)} style={{ height: 40 }}>
-                      Delete
-                    </button>
+                    <div className="row" style={{ gap: 10 }}>
+                      <button
+                        className="btn"
+                        onClick={() => openEditContact(c)}
+                        style={{ height: 40 }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn"
+                        onClick={() => deleteContact(c.id)}
+                        style={{ height: 40 }}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -636,34 +498,38 @@ export default function AccountDetailPage() {
       <div className="card">
         <div style={{ fontWeight: 900, fontSize: 16 }}>Recent interactions</div>
         <div className="subtle" style={{ marginTop: 4 }}>
-          Latest 30 (per account)
+          Últimas 30 (por cuenta)
         </div>
 
         <div style={{ height: 12 }} />
 
         {interactions.length === 0 ? (
           <div className="subtle" style={{ fontSize: 13 }}>
-            No interactions yet.
+            Sin interacciones aún.
           </div>
         ) : (
           <div style={{ display: "grid", gap: 10 }}>
-            {interactions.map((it) => (
-              <div key={it.id} className="card" style={{ padding: 14 }}>
-                <div style={{ fontWeight: 900, fontSize: 13, letterSpacing: 0.2 }}>
-                  {it.channel.toUpperCase()} • {new Date(it.created_at).toLocaleDateString("en-US")} •{" "}
-                  {it.contact_id ? "contact-linked" : "no contact"}
+            {interactions.map((it) => {
+              const contactName = contacts.find((c) => c.id === it.contact_id)?.name ?? null;
+              return (
+                <div key={it.id} className="card" style={{ padding: 14 }}>
+                  <div style={{ fontWeight: 900, fontSize: 13, letterSpacing: 0.2 }}>
+                    {it.channel.toUpperCase()} •{" "}
+                    {new Date(it.created_at).toLocaleDateString("es-PE")} •{" "}
+                    {contactName ?? "sin contacto"}
+                  </div>
+                  <div style={{ marginTop: 8, fontSize: 13, opacity: 0.9 }}>{it.summary}</div>
+                  <div style={{ marginTop: 8, fontSize: 12, opacity: 0.75 }}>
+                    Next: {it.next_step} ({it.next_step_date})
+                  </div>
                 </div>
-                <div style={{ marginTop: 8, fontSize: 13, opacity: 0.9 }}>{it.summary}</div>
-                <div style={{ marginTop: 8, fontSize: 12, opacity: 0.75 }}>
-                  Next: {it.next_step} ({it.next_step_date})
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
 
-      {/* Quick Log */}
+      {/* Quick Log Modal */}
       {account ? (
         <QuickLogModal
           open={logOpen}
@@ -675,92 +541,18 @@ export default function AccountDetailPage() {
         />
       ) : null}
 
-      {/* Edit Contact Modal */}
-      {editing ? (
-        <div
-          onClick={() => setEditing(null)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.55)",
-            display: "grid",
-            placeItems: "center",
-            padding: 16,
-            zIndex: 60,
-          }}
-        >
-          <div onClick={(e) => e.stopPropagation()} className="card" style={{ width: "100%", maxWidth: 520, padding: 16 }}>
-            <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
-              <div>
-                <div style={{ fontWeight: 900, fontSize: 16 }}>Edit contact</div>
-                <div className="subtle" style={{ marginTop: 4 }}>
-                  Keep it clean. Keep it useful.
-                </div>
-              </div>
-              <button className="btn" onClick={() => setEditing(null)}>
-                Close
-              </button>
-            </div>
-
-            <div style={{ height: 12 }} />
-
-            <div style={{ display: "grid", gap: 10 }}>
-              <label style={{ display: "grid", gap: 6 }}>
-                <div className="label">Name</div>
-                <input className="field" value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} />
-              </label>
-
-              <label style={{ display: "grid", gap: 6 }}>
-                <div className="label">Email (optional)</div>
-                <input
-                  className="field"
-                  value={editing.email ?? ""}
-                  onChange={(e) => setEditing({ ...editing, email: e.target.value })}
-                />
-              </label>
-
-              <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr 1fr" }}>
-                <label style={{ display: "grid", gap: 6 }}>
-                  <div className="label">Area</div>
-                  <select className="field" value={editing.area} onChange={(e) => setEditing({ ...editing, area: e.target.value as Area })}>
-                    <option value="Marketing">Marketing</option>
-                    <option value="R&D">R&amp;D</option>
-                    <option value="Procurement">Procurement</option>
-                    <option value="Commercial">Commercial</option>
-                    <option value="Directors">Directors</option>
-                  </select>
-                </label>
-
-                <label style={{ display: "grid", gap: 6 }}>
-                  <div className="label">Preferred</div>
-                  <select
-                    className="field"
-                    value={editing.preferred_channel ?? "whatsapp"}
-                    onChange={(e) => setEditing({ ...editing, preferred_channel: e.target.value as Channel })}
-                  >
-                    <option value="call">call</option>
-                    <option value="whatsapp">whatsapp</option>
-                    <option value="email">email</option>
-                  </select>
-                </label>
-              </div>
-
-              <label style={{ display: "grid", gap: 6 }}>
-                <div className="label">Personal hook (optional)</div>
-                <input
-                  className="field"
-                  value={editing.personal_hook ?? ""}
-                  onChange={(e) => setEditing({ ...editing, personal_hook: e.target.value })}
-                />
-              </label>
-
-              <button className="btn btnPrimary" onClick={saveEdit} disabled={loading}>
-                Save changes
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      {/* Add / Edit Contact Sheet */}
+      <AddContactSheet
+        open={sheetOpen}
+        mode={editingContact ? "edit" : "create"}
+        accountId={accountId ?? ""}
+        initial={editingContact}
+        onClose={() => {
+          setSheetOpen(false);
+          setEditingContact(null);
+        }}
+        onSaved={loadAll}
+      />
     </main>
   );
 }
