@@ -85,35 +85,35 @@ export default function AccountsPage() {
 
   async function addAccount() {
     setMsg(null);
-
+  
     const nm = name.trim();
     if (!nm) return setMsg("Account name is required.");
-
+  
     const ctry = country.trim() ? country.trim() : null;
     const v = valueUsd.trim() ? Number(valueUsd.trim()) : null;
     if (valueUsd.trim() && (v == null || Number.isNaN(v))) {
       return setMsg("Value (USD) must be a number.");
     }
-
+  
     setLoading(true);
     try {
       const user = await requireUser();
-
-      // ✅ IMPORTANT: DB expects owner_user_id (NOT NULL)
+  
       const { error } = await supabase.from("accounts").insert({
+        owner_user_id: user.id,   // ✅ ESTA ES LA CORRECTA
         name: nm,
         tier,
         country: ctry,
         value_usd: v,
       });
-
+  
       if (error) throw error;
-
+  
       setName("");
       setTier("A");
       setCountry("");
       setValueUsd("");
-
+  
       await load();
     } catch (e: any) {
       setMsg(e?.message ?? "Could not add account");
