@@ -1,13 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+
+type Channel = "call" | "whatsapp" | "email";
+type Area = "Marketing" | "R&D" | "Procurement" | "Commercial" | "Directors";
 
 type Contact = {
   id: string;
   name: string;
-  area: string | null;
-  preferred_channel: "call" | "whatsapp" | "email" | null;
+  area: Area;
+  preferred_channel: Channel | null;
+  personal_hook: string | null;
+  last_touch_at: string | null;
 };
 
 type Props = {
@@ -16,8 +21,16 @@ type Props = {
   accountId: string;
   accountName: string;
   contacts: Contact[];
-  onSaved: () => void;
+  onSaved: () => void | Promise<void>;
 };
+
+function daysSince(iso: string | null) {
+  if (!iso) return null;
+  const d = new Date(iso).getTime();
+  const now = Date.now();
+  const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24));
+  return diff < 0 ? 0 : diff;
+}
 
 export default function QuickLogModal({
   open,
@@ -28,8 +41,8 @@ export default function QuickLogModal({
   onSaved,
 }: Props) {
   const [contactId, setContactId] = useState<string>("");
+  const [channel, setChannel] = useState<Channel>("call");
 
-  const [channel, setChannel] = useState<"call" | "whatsapp" | "email">("call");
   const [summary, setSummary] = useState("");
   const [nextStep, setNextStep] = useState("");
   const [nextStepDate, setNextStepDate] = useState(() => {
@@ -48,24 +61,73 @@ export default function QuickLogModal({
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
-  const contactOptions = useMemo(() => {
-    return (contacts ?? []).slice().sort((a, b) => a.name.localeCompare(b.name));
+  const sortedContacts = useMemo(() => {
+    // Prioriza contactos "menos tocados" primero (null = nunca = prioridad),
+    // y luego por días desde último toque (más viejo = prioridad)
+    return [...(contacts ?? [])].sort((a, b) => {
+      const da = daysSince(a.last_touch_at);
+      const db = daysSince(b.last_touch_at);
+      const va = da == null ? 999999 : da;
+      const vb = db == null ? 999999 : db;
+      return vb - va; // más días = más prioridad
+    });
   }, [contacts]);
+
+  const selected = useMemo(
+    () => (contacts ?? []).find((c) => c.id === contactId) ?? null,
+    [contacts, contactId]
+  );
+
+  useEffect(() => {
+    if (!open) return;
+
+    // default contact: el de mayor prioridad (más “due”)
+    const first = sortedContacts[0];
+    if (first) {
+      setContactId(first.id);
+      setChannel((first.preferred_channel ?? "call") as Channel);
+    } else {
+      setContactId("");
+      setChannel("call");
+    }
+    // no reset de summary para no perder si cierras/abres accidentalmente
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   if (!open) return null;
 
   async function save() {
     setMsg(null);
 
-    if (!summary.trim()) return setMsg("Summary is required.");
-    if (!nextStep.trim()) return setMsg("Next step is required.");
-    if (!nextStepDate) return setMsg("Next step date is required.");
+    if (!contacts || contacts.length === 0) {
+      setMsg("You need at least 1 contact to log an interaction.");
+      return;
+    }
+    if (!contactId) {
+      setMsg("Contact is required.");
+      return;
+    }
+    if (!summary.trim()) {
+      setMsg("Summary is required.");
+      return;
+    }
+    if (!nextStep.trim()) {
+      setMsg("Next step is required.");
+      return;
+    }
+    if (!nextStepDate) {
+      setMsg("Next step date is required.");
+      return;
+    }
 
     setLoading(true);
     try {
+      const nowIso = new Date().toISOString();
+
+      // 1) create interaction (now requires contact_id)
       const { error: interr } = await supabase.from("interactions").insert({
         account_id: accountId,
-        contact_id: contactId ? contactId : null,
+        contact_id: contactId,
         channel,
         summary: summary.trim(),
         objection_tag: objectionTag.trim() ? objectionTag.trim() : null,
@@ -79,19 +141,26 @@ export default function QuickLogModal({
 
       if (interr) throw interr;
 
+      // 2) update account last_interaction_at
       const { error: accErr } = await supabase
         .from("accounts")
-        .update({ last_interaction_at: new Date().toISOString() })
+        .update({ last_interaction_at: nowIso })
         .eq("id", accountId);
 
       if (accErr) throw accErr;
 
-      onSaved();
+      // 3) update contact last_touch_at (THIS IS INTIMACY)
+      const { error: cErr } = await supabase
+        .from("contacts")
+        .update({ last_touch_at: nowIso })
+        .eq("id", contactId);
+
+      if (cErr) throw cErr;
+
+      await onSaved();
       onClose();
 
-      // reset
-      setContactId("");
-      setChannel("call");
+      // reset fields
       setSummary("");
       setNextStep("");
       setObjectionTag("");
@@ -116,84 +185,68 @@ export default function QuickLogModal({
         display: "grid",
         placeItems: "center",
         padding: 16,
-        zIndex: 50,
+        zIndex: 70,
       }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
+        className="card"
         style={{
           width: "100%",
           maxWidth: 560,
-          borderRadius: 16,
-          border: "1px solid rgba(255,255,255,0.14)",
-          background: "rgba(20,20,24,0.98)",
           padding: 16,
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
+        <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
           <div>
             <div style={{ fontWeight: 900, fontSize: 16 }}>Quick Log</div>
-            <div style={{ marginTop: 4, opacity: 0.75, fontSize: 13 }}>{accountName}</div>
+            <div className="subtle" style={{ marginTop: 4 }}>
+              {accountName}
+            </div>
           </div>
-          <button
-            onClick={onClose}
-            style={{
-              padding: "8px 10px",
-              borderRadius: 12,
-              border: "1px solid rgba(255,255,255,0.15)",
-              background: "transparent",
-              color: "white",
-              cursor: "pointer",
-              height: 36,
-            }}
-          >
+          <button className="btn" onClick={onClose} style={{ height: 40 }}>
             Close
           </button>
         </div>
 
-        <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
-          <label>
-            <div style={{ fontSize: 12, opacity: 0.7 }}>
-              Contact (optional, recommended)
-            </div>
+        <div style={{ height: 12 }} />
+
+        <div style={{ display: "grid", gap: 10 }}>
+          <label style={{ display: "grid", gap: 6 }}>
+            <div className="label">Contact (required)</div>
             <select
+              className="field"
               value={contactId}
-              onChange={(e) => setContactId(e.target.value)}
-              style={{
-                width: "100%",
-                padding: 12,
-                borderRadius: 12,
-                border: "1px solid rgba(255,255,255,0.15)",
-                background: "rgba(255,255,255,0.06)",
-                color: "white",
-                outline: "none",
+              onChange={(e) => {
+                const id = e.target.value;
+                setContactId(id);
+                const c = contacts.find((x) => x.id === id);
+                if (c?.preferred_channel) setChannel(c.preferred_channel as Channel);
               }}
             >
-              <option value="">— none —</option>
-              {contactOptions.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                  {c.area ? ` (${c.area})` : ""}
-                  {c.preferred_channel ? ` • ${c.preferred_channel}` : ""}
-                </option>
-              ))}
+              {(sortedContacts ?? []).map((c) => {
+                const d = daysSince(c.last_touch_at);
+                const last = d == null ? "never" : d === 0 ? "today" : `${d}d`;
+                return (
+                  <option key={c.id} value={c.id}>
+                    {c.name} ({c.area}) • pref: {c.preferred_channel ?? "—"} • last: {last}
+                  </option>
+                );
+              })}
             </select>
+            {selected?.personal_hook ? (
+              <div className="subtle" style={{ marginTop: 4 }}>
+                Hook: {selected.personal_hook}
+              </div>
+            ) : null}
           </label>
 
-          <label>
-            <div style={{ fontSize: 12, opacity: 0.7 }}>Channel</div>
+          <label style={{ display: "grid", gap: 6 }}>
+            <div className="label">Channel</div>
             <select
+              className="field"
               value={channel}
-              onChange={(e) => setChannel(e.target.value as any)}
-              style={{
-                width: "100%",
-                padding: 12,
-                borderRadius: 12,
-                border: "1px solid rgba(255,255,255,0.15)",
-                background: "rgba(255,255,255,0.06)",
-                color: "white",
-                outline: "none",
-              }}
+              onChange={(e) => setChannel(e.target.value as Channel)}
             >
               <option value="call">Call</option>
               <option value="whatsapp">WhatsApp</option>
@@ -201,152 +254,85 @@ export default function QuickLogModal({
             </select>
           </label>
 
-          <label>
-            <div style={{ fontSize: 12, opacity: 0.7 }}>Summary (required)</div>
+          <label style={{ display: "grid", gap: 6 }}>
+            <div className="label">Summary (required)</div>
             <textarea
+              className="field"
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
               rows={3}
               placeholder="What happened? Key outcome?"
-              style={{
-                width: "100%",
-                padding: 12,
-                borderRadius: 12,
-                border: "1px solid rgba(255,255,255,0.15)",
-                background: "rgba(255,255,255,0.06)",
-                color: "white",
-                outline: "none",
-                resize: "vertical",
-              }}
+              style={{ resize: "vertical" }}
             />
           </label>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 180px", gap: 10 }}>
-            <label>
-              <div style={{ fontSize: 12, opacity: 0.7 }}>Next step (required)</div>
+            <label style={{ display: "grid", gap: 6 }}>
+              <div className="label">Next step (required)</div>
               <input
+                className="field"
                 value={nextStep}
                 onChange={(e) => setNextStep(e.target.value)}
                 placeholder="Next step action"
-                style={{
-                  width: "100%",
-                  padding: 12,
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  background: "rgba(255,255,255,0.06)",
-                  color: "white",
-                  outline: "none",
-                }}
               />
             </label>
 
-            <label>
-              <div style={{ fontSize: 12, opacity: 0.7 }}>Next step date</div>
+            <label style={{ display: "grid", gap: 6 }}>
+              <div className="label">Next step date</div>
               <input
+                className="field"
                 value={nextStepDate}
                 onChange={(e) => setNextStepDate(e.target.value)}
                 type="date"
-                style={{
-                  width: "100%",
-                  padding: 12,
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  background: "rgba(255,255,255,0.06)",
-                  color: "white",
-                  outline: "none",
-                }}
               />
             </label>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-            <label>
-              <div style={{ fontSize: 12, opacity: 0.7 }}>Objection tag (optional)</div>
+            <label style={{ display: "grid", gap: 6 }}>
+              <div className="label">Objection tag (optional)</div>
               <input
+                className="field"
                 value={objectionTag}
                 onChange={(e) => setObjectionTag(e.target.value)}
                 placeholder="e.g., price, timing"
-                style={{
-                  width: "100%",
-                  padding: 12,
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  background: "rgba(255,255,255,0.06)",
-                  color: "white",
-                  outline: "none",
-                }}
               />
             </label>
 
-            <label>
-              <div style={{ fontSize: 12, opacity: 0.7 }}>Target price (optional)</div>
+            <label style={{ display: "grid", gap: 6 }}>
+              <div className="label">Target price (optional)</div>
               <input
+                className="field"
                 value={targetPrice}
                 onChange={(e) => setTargetPrice(e.target.value)}
                 placeholder="e.g., 12.5 USD/kg"
-                style={{
-                  width: "100%",
-                  padding: 12,
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  background: "rgba(255,255,255,0.06)",
-                  color: "white",
-                  outline: "none",
-                }}
               />
             </label>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
-            <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <input
-                type="checkbox"
-                checked={riskT}
-                onChange={(e) => setRiskT(e.target.checked)}
-              />
+          <div className="row" style={{ gap: 14, flexWrap: "wrap" }}>
+            <label className="row" style={{ gap: 8, alignItems: "center" }}>
+              <input type="checkbox" checked={riskT} onChange={(e) => setRiskT(e.target.checked)} />
               <span style={{ fontSize: 13, opacity: 0.9 }}>Risk: Technical</span>
             </label>
-
-            <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <input
-                type="checkbox"
-                checked={riskR}
-                onChange={(e) => setRiskR(e.target.checked)}
-              />
+            <label className="row" style={{ gap: 8, alignItems: "center" }}>
+              <input type="checkbox" checked={riskR} onChange={(e) => setRiskR(e.target.checked)} />
               <span style={{ fontSize: 13, opacity: 0.9 }}>Risk: Regulatory</span>
             </label>
-
-            <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <input
-                type="checkbox"
-                checked={riskC}
-                onChange={(e) => setRiskC(e.target.checked)}
-              />
+            <label className="row" style={{ gap: 8, alignItems: "center" }}>
+              <input type="checkbox" checked={riskC} onChange={(e) => setRiskC(e.target.checked)} />
               <span style={{ fontSize: 13, opacity: 0.9 }}>Risk: Commercial</span>
             </label>
           </div>
 
           {msg && <div style={{ fontSize: 13, opacity: 0.9 }}>{msg}</div>}
 
-          <button
-            disabled={loading}
-            onClick={save}
-            style={{
-              padding: 12,
-              borderRadius: 12,
-              border: "none",
-              background: "white",
-              color: "black",
-              fontWeight: 900,
-              cursor: "pointer",
-              marginTop: 4,
-            }}
-          >
+          <button className="btn btnPrimary" disabled={loading} onClick={save} style={{ height: 44 }}>
             {loading ? "Saving..." : "Save log"}
           </button>
 
-          <div style={{ fontSize: 12, opacity: 0.65 }}>
-            Rule: no interaction can be saved without next step + date.
+          <div className="subtle" style={{ fontSize: 12 }}>
+            Rule: every interaction must be linked to a contact.
           </div>
         </div>
       </div>
