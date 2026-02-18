@@ -5,12 +5,20 @@ import { useParams, useRouter } from "next/navigation";
 import { supabase } from "../../../lib/supabaseClient";
 import QuickLogModal from "../../../components/QuickLogModal";
 import AddContactSheet from "../../../components/AddContactSheet";
+import { ScorePill, CoverageChips } from "../../../components/IntimacyWidgets";
+import {
+  AREAS,
+  daysSince,
+  fmtMoney,
+  fmtLastTouch,
+  channelLabel,
+  computeIntimacyScore,
+  type Tier,
+  type Area,
+  type Channel,
+} from "../../../lib/intimacy";
 
 export const dynamic = "force-dynamic";
-
-type Area = "Marketing" | "R&D" | "Procurement" | "Commercial" | "Directors";
-type Channel = "call" | "whatsapp" | "email";
-type Tier = "A" | "B" | "C";
 
 type Account = {
   id: string;
@@ -44,132 +52,8 @@ type Interaction = {
   created_at: string;
 };
 
-const AREAS: Area[] = ["Marketing", "R&D", "Procurement", "Commercial", "Directors"];
-
 function isUuid(v: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
-}
-
-function fmtMoney(n: number | null) {
-  if (n == null || Number.isNaN(n)) return "—";
-  try {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 0,
-    }).format(n);
-  } catch {
-    return `${n}`;
-  }
-}
-
-function daysSince(iso: string | null | undefined) {
-  if (!iso) return null;
-  const d = new Date(iso).getTime();
-  const now = Date.now();
-  const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24));
-  return diff < 0 ? 0 : diff;
-}
-
-function cadenceDays(tier: Tier) {
-  if (tier === "A") return 7;
-  if (tier === "B") return 14;
-  return 30;
-}
-
-function computeIntimacyScore(account: Account, contacts: Contact[]) {
-  const cadence = cadenceDays(account.tier);
-  const d = daysSince(account.last_interaction_at);
-
-  // Recency 0–60
-  let recency = 0;
-  if (d != null) {
-    if (d <= cadence) recency = 60;
-    else recency = Math.max(0, 60 - (d - cadence) * 5);
-  }
-
-  // Coverage 0–40
-  const counts: Record<Area, number> = {
-    Marketing: 0,
-    "R&D": 0,
-    Procurement: 0,
-    Commercial: 0,
-    Directors: 0,
-  };
-  for (const c of contacts) counts[c.area] = (counts[c.area] ?? 0) + 1;
-
-  const coveredAreas = AREAS.reduce((acc, ar) => acc + ((counts[ar] ?? 0) > 0 ? 1 : 0), 0);
-  const coverage = Math.round((coveredAreas / AREAS.length) * 40);
-  const total = Math.max(0, Math.min(100, Math.round(recency + coverage)));
-  const label = total >= 80 ? "Strong" : total >= 55 ? "Ok" : "Risk";
-  const tone = total >= 80 ? "good" : total >= 55 ? "neutral" : "warn";
-
-  return {
-    total,
-    label,
-    tone: tone as "good" | "neutral" | "warn",
-    recency: Math.round(recency),
-    coverage,
-    counts,
-    coveredAreas,
-    missing: AREAS.filter((ar) => (counts[ar] ?? 0) === 0),
-    cadence,
-    d,
-  };
-}
-
-function channelLabel(ch: Channel | null) {
-  if (!ch) return "—";
-  return ch;
-}
-
-function areaShort(a: Area) {
-  if (a === "Marketing") return "Mkt";
-  if (a === "R&D") return "R&D";
-  if (a === "Procurement") return "Proc";
-  if (a === "Commercial") return "Comm";
-  return "Dir";
-}
-
-function ScorePill({ total, label, tone }: { total: number; label: string; tone: "good" | "neutral" | "warn" }) {
-  const styles =
-    tone === "good"
-      ? { borderColor: "rgba(80,220,160,0.35)", background: "rgba(80,220,160,0.08)" }
-      : tone === "warn"
-      ? { borderColor: "rgba(255,120,120,0.35)", background: "rgba(255,120,120,0.08)" }
-      : { borderColor: "rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.06)" };
-
-  return (
-    <span className="pill" style={{ ...styles, opacity: 0.95 }}>
-      {total} {label}
-    </span>
-  );
-}
-
-function CoverageChips({ counts }: { counts: Record<Area, number> }) {
-  return (
-    <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
-      {AREAS.map((ar) => {
-        const n = counts[ar] ?? 0;
-        const ok = n > 0;
-        return (
-          <span
-            key={ar}
-            className="pill"
-            style={{
-              opacity: 0.95,
-              borderColor: ok ? "rgba(80,220,160,0.35)" : "rgba(255,120,120,0.35)",
-              background: ok ? "rgba(80,220,160,0.08)" : "rgba(255,120,120,0.08)",
-              color: "rgba(255,255,255,0.92)",
-            }}
-            title={ok ? `${ar}: ${n}` : `${ar}: falta`}
-          >
-            {areaShort(ar)} {n}
-          </span>
-        );
-      })}
-    </div>
-  );
 }
 
 export default function AccountDetailPage() {
@@ -231,8 +115,11 @@ export default function AccountDetailPage() {
         .order("created_at", { ascending: false })
         .limit(30);
 
-      const [{ data: acc, error: accErr }, { data: cts, error: cErr }, { data: its, error: iErr }] =
-        await Promise.all([accQ, contactsQ, interQ]);
+      const [
+        { data: acc, error: accErr },
+        { data: cts, error: cErr },
+        { data: its, error: iErr },
+      ] = await Promise.all([accQ, contactsQ, interQ]);
 
       if (accErr) throw accErr;
       if (cErr) throw cErr;
@@ -288,32 +175,22 @@ export default function AccountDetailPage() {
     setSheetOpen(true);
   }
 
-  const headerActions = (
-    <div className="row" style={{ gap: 10, flexWrap: "wrap" }}>
-      <div className="segmented">
-        <button className="segBtn" onClick={() => router.push("/today")}>
-          Today
-        </button>
-        <button className="segBtn" onClick={() => router.push("/accounts")}>
-          Accounts
-        </button>
-        <button className="segBtn" onClick={() => router.push("/weekly")}>
-          Weekly Pack
-        </button>
-      </div>
-      <button className="btn" onClick={loadAll} disabled={loading}>
-        Refresh
-      </button>
-      <button className="btn btnPrimary" onClick={signOut}>
-        Sign out
-      </button>
-    </div>
-  );
-
   const score = useMemo(() => {
     if (!account) return null;
     return computeIntimacyScore(account, contacts);
   }, [account, contacts]);
+
+  const headerActions = (
+    <div className="row" style={{ gap: 10, flexWrap: "wrap" }}>
+      <div className="segmented">
+        <button className="segBtn" onClick={() => router.push("/today")}>Today</button>
+        <button className="segBtn" onClick={() => router.push("/accounts")}>Accounts</button>
+        <button className="segBtn" onClick={() => router.push("/weekly")}>Weekly Pack</button>
+      </div>
+      <button className="btn" onClick={loadAll} disabled={loading}>Refresh</button>
+      <button className="btn btnPrimary" onClick={signOut}>Sign out</button>
+    </div>
+  );
 
   if (!accountId) {
     return (
@@ -328,9 +205,7 @@ export default function AccountDetailPage() {
         <div className="card">
           <div style={{ fontSize: 13, opacity: 0.9 }}>No account id found. Go back to Accounts.</div>
           <div style={{ height: 12 }} />
-          <button className="btn" onClick={() => router.push("/accounts")}>
-            Back to Accounts
-          </button>
+          <button className="btn" onClick={() => router.push("/accounts")}>Back to Accounts</button>
         </div>
       </main>
     );
@@ -340,18 +215,8 @@ export default function AccountDetailPage() {
     <main>
       <div className="topbar">
         <div style={{ minWidth: 0 }}>
-          <h1
-            className="h1"
-            style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}
-          >
-            <span
-              style={{
-                minWidth: 0,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
+          <h1 className="h1" style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+            <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
               {account?.name ?? "Account"}
             </span>
             {score ? <ScorePill total={score.total} label={score.label} tone={score.tone} /> : null}
@@ -363,9 +228,7 @@ export default function AccountDetailPage() {
                 {account.tier} • {account.country ?? "—"} • {fmtMoney(account.value_usd)}
                 {score ? (
                   <>
-                    {" "}
-                    • last touch: {score.d == null ? "never" : `${score.d}d`} • cadence:{" "}
-                    {score.cadence}d • coverage: {score.coveredAreas}/{AREAS.length}
+                    {" "}• last touch: {fmtLastTouch(score.d)} • cadence: {score.cadence}d • coverage: {score.coveredAreas}/{AREAS.length}
                   </>
                 ) : null}
               </>
@@ -387,14 +250,9 @@ export default function AccountDetailPage() {
       {/* Intimacy Score */}
       {score ? (
         <div className="card" style={{ padding: 16 }}>
-          <div
-            className="row"
-            style={{ justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}
-          >
+          <div className="row" style={{ justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
             <div>
-              <div style={{ fontWeight: 950, fontSize: 16, letterSpacing: -0.2 }}>
-                Intimacy score
-              </div>
+              <div style={{ fontWeight: 950, fontSize: 16, letterSpacing: -0.2 }}>Intimacy score</div>
               <div className="subtle" style={{ marginTop: 4 }}>
                 Recency: {score.recency}/60 • Coverage: {score.coverage}/40
                 {score.missing.length > 0
@@ -402,12 +260,10 @@ export default function AccountDetailPage() {
                   : " • Coverage: full"}
               </div>
             </div>
-
             <button className="btn btnPrimary" onClick={() => setLogOpen(true)} disabled={!account}>
               Quick log
             </button>
           </div>
-
           <div style={{ height: 12 }} />
           <CoverageChips counts={score.counts} />
         </div>
@@ -443,7 +299,7 @@ export default function AccountDetailPage() {
           <div style={{ display: "grid", gap: 10 }}>
             {contacts.map((c) => {
               const d = daysSince(c.last_touch_at);
-              const lastTouch = d == null ? "nunca" : d === 0 ? "hoy" : `${d}d`;
+              const lastTouch = fmtLastTouch(d);
               return (
                 <div key={c.id} className="card" style={{ padding: 14 }}>
                   <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
@@ -454,7 +310,6 @@ export default function AccountDetailPage() {
                           {c.area} • {channelLabel(c.preferred_channel)} • {lastTouch}
                         </span>
                       </div>
-
                       {c.personal_hook ? (
                         <div style={{ marginTop: 6, fontSize: 13, opacity: 0.9 }}>
                           Hook: {c.personal_hook}
@@ -462,25 +317,16 @@ export default function AccountDetailPage() {
                       ) : (
                         <div style={{ marginTop: 6, fontSize: 13, opacity: 0.5 }}>Hook: —</div>
                       )}
-
                       {c.email ? (
                         <div style={{ marginTop: 4, fontSize: 12, opacity: 0.6 }}>{c.email}</div>
                       ) : null}
                     </div>
 
                     <div className="row" style={{ gap: 10 }}>
-                      <button
-                        className="btn"
-                        onClick={() => openEditContact(c)}
-                        style={{ height: 40 }}
-                      >
+                      <button className="btn" onClick={() => openEditContact(c)} style={{ height: 40 }}>
                         Edit
                       </button>
-                      <button
-                        className="btn"
-                        onClick={() => deleteContact(c.id)}
-                        style={{ height: 40 }}
-                      >
+                      <button className="btn" onClick={() => deleteContact(c.id)} style={{ height: 40 }}>
                         Delete
                       </button>
                     </div>
@@ -497,16 +343,12 @@ export default function AccountDetailPage() {
       {/* Recent interactions */}
       <div className="card">
         <div style={{ fontWeight: 900, fontSize: 16 }}>Recent interactions</div>
-        <div className="subtle" style={{ marginTop: 4 }}>
-          Últimas 30 (por cuenta)
-        </div>
+        <div className="subtle" style={{ marginTop: 4 }}>Últimas 30 (por cuenta)</div>
 
         <div style={{ height: 12 }} />
 
         {interactions.length === 0 ? (
-          <div className="subtle" style={{ fontSize: 13 }}>
-            Sin interacciones aún.
-          </div>
+          <div className="subtle" style={{ fontSize: 13 }}>Sin interacciones aún.</div>
         ) : (
           <div style={{ display: "grid", gap: 10 }}>
             {interactions.map((it) => {
