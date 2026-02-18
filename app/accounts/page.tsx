@@ -66,9 +66,7 @@ export default function AccountsPage() {
 
       const { data, error } = await supabase
         .from("accounts")
-        .select(
-          "id,name,tier,country,value_usd,last_interaction_at,created_at"
-        )
+        .select("id,name,tier,country,value_usd,last_interaction_at,created_at")
         .order("value_usd", { ascending: false, nullsFirst: false });
 
       if (error) throw error;
@@ -101,8 +99,9 @@ export default function AccountsPage() {
     try {
       const user = await requireUser();
 
+      // ✅ IMPORTANT: DB expects owner_user_id (NOT NULL)
       const { error } = await supabase.from("accounts").insert({
-        owner_id: user.id, // ✅ CRÍTICO PARA RLS
+        owner_user_id: user.id,
         name: nm,
         tier,
         country: ctry,
@@ -266,26 +265,28 @@ export default function AccountsPage() {
         {list.map((a) => {
           const d = daysSince(a.last_interaction_at);
           const badge = d == null ? "never" : d <= 7 ? "ok" : "due";
-          const lastTouch =
-            d == null ? "never" : d === 0 ? "today" : `${d}d`;
+          const lastTouch = d == null ? "never" : d === 0 ? "today" : `${d}d`;
 
           return (
             <div className="card" key={a.id}>
-              <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
+              <div
+                className="row"
+                style={{ justifyContent: "space-between", gap: 12 }}
+              >
                 <div>
                   <div style={{ fontWeight: 900, fontSize: 18 }}>
                     {a.name}{" "}
-                    <span style={{ fontWeight: 700, opacity: 0.7, fontSize: 14 }}>
+                    <span
+                      style={{ fontWeight: 700, opacity: 0.7, fontSize: 14 }}
+                    >
                       {a.tier} • {a.country ?? "—"}
                     </span>{" "}
-                    <span
-                      className="pill"
-                      style={{
-                        marginLeft: 8,
-                        opacity: 0.9,
-                      }}
-                    >
-                      {badge === "never" ? "never" : badge === "ok" ? "ok" : "due"}
+                    <span className="pill" style={{ marginLeft: 8, opacity: 0.9 }}>
+                      {badge === "never"
+                        ? "never"
+                        : badge === "ok"
+                        ? "ok"
+                        : "due"}
                     </span>
                   </div>
 
