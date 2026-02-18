@@ -230,3 +230,196 @@ textarea {
   background: rgba(255, 255, 255, 0.14);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 }
+
+/* --- Today Account Card (premium) --- */
+.accCard {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 22px;
+  padding: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.accCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.accCardMust {
+  position: relative;
+  overflow: hidden;
+}
+
+.accCardMust::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 4px;
+  border-radius: 999px;
+  background: rgba(255, 120, 120, 0.9);
+  box-shadow: 0 0 0 6px rgba(255, 120, 120, 0.08);
+}
+
+.accCardRow {
+  display: grid;
+  grid-template-columns: 78px 1fr;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.scoreCircle {
+  height: 78px;
+  width: 78px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.scoreCircle.healthy {
+  box-shadow: 0 0 0 6px rgba(120, 255, 180, 0.06);
+}
+
+.scoreCircle.watch {
+  box-shadow: 0 0 0 6px rgba(255, 210, 120, 0.06);
+}
+
+.scoreCircle.risk {
+  box-shadow: 0 0 0 6px rgba(255, 120, 120, 0.06);
+}
+
+.scoreNum {
+  font-weight: 900;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.scoreLbl {
+  font-size: 11px;
+  opacity: 0.72;
+  margin-top: -2px;
+}
+
+.accMain {
+  min-width: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.accTitleRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.accTitle {
+  font-weight: 900;
+  font-size: 18px;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.accMeta {
+  margin-left: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.accBadge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.04);
+  opacity: 0.95;
+}
+
+.accBadge.ok {
+  box-shadow: 0 0 0 4px rgba(120, 255, 180, 0.06);
+}
+
+.accBadge.due {
+  box-shadow: 0 0 0 4px rgba(255, 120, 120, 0.06);
+}
+
+.accActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.accSubRow {
+  display: grid;
+  gap: 6px;
+}
+
+.accSub {
+  font-size: 12px;
+  opacity: 0.8;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.accSubItem {
+  white-space: nowrap;
+}
+
+.dot {
+  opacity: 0.35;
+}
+
+.accMissing {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.accMissing.ok {
+  opacity: 0.7;
+}
+
+.accRecBox {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.accRecLabel {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  opacity: 0.6;
+  font-weight: 800;
+}
+
+.accRecName {
+  margin-top: 8px;
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.accRecMeta {
+  margin-left: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  opacity: 0.65;
+}
+
+.accRecLine {
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.8;
+}
