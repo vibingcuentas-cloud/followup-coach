@@ -101,7 +101,6 @@ export default function AccountsPage() {
 
       // ✅ IMPORTANT: DB expects owner_user_id (NOT NULL)
       const { error } = await supabase.from("accounts").insert({
-        owner_user_id: user.id,
         name: nm,
         tier,
         country: ctry,
