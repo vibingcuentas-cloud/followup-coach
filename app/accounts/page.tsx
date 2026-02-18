@@ -100,7 +100,6 @@ export default function AccountsPage() {
       const user = await requireUser();
   
       const { error } = await supabase.from("accounts").insert({
-        owner_user_id: user.id,   // ✅ ESTA ES LA CORRECTA
         name: nm,
         tier,
         country: ctry,
