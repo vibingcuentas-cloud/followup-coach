@@ -1,20 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+
+type Contact = {
+  id: string;
+  name: string;
+  area: string | null;
+  preferred_channel: "call" | "whatsapp" | "email" | null;
+};
 
 type Props = {
   open: boolean;
   onClose: () => void;
   accountId: string;
   accountName: string;
+  contacts: Contact[];
   onSaved: () => void;
-};
-
-type Contact = {
-  id: string;
-  name: string;
-  area: string;
 };
 
 export default function QuickLogModal({
@@ -22,14 +24,12 @@ export default function QuickLogModal({
   onClose,
   accountId,
   accountName,
+  contacts,
   onSaved,
 }: Props) {
-  const [channel, setChannel] = useState<"call" | "whatsapp" | "email">("call");
-
-  // NEW: contacts dropdown
-  const [contacts, setContacts] = useState<Contact[]>([]);
   const [contactId, setContactId] = useState<string>("");
 
+  const [channel, setChannel] = useState<"call" | "whatsapp" | "email">("call");
   const [summary, setSummary] = useState("");
   const [nextStep, setNextStep] = useState("");
   const [nextStepDate, setNextStepDate] = useState(() => {
@@ -45,58 +45,27 @@ export default function QuickLogModal({
   const [riskR, setRiskR] = useState(false);
   const [riskC, setRiskC] = useState(false);
 
-  const [personalHook, setPersonalHook] = useState("");
-  const [businessHook, setBusinessHook] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
-  // NEW: load contacts for this account when modal opens / account changes
-  useEffect(() => {
-    (async () => {
-      if (!open || !accountId) return;
-
-      const { data, error } = await supabase
-        .from("contacts")
-        .select("id,name,area")
-        .eq("account_id", accountId)
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        // don't block the modal — just show no contacts
-        setContacts([]);
-        return;
-      }
-
-      setContacts((data as Contact[]) ?? []);
-      setContactId(""); // reset selection when switching account
-    })();
-  }, [accountId, open]);
+  const contactOptions = useMemo(() => {
+    return (contacts ?? []).slice().sort((a, b) => a.name.localeCompare(b.name));
+  }, [contacts]);
 
   if (!open) return null;
 
   async function save() {
     setMsg(null);
 
-    if (!summary.trim()) {
-      setMsg("Summary is required.");
-      return;
-    }
-    if (!nextStep.trim()) {
-      setMsg("Next step is required.");
-      return;
-    }
-    if (!nextStepDate) {
-      setMsg("Next step date is required.");
-      return;
-    }
+    if (!summary.trim()) return setMsg("Summary is required.");
+    if (!nextStep.trim()) return setMsg("Next step is required.");
+    if (!nextStepDate) return setMsg("Next step date is required.");
 
     setLoading(true);
     try {
-      // 1) create interaction (requires next step + date)
       const { error: interr } = await supabase.from("interactions").insert({
         account_id: accountId,
-        contact_id: contactId ? contactId : null, // NEW
+        contact_id: contactId ? contactId : null,
         channel,
         summary: summary.trim(),
         objection_tag: objectionTag.trim() ? objectionTag.trim() : null,
@@ -110,26 +79,19 @@ export default function QuickLogModal({
 
       if (interr) throw interr;
 
-      // 2) update account last_interaction_at and optionally hooks
-      const updatePayload: any = {
-        last_interaction_at: new Date().toISOString(),
-      };
-      if (personalHook.trim()) updatePayload.personal_hook = personalHook.trim();
-      if (businessHook.trim()) updatePayload.business_hook = businessHook.trim();
-
       const { error: accErr } = await supabase
         .from("accounts")
-        .update(updatePayload)
+        .update({ last_interaction_at: new Date().toISOString() })
         .eq("id", accountId);
 
       if (accErr) throw accErr;
 
-      // done
       onSaved();
       onClose();
 
-      // reset minimal fields
+      // reset
       setContactId("");
+      setChannel("call");
       setSummary("");
       setNextStep("");
       setObjectionTag("");
@@ -137,8 +99,6 @@ export default function QuickLogModal({
       setRiskT(false);
       setRiskR(false);
       setRiskC(false);
-      setPersonalHook("");
-      setBusinessHook("");
     } catch (e: any) {
       setMsg(e?.message ?? "Could not save");
     } finally {
@@ -163,25 +123,17 @@ export default function QuickLogModal({
         onClick={(e) => e.stopPropagation()}
         style={{
           width: "100%",
-          maxWidth: 520,
+          maxWidth: 560,
           borderRadius: 16,
           border: "1px solid rgba(255,255,255,0.14)",
           background: "rgba(20,20,24,0.98)",
           padding: 16,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: 12,
-          }}
-        >
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
           <div>
             <div style={{ fontWeight: 900, fontSize: 16 }}>Quick Log</div>
-            <div style={{ marginTop: 4, opacity: 0.75, fontSize: 13 }}>
-              {accountName}
-            </div>
+            <div style={{ marginTop: 4, opacity: 0.75, fontSize: 13 }}>{accountName}</div>
           </div>
           <button
             onClick={onClose}
@@ -201,6 +153,34 @@ export default function QuickLogModal({
 
         <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
           <label>
+            <div style={{ fontSize: 12, opacity: 0.7 }}>
+              Contact (optional, recommended)
+            </div>
+            <select
+              value={contactId}
+              onChange={(e) => setContactId(e.target.value)}
+              style={{
+                width: "100%",
+                padding: 12,
+                borderRadius: 12,
+                border: "1px solid rgba(255,255,255,0.15)",
+                background: "rgba(255,255,255,0.06)",
+                color: "white",
+                outline: "none",
+              }}
+            >
+              <option value="">— none —</option>
+              {contactOptions.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                  {c.area ? ` (${c.area})` : ""}
+                  {c.preferred_channel ? ` • ${c.preferred_channel}` : ""}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label>
             <div style={{ fontSize: 12, opacity: 0.7 }}>Channel</div>
             <select
               value={channel}
@@ -218,31 +198,6 @@ export default function QuickLogModal({
               <option value="call">Call</option>
               <option value="whatsapp">WhatsApp</option>
               <option value="email">Email</option>
-            </select>
-          </label>
-
-          {/* NEW: contact dropdown */}
-          <label>
-            <div style={{ fontSize: 12, opacity: 0.7 }}>Contact (optional)</div>
-            <select
-              value={contactId}
-              onChange={(e) => setContactId(e.target.value)}
-              style={{
-                width: "100%",
-                padding: 12,
-                borderRadius: 12,
-                border: "1px solid rgba(255,255,255,0.15)",
-                background: "rgba(255,255,255,0.06)",
-                color: "white",
-                outline: "none",
-              }}
-            >
-              <option value="">— No specific person —</option>
-              {contacts.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name} ({c.area})
-                </option>
-              ))}
             </select>
           </label>
 
@@ -266,17 +221,9 @@ export default function QuickLogModal({
             />
           </label>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 180px",
-              gap: 10,
-            }}
-          >
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 180px", gap: 10 }}>
             <label>
-              <div style={{ fontSize: 12, opacity: 0.7 }}>
-                Next step (required)
-              </div>
+              <div style={{ fontSize: 12, opacity: 0.7 }}>Next step (required)</div>
               <input
                 value={nextStep}
                 onChange={(e) => setNextStep(e.target.value)}
@@ -376,44 +323,6 @@ export default function QuickLogModal({
                 onChange={(e) => setRiskC(e.target.checked)}
               />
               <span style={{ fontSize: 13, opacity: 0.9 }}>Risk: Commercial</span>
-            </label>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-            <label>
-              <div style={{ fontSize: 12, opacity: 0.7 }}>Personal hook (optional)</div>
-              <input
-                value={personalHook}
-                onChange={(e) => setPersonalHook(e.target.value)}
-                placeholder="e.g., kid birthday, travel"
-                style={{
-                  width: "100%",
-                  padding: 12,
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  background: "rgba(255,255,255,0.06)",
-                  color: "white",
-                  outline: "none",
-                }}
-              />
-            </label>
-
-            <label>
-              <div style={{ fontSize: 12, opacity: 0.7 }}>Business hook (optional)</div>
-              <input
-                value={businessHook}
-                onChange={(e) => setBusinessHook(e.target.value)}
-                placeholder="e.g., new launch, tender"
-                style={{
-                  width: "100%",
-                  padding: 12,
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  background: "rgba(255,255,255,0.06)",
-                  color: "white",
-                  outline: "none",
-                }}
-              />
             </label>
           </div>
 
