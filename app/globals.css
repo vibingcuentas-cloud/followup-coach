@@ -111,7 +111,7 @@ textarea {
 /* Top bar */
 .topbar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 18px;
@@ -140,11 +140,7 @@ textarea {
 /* Card (premium glass) */
 .card {
   border: 1px solid rgba(255, 255, 255, 0.10);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.06),
-    rgba(255, 255, 255, 0.03)
-  );
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
   border-radius: var(--radius);
   padding: 14px;
   box-shadow:
@@ -228,7 +224,7 @@ textarea {
   margin-bottom: 6px;
 }
 
-/* Grid helpers */
+/* Layout helpers */
 .grid {
   display: grid;
   gap: 10px;
@@ -238,6 +234,7 @@ textarea {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .pill {
@@ -258,6 +255,7 @@ textarea {
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .seg {
@@ -288,7 +286,7 @@ textarea {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 }
 
-/* Segmented buttons used in account detail topbar */
+/* Account detail segmented buttons */
 .segBtn {
   height: 38px;
   border-radius: 12px;
@@ -310,11 +308,7 @@ textarea {
 /* -------------------- Today / Account Cards (premium) -------------------- */
 .accCard {
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.035),
-    rgba(255, 255, 255, 0.02)
-  );
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.02));
   border-radius: 22px;
   padding: 14px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
@@ -504,6 +498,165 @@ textarea {
   opacity: 0.82;
 }
 
-.subtle {
-  color: var(--muted);
+/* -------------------- MOBILE FIXES (Account page + global) -------------------- */
+@media (max-width: 720px) {
+  .app-shell {
+    padding: 18px 14px 80px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .h1 {
+    font-size: 24px;
+  }
+
+  .h2 {
+    font-size: 20px;
+  }
+
+  /* Make header action rows behave */
+  .topbar .row {
+    justify-content: flex-start !important;
+  }
+
+  .segmented {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Buttons become more touch friendly / wrap nicely */
+  .btn {
+    height: 44px;
+    border-radius: 14px;
+  }
+
+  /* If a row contains many buttons, let them wrap and breathe */
+  .row {
+    gap: 10px;
+  }
+
+  /* Cards */
+  .card {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  /* Account cards */
+  .accCardRow {
+    grid-template-columns: 64px 1fr;
+    gap: 12px;
+  }
+
+  .scoreCircle {
+    width: 64px;
+    height: 64px;
+  }
+
+  .scoreNum {
+    font-size: 18px;
+  }
+
+  .accTitleRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .accActions {
+    width: 100%;
+  }
+
+  /* Actions become full width with two buttons */
+  .accActions .btn {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .accMeta,
+  .accRecMeta {
+    margin-left: 8px;
+  }
+
+  /* Prevent "left column" look from any inline blocks */
+  .accSubItem,
+  .accMissing {
+    white-space: normal;
+    line-height: 1.35;
+  }
+
+  /* Recommended box: more vertical rhythm */
+  .accRecBox {
+    padding: 12px;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 380px) {
+  .app-shell {
+    padding: 16px 12px 80px;
+  }
+
+  .seg {
+    padding: 0 10px;
+  }
+
+  .accCardRow {
+    grid-template-columns: 58px 1fr;
+  }
+
+  .scoreCircle {
+    width: 58px;
+    height: 58px;
+  }
+}
+
+/* iOS safe area */
+.app-shell {
+  padding-top: calc(18px + env(safe-area-inset-top));
+  padding-left: calc(14px + env(safe-area-inset-left));
+  padding-right: calc(14px + env(safe-area-inset-right));
+}
+
+/* Title block helper */
+.topbarTitle {
+  min-width: 0;
+}
+
+.topbarTitle h1 {
+  word-break: break-word;
+}
+
+/* Mobile: title arriba, acciones abajo, full width */
+@media (max-width: 720px) {
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .topbarTitle {
+    order: 1;
+  }
+
+  .topbarActions {
+    order: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+  }
+
+  /* Que los botones no “aplasten” el título */
+  .topbarActions .btn {
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .topbarActions .segmented {
+    width: 100%;
+  }
 }
