@@ -3,13 +3,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
+import QuickLogModal from "../../components/QuickLogModal";
 
 export const dynamic = "force-dynamic";
+
+type Tier = "A" | "B" | "C";
+type Channel = "call" | "whatsapp" | "email";
+type Area = "Marketing" | "R&D" | "Procurement" | "Commercial" | "Directors";
 
 type Account = {
   id: string;
   name: string;
-  tier: "A" | "B" | "C";
+  tier: Tier;
   country: string | null;
   value_usd: number | null;
   last_interaction_at: string | null;
@@ -20,24 +25,15 @@ type Contact = {
   id: string;
   account_id: string;
   name: string;
-  area: "Marketing" | "R&D" | "Procurement" | "Commercial" | "Directors" | null;
-  preferred_channel: "call" | "whatsapp" | "email" | null;
+  email: string | null;
+  area: Area;
+  preferred_channel: Channel | null;
   personal_hook: string | null;
-};
-
-type Interaction = {
-  id: string;
-  account_id: string;
-  contact_id: string | null;
+  last_touch_at: string | null;
   created_at: string;
 };
 
-function daysSince(iso: string | null) {
-  if (!iso) return null;
-  const t = new Date(iso).getTime();
-  const diff = Math.floor((Date.now() - t) / (1000 * 60 * 60 * 24));
-  return diff < 0 ? 0 : diff;
-}
+const AREAS: Area[] = ["Marketing", "R&D", "Procurement", "Commercial", "Directors"];
 
 function fmtMoney(n: number | null) {
   if (n == null || Number.isNaN(n)) return "—";
@@ -52,17 +48,65 @@ function fmtMoney(n: number | null) {
   }
 }
 
-const cadenceByTier: Record<Account["tier"], number> = { A: 7, B: 14, C: 30 };
+function daysSince(iso: string | null) {
+  if (!iso) return null;
+  const d = new Date(iso).getTime();
+  const now = Date.now();
+  const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24));
+  return diff < 0 ? 0 : diff;
+}
 
-const areaWeight: Record<string, number> = {
-  Directors: 5,
-  "R&D": 4,
-  Procurement: 3,
-  Commercial: 3,
-  Marketing: 2,
-};
+function cadenceDays(tier: Tier) {
+  if (tier === "A") return 7;
+  if (tier === "B") return 14;
+  return 30;
+}
 
-const tierWeight: Record<Account["tier"], number> = { A: 3, B: 2, C: 1 };
+function isAccountDue(a: Account) {
+  const d = daysSince(a.last_interaction_at);
+  const limit = cadenceDays(a.tier);
+  // si nunca hubo interacción -> due
+  if (d == null) return true;
+  return d > limit;
+}
+
+function pickRecommendedContact(contacts: Contact[]) {
+  // prioridad: last_touch_at null (never) primero,
+  // si no, el que tenga más días desde el último toque.
+  if (!contacts || contacts.length === 0) return null;
+
+  const sorted = [...contacts].sort((a, b) => {
+    const da = daysSince(a.last_touch_at);
+    const db = daysSince(b.last_touch_at);
+
+    // never primero
+    const aNever = da == null;
+    const bNever = db == null;
+    if (aNever && !bNever) return -1;
+    if (!aNever && bNever) return 1;
+
+    // más viejo (más días) primero
+    const va = da ?? -1;
+    const vb = db ?? -1;
+    return vb - va;
+  });
+
+  return sorted[0];
+}
+
+function coverageByArea(contacts: Contact[]) {
+  const map: Record<Area, number> = {
+    Marketing: 0,
+    "R&D": 0,
+    Procurement: 0,
+    Commercial: 0,
+    Directors: 0,
+  };
+  for (const c of contacts ?? []) {
+    if (map[c.area] != null) map[c.area] += 1;
+  }
+  return map;
+}
 
 export default function TodayPage() {
   const router = useRouter();
@@ -72,10 +116,14 @@ export default function TodayPage() {
 
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
-  const [interactions, setInteractions] = useState<Interaction[]>([]);
 
-  const [search, setSearch] = useState("");
-  const [tierFilter, setTierFilter] = useState<"all" | "A" | "B" | "C">("all");
+  // filters
+  const [q, setQ] = useState("");
+  const [tierFilter, setTierFilter] = useState<"all" | Tier>("all");
+
+  // quick log modal
+  const [qlOpen, setQlOpen] = useState(false);
+  const [qlAccount, setQlAccount] = useState<Account | null>(null);
 
   async function requireUser() {
     const { data, error } = await supabase.auth.getUser();
@@ -84,7 +132,7 @@ export default function TodayPage() {
     return data.user;
   }
 
-  async function load() {
+  async function loadAll() {
     setMsg(null);
     setLoading(true);
     try {
@@ -96,45 +144,42 @@ export default function TodayPage() {
         .order("value_usd", { ascending: false, nullsFirst: false });
 
       if (accErr) throw accErr;
-      const accs = (acc ?? []) as Account[];
-      setAccounts(accs);
 
-      const accIds = accs.map((a) => a.id);
-      if (accIds.length === 0) {
+      const accList = (acc ?? []) as Account[];
+      setAccounts(accList);
+
+      if (accList.length === 0) {
         setContacts([]);
-        setInteractions([]);
         return;
       }
 
-      const { data: cons, error: conErr } = await supabase
+      const ids = accList.map((a) => a.id);
+
+      const { data: cts, error: cErr } = await supabase
         .from("contacts")
-        .select("id,account_id,name,area,preferred_channel,personal_hook")
-        .in("account_id", accIds);
+        .select(
+          "id,account_id,name,email,area,preferred_channel,personal_hook,last_touch_at,created_at"
+        )
+        .in("account_id", ids);
 
-      if (conErr) throw conErr;
-      setContacts((cons ?? []) as Contact[]);
+      if (cErr) throw cErr;
 
-      const { data: ints, error: intErr } = await supabase
-        .from("interactions")
-        .select("id,account_id,contact_id,created_at")
-        .in("account_id", accIds)
-        .order("created_at", { ascending: false })
-        .limit(500);
-
-      if (intErr) throw intErr;
-      setInteractions((ints ?? []) as Interaction[]);
+      setContacts((cts ?? []) as Contact[]);
     } catch (e: any) {
-      setMsg(e?.message ?? "Could not load");
-      if ((e?.message ?? "").toLowerCase().includes("not signed")) {
+      // si no hay sesión => login
+      const m = e?.message ?? "Could not load";
+      if (String(m).toLowerCase().includes("not signed")) {
         router.push("/login");
+        return;
       }
+      setMsg(m);
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    load();
+    loadAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -142,6 +187,39 @@ export default function TodayPage() {
     await supabase.auth.signOut();
     router.push("/login");
   }
+
+  const contactsByAccount = useMemo(() => {
+    const map = new Map<string, Contact[]>();
+    for (const c of contacts) {
+      if (!map.has(c.account_id)) map.set(c.account_id, []);
+      map.get(c.account_id)!.push(c);
+    }
+    return map;
+  }, [contacts]);
+
+  const filteredAccounts = useMemo(() => {
+    const qq = q.trim().toLowerCase();
+    return accounts
+      .filter((a) => {
+        if (tierFilter !== "all" && a.tier !== tierFilter) return false;
+        if (!qq) return true;
+        return (
+          a.name.toLowerCase().includes(qq) ||
+          (a.country ?? "").toLowerCase().includes(qq)
+        );
+      })
+      .map((a) => {
+        const accContacts = contactsByAccount.get(a.id) ?? [];
+        const rec = pickRecommendedContact(accContacts);
+        const cov = coverageByArea(accContacts);
+        const missing = AREAS.filter((ar) => (cov[ar] ?? 0) === 0);
+        return { a, accContacts, rec, cov, missing };
+      });
+  }, [accounts, contactsByAccount, q, tierFilter]);
+
+  const mustContact = useMemo(() => {
+    return filteredAccounts.filter(({ a }) => isAccountDue(a));
+  }, [filteredAccounts]);
 
   const headerActions = (
     <div className="row" style={{ gap: 10, flexWrap: "wrap" }}>
@@ -151,7 +229,7 @@ export default function TodayPage() {
       <button className="btn" onClick={() => router.push("/weekly")}>
         Weekly Pack
       </button>
-      <button className="btn" onClick={load} disabled={loading}>
+      <button className="btn" onClick={loadAll} disabled={loading}>
         Refresh
       </button>
       <button className="btn btnPrimary" onClick={signOut}>
@@ -160,94 +238,24 @@ export default function TodayPage() {
     </div>
   );
 
-  // Build maps
-  const contactsByAccount = useMemo(() => {
-    const m = new Map<string, Contact[]>();
-    for (const c of contacts) {
-      const arr = m.get(c.account_id) ?? [];
-      arr.push(c);
-      m.set(c.account_id, arr);
-    }
-    return m;
-  }, [contacts]);
-
-  const lastTouchByContact = useMemo(() => {
-    const m = new Map<string, string>(); // contact_id -> latest created_at
-    for (const i of interactions) {
-      if (!i.contact_id) continue;
-      if (!m.has(i.contact_id)) m.set(i.contact_id, i.created_at);
-    }
-    return m;
-  }, [interactions]);
-
-  function recommendedContact(a: Account): { contact: Contact | null; why: string } {
-    const list = contactsByAccount.get(a.id) ?? [];
-    if (list.length === 0) return { contact: null, why: "No contacts yet" };
-
-    let best: Contact | null = null;
-    let bestScore = -Infinity;
-
-    for (const c of list) {
-      const lastIso = c.id ? (lastTouchByContact.get(c.id) ?? null) : null;
-      const d = daysSince(lastIso); // null means never
-
-      const daysComponent = d == null ? 60 : Math.min(d, 60); // cap
-      const areaComponent = areaWeight[c.area ?? ""] ?? 2;
-      const tierComponent = tierWeight[a.tier] ?? 1;
-
-      // Bonus si la cuenta está "due" por cadence
-      const acctDays = daysSince(a.last_interaction_at);
-      const cadence = cadenceByTier[a.tier];
-      const dueBonus =
-        acctDays == null ? 2 : acctDays >= cadence ? 2 : acctDays >= cadence - 2 ? 1 : 0;
-
-      // Score combinado (simple y robusto)
-      const score =
-        daysComponent * 1.0 + areaComponent * 4.0 + tierComponent * 3.0 + dueBonus * 5.0;
-
-      if (score > bestScore) {
-        bestScore = score;
-        best = c;
-      }
-    }
-
-    // Explain briefly
-    const lastIso = best?.id ? (lastTouchByContact.get(best.id) ?? null) : null;
-    const d = daysSince(lastIso);
-    const lastTxt = d == null ? "never" : d === 0 ? "today" : `${d}d`;
-    const why = `${best?.area ?? "—"} • preferred: ${best?.preferred_channel ?? "—"} • last: ${lastTxt}`;
-
-    return { contact: best, why };
+  function openQuickLog(acc: Account) {
+    setQlAccount(acc);
+    setQlOpen(true);
   }
 
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return accounts.filter((a) => {
-      if (tierFilter !== "all" && a.tier !== tierFilter) return false;
-      if (!q) return true;
-      return (
-        a.name.toLowerCase().includes(q) || (a.country ?? "").toLowerCase().includes(q)
-      );
-    });
-  }, [accounts, search, tierFilter]);
+  const qlContacts = useMemo(() => {
+    if (!qlAccount) return [];
+    return contactsByAccount.get(qlAccount.id) ?? [];
+  }, [qlAccount, contactsByAccount]);
 
-  const dueSoon = useMemo(() => {
-    return filtered.filter((a) => {
-      const d = daysSince(a.last_interaction_at);
-      const cadence = cadenceByTier[a.tier];
-      if (d == null) return true; // never = due
-      return d >= cadence;
-    });
-  }, [filtered]);
-
-  const all = useMemo(() => filtered, [filtered]);
+  const cadenceText = "A=7d • B=14d • C=30d";
 
   return (
     <main>
       <div className="topbar">
         <div>
           <h1 className="h1">Today</h1>
-          <div className="subtle">Search, filter, then execute. A=7d • B=14d • C=30d</div>
+          <div className="subtle">Search, filter, then execute. {cadenceText}</div>
         </div>
         {headerActions}
       </div>
@@ -258,22 +266,22 @@ export default function TodayPage() {
         </div>
       )}
 
-      <div className="card">
+      <div className="card" style={{ marginBottom: 12 }}>
         <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr auto" }}>
           <label style={{ display: "grid", gap: 6 }}>
             <div className="label">Search</div>
             <input
               className="field"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
               placeholder="Search accounts (name / country)"
             />
           </label>
 
           <button
             className="btn"
-            onClick={() => setSearch("")}
-            style={{ height: 44, borderRadius: 16 }}
+            onClick={() => setQ("")}
+            style={{ height: 44, borderRadius: 16, alignSelf: "end" }}
           >
             Clear
           </button>
@@ -281,210 +289,251 @@ export default function TodayPage() {
 
         <div style={{ height: 10 }} />
 
-        <div className="row" style={{ gap: 10, flexWrap: "wrap" }}>
-          <div style={{ fontSize: 12, opacity: 0.7, marginRight: 6 }}>Tier</div>
-          {(["all", "A", "B", "C"] as const).map((t) => (
-            <button
-              key={t}
-              className="btn"
-              onClick={() => setTierFilter(t)}
-              style={{
-                height: 38,
-                borderRadius: 14,
-                opacity: tierFilter === t ? 1 : 0.8,
-              }}
-            >
-              {t === "all" ? "All" : t}
-            </button>
-          ))}
-          <div style={{ marginLeft: "auto", fontSize: 12, opacity: 0.7 }}>
-            Showing <b>{filtered.length}</b> accounts
+        <div className="row" style={{ justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+          <div>
+            <div className="label" style={{ marginBottom: 6 }}>
+              Tier
+            </div>
+            <div className="segmented">
+              <button
+                className={`seg ${tierFilter === "all" ? "active" : ""}`}
+                onClick={() => setTierFilter("all")}
+              >
+                All
+              </button>
+              <button
+                className={`seg ${tierFilter === "A" ? "active" : ""}`}
+                onClick={() => setTierFilter("A")}
+              >
+                A
+              </button>
+              <button
+                className={`seg ${tierFilter === "B" ? "active" : ""}`}
+                onClick={() => setTierFilter("B")}
+              >
+                B
+              </button>
+              <button
+                className={`seg ${tierFilter === "C" ? "active" : ""}`}
+                onClick={() => setTierFilter("C")}
+              >
+                C
+              </button>
+            </div>
+          </div>
+
+          <div className="subtle" style={{ textAlign: "right" }}>
+            <div>Showing</div>
+            <div style={{ fontWeight: 900, fontSize: 20, opacity: 0.95 }}>
+              {filteredAccounts.length} accounts
+            </div>
           </div>
         </div>
       </div>
 
-      <div style={{ height: 12 }} />
+      {/* MUST CONTACT */}
+      <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+        <h2 className="h2">Must contact</h2>
+        <div className="pill" style={{ opacity: 0.9 }}>
+          {mustContact.length}
+        </div>
+      </div>
+
+      <div style={{ height: 10 }} />
 
       {loading && (
         <div className="card">
-          <div style={{ fontSize: 13, opacity: 0.85 }}>Loading...</div>
+          <div className="subtle">Loading...</div>
         </div>
       )}
 
-      {!loading && (
-        <>
-          <div
-            className="row"
-            style={{ justifyContent: "space-between", margin: "8px 0" }}
-          >
-            <div style={{ fontWeight: 900, fontSize: 16 }}>Must contact</div>
-            <div className="pill">{dueSoon.length}</div>
-          </div>
+      {!loading && mustContact.length === 0 && (
+        <div className="card">
+          <div style={{ fontSize: 13, opacity: 0.85 }}>No accounts due soon.</div>
+        </div>
+      )}
 
-          {dueSoon.length === 0 ? (
-            <div className="card">
-              <div style={{ fontSize: 13, opacity: 0.85 }}>No accounts due soon.</div>
-            </div>
-          ) : (
-            <div style={{ display: "grid", gap: 12 }}>
-              {dueSoon.map((a) => {
-                const acctDays = daysSince(a.last_interaction_at);
-                const lastTouch =
-                  acctDays == null ? "never" : acctDays === 0 ? "today" : `${acctDays}d`;
+      <div style={{ display: "grid", gap: 12 }}>
+        {!loading &&
+          mustContact.map(({ a, accContacts, rec, missing }) => {
+            const d = daysSince(a.last_interaction_at);
+            const lastTouch = d == null ? "never" : d === 0 ? "today" : `${d}d`;
+            const missingText =
+              missing.length === 0 ? null : `Coverage gap: ${missing.join(", ")}`;
 
-                const rec = recommendedContact(a);
+            const recDays = rec ? daysSince(rec.last_touch_at) : null;
+            const recLast = !rec ? "—" : recDays == null ? "never" : recDays === 0 ? "today" : `${recDays}d`;
 
-                return (
-                  <div key={a.id} className="card">
-                    <div
-                      className="row"
-                      style={{ justifyContent: "space-between", gap: 12 }}
-                    >
-                      <div>
+            return (
+              <div className="card" key={a.id}>
+                <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontWeight: 900, fontSize: 18 }}>
+                      {a.name}{" "}
+                      <span style={{ fontWeight: 700, opacity: 0.7, fontSize: 14 }}>
+                        {a.tier} • {a.country ?? "—"}
+                      </span>{" "}
+                      <span className="pill" style={{ marginLeft: 8 }}>
+                        due
+                      </span>
+                    </div>
+
+                    <div className="subtle" style={{ marginTop: 6 }}>
+                      Value: {fmtMoney(a.value_usd)} • Last touch: {lastTouch}
+                    </div>
+
+                    <div style={{ height: 8 }} />
+
+                    {missingText ? (
+                      <div className="subtle" style={{ opacity: 0.9 }}>
+                        {missingText}
+                      </div>
+                    ) : (
+                      <div className="subtle">Coverage: ok</div>
+                    )}
+
+                    <div style={{ height: 10 }} />
+
+                    {/* Recommended contact (Intimacy) */}
+                    {accContacts.length === 0 ? (
+                      <div style={{ fontSize: 13, opacity: 0.9 }}>
+                        No contacts yet — add them inside the account.
+                      </div>
+                    ) : rec ? (
+                      <div style={{ fontSize: 13, opacity: 0.95 }}>
                         <div style={{ fontWeight: 900, fontSize: 18 }}>
-                          {a.name}{" "}
+                          {rec.name}{" "}
                           <span style={{ fontWeight: 700, opacity: 0.7, fontSize: 14 }}>
-                            {a.tier} • {a.country ?? "—"}
-                          </span>{" "}
-                          <span className="pill" style={{ marginLeft: 8 }}>
-                            due
+                            ({rec.area}) — {recLast}
                           </span>
                         </div>
-
-                        <div style={{ marginTop: 8, opacity: 0.8, fontSize: 13 }}>
-                          Value: {fmtMoney(a.value_usd)} • Last touch: {lastTouch}
-                        </div>
-
-                        <div style={{ marginTop: 10, fontSize: 13, opacity: 0.9 }}>
-                          <div style={{ opacity: 0.7, fontSize: 12 }}>
-                            Recommended contact
-                          </div>
-                          {rec.contact ? (
-                            <>
-                              <div
-                                style={{ fontWeight: 900, fontSize: 16, marginTop: 4 }}
-                              >
-                                {rec.contact.name}{" "}
-                                <span
-                                  style={{ fontWeight: 700, opacity: 0.7, fontSize: 13 }}
-                                >
-                                  ({rec.contact.area ?? "—"})
-                                </span>
-                              </div>
-                              <div style={{ marginTop: 4, opacity: 0.8 }}>
-                                {rec.why}
-                                {rec.contact.personal_hook ? (
-                                  <> • hook: {rec.contact.personal_hook}</>
-                                ) : null}
-                              </div>
-                            </>
-                          ) : (
-                            <div style={{ marginTop: 4, opacity: 0.8 }}>
-                              No contacts yet — add them inside the account.
-                            </div>
-                          )}
+                        <div className="subtle" style={{ marginTop: 4 }}>
+                          Preferred: {rec.preferred_channel ?? "—"}
+                          {rec.personal_hook ? ` • Hook: ${rec.personal_hook}` : ""}
                         </div>
                       </div>
-
-                      <div className="row" style={{ gap: 10, alignItems: "center" }}>
-                        <button
-                          className="btn"
-                          onClick={() => router.push(`/accounts/${a.id}`)}
-                          style={{ height: 40, borderRadius: 14 }}
-                        >
-                          Open
-                        </button>
-                        <button
-                          className="btn btnPrimary"
-                          onClick={() => router.push(`/accounts/${a.id}`)}
-                          style={{ height: 40, borderRadius: 14 }}
-                        >
-                          Quick log
-                        </button>
-                      </div>
-                    </div>
+                    ) : (
+                      <div className="subtle">No recommended contact.</div>
+                    )}
                   </div>
-                );
-              })}
-            </div>
-          )}
 
-          <div style={{ height: 16 }} />
-
-          <div
-            className="row"
-            style={{ justifyContent: "space-between", margin: "8px 0" }}
-          >
-            <div style={{ fontWeight: 900, fontSize: 16 }}>All accounts</div>
-            <div className="pill">{all.length}</div>
-          </div>
-
-          <div style={{ display: "grid", gap: 12 }}>
-            {all.map((a) => {
-              const acctDays = daysSince(a.last_interaction_at);
-              const cadence = cadenceByTier[a.tier];
-              const status =
-                acctDays == null ? "never" : acctDays >= cadence ? "due" : "ok";
-
-              const rec = recommendedContact(a);
-
-              return (
-                <div key={a.id} className="card">
-                  <div
-                    className="row"
-                    style={{ justifyContent: "space-between", gap: 12 }}
-                  >
-                    <div>
-                      <div style={{ fontWeight: 900, fontSize: 18 }}>
-                        {a.name}{" "}
-                        <span style={{ fontWeight: 700, opacity: 0.7, fontSize: 14 }}>
-                          {a.tier} • {a.country ?? "—"}
-                        </span>{" "}
-                        <span className="pill" style={{ marginLeft: 8 }}>
-                          {status}
-                        </span>
-                      </div>
-
-                      <div style={{ marginTop: 8, opacity: 0.8, fontSize: 13 }}>
-                        Value: {fmtMoney(a.value_usd)} • Last touch:{" "}
-                        {acctDays == null ? "never" : `${acctDays}d`} • within {cadence}d
-                      </div>
-
-                      <div style={{ marginTop: 10, fontSize: 13, opacity: 0.9 }}>
-                        <div style={{ opacity: 0.7, fontSize: 12 }}>
-                          Recommended contact
-                        </div>
-                        {rec.contact ? (
-                          <div style={{ marginTop: 4, fontWeight: 900 }}>
-                            {rec.contact.name}{" "}
-                            <span style={{ fontWeight: 700, opacity: 0.7 }}>
-                              ({rec.contact.area ?? "—"}) •{" "}
-                              {rec.contact.preferred_channel ?? "—"}
-                            </span>
-                          </div>
-                        ) : (
-                          <div style={{ marginTop: 4, opacity: 0.8 }}>
-                            No contacts yet.
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="row" style={{ gap: 10, alignItems: "center" }}>
-                      <button
-                        className="btn"
-                        onClick={() => router.push(`/accounts/${a.id}`)}
-                        style={{ height: 40, borderRadius: 14 }}
-                      >
-                        Open
-                      </button>
-                    </div>
+                  <div className="row" style={{ gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+                    <button
+                      className="btn"
+                      onClick={() => router.push(`/accounts/${a.id}`)}
+                      style={{ height: 40, borderRadius: 14 }}
+                    >
+                      Open
+                    </button>
+                    <button
+                      className="btn btnPrimary"
+                      onClick={() => openQuickLog(a)}
+                      style={{ height: 40, borderRadius: 14 }}
+                      disabled={accContacts.length === 0}
+                      title={accContacts.length === 0 ? "Add a contact first" : "Quick log"}
+                    >
+                      Quick log
+                    </button>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        </>
+              </div>
+            );
+          })}
+      </div>
+
+      <div style={{ height: 18 }} />
+
+      {/* ALL ACCOUNTS */}
+      <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+        <h2 className="h2">All accounts</h2>
+        <div className="pill" style={{ opacity: 0.9 }}>
+          {filteredAccounts.length}
+        </div>
+      </div>
+
+      <div style={{ height: 10 }} />
+
+      <div style={{ display: "grid", gap: 12 }}>
+        {!loading &&
+          filteredAccounts.map(({ a, accContacts, rec }) => {
+            const d = daysSince(a.last_interaction_at);
+            const lastTouch = d == null ? "never" : d === 0 ? "today" : `${d}d`;
+
+            const due = isAccountDue(a);
+            const badge = d == null ? "never" : due ? "due" : "ok";
+
+            const recDays = rec ? daysSince(rec.last_touch_at) : null;
+            const recLast = !rec ? "—" : recDays == null ? "never" : recDays === 0 ? "today" : `${recDays}d`;
+
+            return (
+              <div className="card" key={a.id}>
+                <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontWeight: 900, fontSize: 18 }}>
+                      {a.name}{" "}
+                      <span style={{ fontWeight: 700, opacity: 0.7, fontSize: 14 }}>
+                        {a.tier} • {a.country ?? "—"}
+                      </span>{" "}
+                      <span className="pill" style={{ marginLeft: 8 }}>
+                        {badge}
+                      </span>
+                    </div>
+
+                    <div className="subtle" style={{ marginTop: 6 }}>
+                      Last touch: {lastTouch}
+                      {" • "}
+                      Contacts: {accContacts.length}
+                      {" • "}
+                      Value: {fmtMoney(a.value_usd)}
+                    </div>
+
+                    {rec ? (
+                      <div className="subtle" style={{ marginTop: 6 }}>
+                        Recommended: <span style={{ opacity: 0.95 }}>{rec.name}</span> ({rec.area}) —{" "}
+                        {recLast} • {rec.preferred_channel ?? "—"}
+                        {rec.personal_hook ? ` • Hook: ${rec.personal_hook}` : ""}
+                      </div>
+                    ) : (
+                      <div className="subtle" style={{ marginTop: 6 }}>
+                        Recommended: — (add contacts)
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="row" style={{ gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+                    <button
+                      className="btn"
+                      onClick={() => router.push(`/accounts/${a.id}`)}
+                      style={{ height: 40, borderRadius: 14 }}
+                    >
+                      Open
+                    </button>
+                    <button
+                      className="btn btnPrimary"
+                      onClick={() => openQuickLog(a)}
+                      style={{ height: 40, borderRadius: 14 }}
+                      disabled={accContacts.length === 0}
+                      title={accContacts.length === 0 ? "Add a contact first" : "Quick log"}
+                    >
+                      Quick log
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+      </div>
+
+      {/* Quick Log Modal */}
+      {qlAccount && (
+        <QuickLogModal
+          open={qlOpen}
+          onClose={() => setQlOpen(false)}
+          accountId={qlAccount.id}
+          accountName={qlAccount.name}
+          contacts={qlContacts}
+          onSaved={loadAll}
+        />
       )}
     </main>
   );
