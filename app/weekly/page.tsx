@@ -156,14 +156,24 @@ export default function WeeklyPage() {
         </div>
       </div>
 
-      {msg && <div className="card" style={{ marginBottom: 10 }}>{msg}</div>}
+      {msg && (
+        <div className="card" style={{ marginBottom: 10 }}>
+          {msg}
+        </div>
+      )}
 
       {loading ? (
         <div className="card">Loading…</div>
       ) : (
         <div className="card">
           <div className="label">Text (ready to copy)</div>
-          <textarea className="field" readOnly rows={24} value={weeklyText} style={{ resize: "vertical" }} />
+          <textarea
+            className="field"
+            readOnly
+            rows={24}
+            value={weeklyText}
+            style={{ resize: "vertical" }}
+          />
         </div>
       )}
     </main>

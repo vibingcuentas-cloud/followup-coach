@@ -85,34 +85,34 @@ export default function AccountsPage() {
 
   async function addAccount() {
     setMsg(null);
-  
+
     const nm = name.trim();
     if (!nm) return setMsg("Account name is required.");
-  
+
     const ctry = country.trim() ? country.trim() : null;
     const v = valueUsd.trim() ? Number(valueUsd.trim()) : null;
     if (valueUsd.trim() && (v == null || Number.isNaN(v))) {
       return setMsg("Value (USD) must be a number.");
     }
-  
+
     setLoading(true);
     try {
       const user = await requireUser();
-  
+
       const { error } = await supabase.from("accounts").insert({
         name: nm,
         tier,
         country: ctry,
         value_usd: v,
       });
-  
+
       if (error) throw error;
-  
+
       setName("");
       setTier("A");
       setCountry("");
       setValueUsd("");
-  
+
       await load();
     } catch (e: any) {
       setMsg(e?.message ?? "Could not add account");
@@ -267,24 +267,15 @@ export default function AccountsPage() {
 
           return (
             <div className="card" key={a.id}>
-              <div
-                className="row"
-                style={{ justifyContent: "space-between", gap: 12 }}
-              >
+              <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
                 <div>
                   <div style={{ fontWeight: 900, fontSize: 18 }}>
                     {a.name}{" "}
-                    <span
-                      style={{ fontWeight: 700, opacity: 0.7, fontSize: 14 }}
-                    >
+                    <span style={{ fontWeight: 700, opacity: 0.7, fontSize: 14 }}>
                       {a.tier} • {a.country ?? "—"}
                     </span>{" "}
                     <span className="pill" style={{ marginLeft: 8, opacity: 0.9 }}>
-                      {badge === "never"
-                        ? "never"
-                        : badge === "ok"
-                        ? "ok"
-                        : "due"}
+                      {badge === "never" ? "never" : badge === "ok" ? "ok" : "due"}
                     </span>
                   </div>
 

@@ -47,9 +47,7 @@ export default function LoginPage() {
 
       // SIGN UP
       const redirectTo =
-        typeof window !== "undefined"
-          ? `${window.location.origin}/today`
-          : undefined;
+        typeof window !== "undefined" ? `${window.location.origin}/today` : undefined;
 
       const { data, error } = await supabase.auth.signUp({
         email: e,
@@ -71,7 +69,9 @@ export default function LoginPage() {
         router.push("/today");
       } else {
         // Confirmation ON -> tell user to check email
-        setMsg("Account created. Check your email to confirm your account, then sign in.");
+        setMsg(
+          "Account created. Check your email to confirm your account, then sign in."
+        );
         setMode("signin");
       }
     } catch (e: any) {
@@ -84,7 +84,14 @@ export default function LoginPage() {
 
   return (
     <main style={{ padding: 24, maxWidth: 980, margin: "0 auto" }}>
-      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 12 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          gap: 12,
+        }}
+      >
         <div>
           <h1 style={{ fontSize: 34, fontWeight: 900, letterSpacing: -0.5 }}>
             {mode === "signin" ? "Sign in" : "Sign up"}
@@ -96,7 +103,10 @@ export default function LoginPage() {
 
         <div style={{ display: "flex", gap: 10 }}>
           <button
-            onClick={() => { setMsg(null); setMode("signin"); }}
+            onClick={() => {
+              setMsg(null);
+              setMode("signin");
+            }}
             style={{
               padding: "10px 12px",
               borderRadius: 14,
@@ -110,7 +120,10 @@ export default function LoginPage() {
             Sign in
           </button>
           <button
-            onClick={() => { setMsg(null); setMode("signup"); }}
+            onClick={() => {
+              setMsg(null);
+              setMode("signup");
+            }}
             style={{
               padding: "10px 12px",
               borderRadius: 14,
@@ -213,7 +226,8 @@ export default function LoginPage() {
         </div>
 
         <div style={{ marginTop: 12, fontSize: 12, opacity: 0.65 }}>
-          If Sign Up requires email confirmation, ensure Supabase “Site URL” and “Redirect URLs” include your Vercel domain.
+          If Sign Up requires email confirmation, ensure Supabase “Site URL” and “Redirect
+          URLs” include your Vercel domain.
         </div>
       </section>
     </main>
