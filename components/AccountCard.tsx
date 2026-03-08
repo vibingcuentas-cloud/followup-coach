@@ -73,6 +73,9 @@ export default function AccountCard({
   missingAreas,
   onOpen,
   onLog,
+  dueLabel,
+  urgencyReason,
+  compact = false,
   variant = "default",
 }: {
   account: Account;
@@ -80,6 +83,9 @@ export default function AccountCard({
   missingAreas: string[];
   onOpen: () => void;
   onLog: () => void;
+  dueLabel?: "overdue" | "due-soon" | "on-track" | "never";
+  urgencyReason?: string;
+  compact?: boolean;
   variant?: "default" | "must";
 }) {
   const due = isAccountDue(account);
@@ -88,9 +94,28 @@ export default function AccountCard({
 
   const lastTouch = fmtLastTouch(score.d);
   const recLastTouch = rec ? fmtLastTouch(daysSince(rec.last_touch_at)) : "—";
+  const reminderLabel =
+    dueLabel === "overdue"
+      ? "Overdue"
+      : dueLabel === "due-soon"
+        ? "Due today"
+        : dueLabel === "never"
+          ? "Never touched"
+          : "On track";
+  const phoneFromHook = rec?.personal_hook?.match(
+    /(?:phone|tel|whatsapp)\s*:\s*([+0-9()\-\s]{6,})/i
+  )?.[1]?.trim();
+  const normalizedPhone = phoneFromHook?.replace(/[^\d+]/g, "") ?? "";
+  const waHref = normalizedPhone ? `https://wa.me/${normalizedPhone.replace(/^\+/, "")}` : null;
+  const telHref = normalizedPhone ? `tel:${normalizedPhone}` : null;
+  const mailHref = rec?.email ? `mailto:${rec.email}` : null;
 
   return (
-    <div className={`accCard ${variant === "must" ? "accCardMust cardUrgent" : "cardElevated"}`}>
+    <div
+      className={`accCard ${variant === "must" ? "accCardMust cardUrgent" : "cardElevated"} ${
+        compact ? "accCompact" : ""
+      }`}
+    >
       <div className="accCardRow">
         <ScoreCircle score={score.total} status={scoreToneToStatus(score.tone)} />
 
@@ -103,6 +128,9 @@ export default function AccountCard({
               </span>
               <span className={`accBadge ${due ? "due" : "ok"}`}>
                 {due ? "due" : "ok"}
+              </span>
+              <span className="accBadge" style={{ marginLeft: 8, opacity: 0.9 }}>
+                {reminderLabel}
               </span>
             </div>
 
@@ -136,6 +164,7 @@ export default function AccountCard({
               <span className="dot">•</span>
               <span className="accSubItem">Last touch: {lastTouch}</span>
             </div>
+            {urgencyReason && <div className="accMissing">{urgencyReason}</div>}
 
             {missingAreas.length > 0 ? (
               <div className="accMissing">Missing: {missingAreas.join(", ")}</div>
@@ -161,6 +190,25 @@ export default function AccountCard({
                   Preferred: {channelLabel(rec.preferred_channel)}
                   {rec.personal_hook ? ` • Hook: ${rec.personal_hook}` : ""}
                 </div>
+                {(waHref || telHref || mailHref) && (
+                  <div className="row" style={{ marginTop: 8, gap: 8 }}>
+                    {waHref && (
+                      <a className="btn" href={waHref} target="_blank" rel="noreferrer">
+                        WhatsApp
+                      </a>
+                    )}
+                    {telHref && (
+                      <a className="btn" href={telHref}>
+                        Call
+                      </a>
+                    )}
+                    {mailHref && (
+                      <a className="btn" href={mailHref}>
+                        Email
+                      </a>
+                    )}
+                  </div>
+                )}
               </>
             ) : (
               <div className="accRecLine subtle">

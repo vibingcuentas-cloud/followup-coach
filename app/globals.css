@@ -354,6 +354,28 @@ textarea {
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
+.accCompact {
+  padding: 12px;
+}
+
+.accCompact .accCardRow {
+  grid-template-columns: 62px 1fr;
+  gap: 10px;
+}
+
+.accCompact .scoreCircle {
+  width: 62px;
+  height: 62px;
+}
+
+.accCompact .scoreNum {
+  font-size: 20px;
+}
+
+.accCompact .accRecBox {
+  padding: 10px;
+}
+
 .accCard:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 45px rgba(0, 0, 0, 0.5);
@@ -622,6 +644,52 @@ textarea {
   min-width: 118px;
 }
 
+.quickLogSteps {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.stepDot {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--muted);
+}
+
+.stepDot.done {
+  border-color: rgba(96, 231, 164, 0.5);
+  color: rgba(96, 231, 164, 0.95);
+  background: rgba(96, 231, 164, 0.12);
+}
+
+.stepProgress {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.toastBar {
+  position: fixed;
+  left: 50%;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(94vw, 520px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(18, 20, 27, 0.96);
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  z-index: 120;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
 .accountsAddGrid {
   display: grid;
   gap: 10px;
@@ -860,6 +928,10 @@ textarea {
 
   .quickLogGridTwoCols {
     grid-template-columns: 1fr;
+  }
+
+  .stepProgress {
+    margin-left: 0;
   }
 }
 

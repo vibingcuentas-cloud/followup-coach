@@ -23,8 +23,15 @@ type Props = {
   onClose: () => void;
   accountId: string;
   accountName: string;
+  accountLastInteractionAt?: string | null;
   contacts: Contact[];
-  onSaved: () => Promise<void>;
+  onSaved: (meta: {
+    interactionId: string;
+    accountId: string;
+    contactId: string;
+    previousAccountLastInteractionAt: string | null;
+    previousContactLastTouchAt: string | null;
+  }) => Promise<void> | void;
 };
 
 function localDateInputValue(date = new Date()): string {
@@ -53,6 +60,7 @@ export default function QuickLogModal({
   onClose,
   accountId,
   accountName,
+  accountLastInteractionAt = null,
   contacts,
   onSaved,
 }: Props) {
@@ -64,6 +72,8 @@ export default function QuickLogModal({
   const [summary, setSummary] = useState("");
   const [nextStep, setNextStep] = useState("");
   const [nextStepDate, setNextStepDate] = useState(defaultNextStepDate());
+  const [useDraftLoaded, setUseDraftLoaded] = useState(false);
+  const draftKey = `quicklog-draft:${accountId}`;
 
   const recommendedId = useMemo(() => {
     if (contacts.length === 0) return "";
@@ -82,12 +92,46 @@ export default function QuickLogModal({
   useEffect(() => {
     if (!open) return;
     setMsg(null);
+    const raw = localStorage.getItem(draftKey);
+    if (raw) {
+      try {
+        const d = JSON.parse(raw) as {
+          contactId?: string;
+          channel?: Channel;
+          summary?: string;
+          nextStep?: string;
+          nextStepDate?: string;
+        };
+        setContactId(d.contactId ?? recommendedId);
+        setChannel(d.channel ?? "whatsapp");
+        setSummary(d.summary ?? "");
+        setNextStep(d.nextStep ?? "");
+        setNextStepDate(d.nextStepDate ?? defaultNextStepDate());
+        setUseDraftLoaded(true);
+        return;
+      } catch {
+        localStorage.removeItem(draftKey);
+      }
+    }
     setSummary("");
     setNextStep("");
     setNextStepDate(defaultNextStepDate());
     setChannel("whatsapp");
     setContactId(recommendedId);
-  }, [open, recommendedId]);
+    setUseDraftLoaded(false);
+  }, [open, recommendedId, draftKey]);
+
+  useEffect(() => {
+    if (!open) return;
+    const payload = {
+      contactId,
+      channel,
+      summary,
+      nextStep,
+      nextStepDate,
+    };
+    localStorage.setItem(draftKey, JSON.stringify(payload));
+  }, [open, contactId, channel, summary, nextStep, nextStepDate, draftKey]);
 
   if (!open) return null;
 
@@ -118,16 +162,23 @@ export default function QuickLogModal({
     setLoading(true);
     try {
       const nowIso = new Date().toISOString();
+      const previousContactLastTouchAt =
+        contacts.find((c) => c.id === contactId)?.last_touch_at ?? null;
 
-      const { error: iErr } = await supabase.from("interactions").insert({
-        account_id: accountId,
-        contact_id: contactId,
-        channel,
-        summary: summary.trim(),
-        next_step: nextStep.trim(),
-        next_step_date: nextStepDate,
-      });
+      const { data: inserted, error: iErr } = await supabase
+        .from("interactions")
+        .insert({
+          account_id: accountId,
+          contact_id: contactId,
+          channel,
+          summary: summary.trim(),
+          next_step: nextStep.trim(),
+          next_step_date: nextStepDate,
+        })
+        .select("id")
+        .single();
       if (iErr) throw iErr;
+      if (!inserted?.id) throw new Error("Could not retrieve interaction id.");
 
       const { error: aErr } = await supabase
         .from("accounts")
@@ -141,7 +192,14 @@ export default function QuickLogModal({
         .eq("id", contactId);
       if (cErr) throw cErr;
 
-      await onSaved();
+      await onSaved({
+        interactionId: inserted.id,
+        accountId,
+        contactId,
+        previousAccountLastInteractionAt: accountLastInteractionAt,
+        previousContactLastTouchAt,
+      });
+      localStorage.removeItem(draftKey);
       onClose();
     } catch (error: unknown) {
       setMsg(getErrorMessage(error, "No se pudo guardar la interacción."));
@@ -151,6 +209,8 @@ export default function QuickLogModal({
   }
 
   const selectedContact = contacts.find((c) => c.id === contactId) ?? null;
+  const completedSteps =
+    (contactId ? 1 : 0) + (summary.trim() ? 1 : 0) + (nextStep.trim() && nextStepDate ? 1 : 0);
 
   return (
     <div
@@ -185,6 +245,19 @@ export default function QuickLogModal({
             </button>
           </div>
         </div>
+
+        <div className="quickLogSteps">
+          <span className={`stepDot ${contactId ? "done" : ""}`}>1 Contact</span>
+          <span className={`stepDot ${summary.trim() ? "done" : ""}`}>2 Summary</span>
+          <span className={`stepDot ${nextStep.trim() && nextStepDate ? "done" : ""}`}>3 Next step</span>
+          <span className="stepProgress">{completedSteps}/3</span>
+        </div>
+
+        {useDraftLoaded && (
+          <div className="subtle" style={{ marginTop: 8 }}>
+            Restored draft.
+          </div>
+        )}
 
         {msg && (
           <div className="card" style={{ marginTop: 12, padding: 12 }}>

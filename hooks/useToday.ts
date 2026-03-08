@@ -8,6 +8,7 @@ import { supabase } from "../lib/supabaseClient";
 import {
   AREAS,
   daysSince,
+  cadenceDays,
   fmtMoney,
   fmtLastTouch,
   coverageByArea,
@@ -58,6 +59,9 @@ export type EnrichedAccount = {
   recommendedLastTouch: string;
   coverageCounts: Record<Area, number>;
   missingAreas: Area[];
+  overdueDays: number;
+  dueLabel: "overdue" | "due-soon" | "on-track" | "never";
+  urgencyReason: string;
 };
 
 function getErrorMessage(error: unknown, fallback: string): string {
@@ -164,6 +168,19 @@ export function useToday() {
         const score = computeIntimacyScore(a, contacts);
         const rec = pickRecommendedContact(contacts);
         const recDays = rec ? daysSince(rec.last_touch_at) : null;
+        const d = daysSince(a.last_interaction_at);
+        const cadence = cadenceDays(a.tier);
+        const overdueDays = d == null ? cadence + 1 : Math.max(0, d - cadence);
+        const dueLabel: EnrichedAccount["dueLabel"] =
+          d == null ? "never" : d > cadence ? "overdue" : d === cadence ? "due-soon" : "on-track";
+        const urgencyReason =
+          d == null
+            ? `Never touched • cadence ${cadence}d`
+            : d > cadence
+              ? `${d}d since last touch • overdue by ${d - cadence}d`
+              : d === cadence
+                ? `${d}d since last touch • due today`
+                : `${d}d since last touch • on track`;
 
         return {
           id: a.id,
@@ -181,20 +198,28 @@ export function useToday() {
           recommendedLastTouch: fmtLastTouch(recDays),
           coverageCounts,
           missingAreas,
+          overdueDays,
+          dueLabel,
+          urgencyReason,
         };
       });
   }, [rawAccounts, contactsByAccount, search, tierFilter]);
 
-  const mustContact = useMemo(
-    () =>
-      allEnriched
-        .filter((a) => a.isDue)
-        .sort((x, y) => {
-          if (x.score.total !== y.score.total) return x.score.total - y.score.total;
-          return x.score.coverage - y.score.coverage;
-        }),
-    [allEnriched]
-  );
+  const mustContact = useMemo(() => {
+    function urgencyWeight(a: EnrichedAccount): number {
+      const value = a.value_usd ?? 0;
+      const valueBand = value >= 500000 ? 35 : value >= 200000 ? 24 : value >= 50000 ? 14 : 6;
+      const overdueBand = Math.min(30, a.overdueDays * 2);
+      const missingBand = a.missingAreas.length * 3;
+      const scoreBand = Math.max(0, 100 - a.score.total);
+      const neverBand = a.dueLabel === "never" ? 12 : 0;
+      return overdueBand + missingBand + scoreBand + valueBand + neverBand;
+    }
+
+    return allEnriched
+      .filter((a) => a.isDue)
+      .sort((x, y) => urgencyWeight(y) - urgencyWeight(x));
+  }, [allEnriched]);
 
   const allSorted = useMemo(
     () => [...allEnriched].sort((x, y) => x.score.total - y.score.total),

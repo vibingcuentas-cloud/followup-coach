@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useToday, type EnrichedAccount } from "../../hooks/useToday";
 import AccountCard from "../../components/AccountCard";
 import QuickLogModal from "../../components/QuickLogModal";
+import { supabase } from "../../lib/supabaseClient";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,15 @@ export default function TodayPage() {
 
   const [qlOpen, setQlOpen] = useState(false);
   const [qlAccount, setQlAccount] = useState<EnrichedAccount | null>(null);
+  const [compact, setCompact] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem("forge-onboarding-dismissed") !== "1";
+  });
+  const [toast, setToast] = useState<{
+    text: string;
+    undo?: () => Promise<void>;
+  } | null>(null);
 
   const healthyCount = useMemo(
     () => allSorted.filter((a) => a.score.total >= 80).length,
@@ -40,6 +50,80 @@ export default function TodayPage() {
   function openQuickLog(acc: EnrichedAccount) {
     setQlAccount(acc);
     setQlOpen(true);
+  }
+
+  async function handleQuickLogSaved(meta: {
+    interactionId: string;
+    accountId: string;
+    contactId: string;
+    previousAccountLastInteractionAt: string | null;
+    previousContactLastTouchAt: string | null;
+  }) {
+    await loadAll();
+    setToast({
+      text: "Interaction logged.",
+      undo: async () => {
+        await supabase.from("interactions").delete().eq("id", meta.interactionId);
+        await supabase
+          .from("accounts")
+          .update({ last_interaction_at: meta.previousAccountLastInteractionAt })
+          .eq("id", meta.accountId);
+        await supabase
+          .from("contacts")
+          .update({ last_touch_at: meta.previousContactLastTouchAt })
+          .eq("id", meta.contactId);
+        await loadAll();
+      },
+    });
+    setTimeout(() => setToast(null), 5000);
+  }
+
+  async function loadDemoData() {
+    if (allSorted.length > 0) return;
+    const { data: userData } = await supabase.auth.getUser();
+    const uid = userData.user?.id;
+    if (!uid) return;
+
+    const nowIso = new Date().toISOString();
+    const { data: insertedAccount } = await supabase
+      .from("accounts")
+      .insert({
+        owner_user_id: uid,
+        name: "Forge Demo Foods",
+        tier: "A",
+        country: "Peru",
+        value_usd: 240000,
+        last_interaction_at: nowIso,
+      })
+      .select("id")
+      .single();
+
+    if (!insertedAccount?.id) return;
+
+    await supabase.from("contacts").insert([
+      {
+        account_id: insertedAccount.id,
+        name: "Mariana Ruiz",
+        email: "mariana@example.com",
+        area: "Commercial",
+        preferred_channel: "whatsapp",
+        personal_hook: "Phone: +51987654321 • Loves football",
+        last_touch_at: nowIso,
+      },
+      {
+        account_id: insertedAccount.id,
+        name: "Jorge Salas",
+        email: "jorge@example.com",
+        area: "Procurement",
+        preferred_channel: "email",
+        personal_hook: "Prefers concise proposals",
+        last_touch_at: null,
+      },
+    ]);
+
+    setShowOnboarding(false);
+    localStorage.setItem("forge-onboarding-dismissed", "1");
+    await loadAll();
   }
 
   return (
@@ -70,6 +154,27 @@ export default function TodayPage() {
       {error && (
         <div className="card" style={{ marginBottom: 12 }}>
           <div style={{ fontSize: 13, opacity: 0.95 }}>{error}</div>
+        </div>
+      )}
+
+      {showOnboarding && (
+        <div className="card cardElevated" style={{ marginBottom: 12 }}>
+          <div style={{ fontWeight: 900 }}>60-second setup</div>
+          <div className="subtle">1) Add accounts 2) Add contacts by area 3) Log first touch</div>
+          <div className="row" style={{ marginTop: 10 }}>
+            <button className="btn btnPrimary" onClick={loadDemoData}>
+              Load demo data
+            </button>
+            <button
+              className="btn"
+              onClick={() => {
+                setShowOnboarding(false);
+                localStorage.setItem("forge-onboarding-dismissed", "1");
+              }}
+            >
+              Dismiss
+            </button>
+          </div>
         </div>
       )}
 
@@ -134,6 +239,9 @@ export default function TodayPage() {
             >
               Clear
             </button>
+            <button className="btn" onClick={() => setCompact((v) => !v)}>
+              {compact ? "Comfort view" : "Compact view"}
+            </button>
           </div>
         </div>
       </div>
@@ -163,6 +271,14 @@ export default function TodayPage() {
       {!loading && mustContact.length === 0 && (
         <div className="card">
           <div style={{ fontSize: 13, opacity: 0.85 }}>No hay cuentas pendientes ahora.</div>
+          <div className="row" style={{ marginTop: 10 }}>
+            <button className="btn" onClick={() => router.push("/accounts")}>
+              Add account
+            </button>
+            <button className="btn" onClick={() => router.push("/weekly")}>
+              Open weekly pack
+            </button>
+          </div>
         </div>
       )}
 
@@ -174,6 +290,9 @@ export default function TodayPage() {
               account={a}
               contacts={a.contacts}
               missingAreas={a.missingAreas}
+              dueLabel={a.dueLabel}
+              urgencyReason={a.urgencyReason}
+              compact={compact}
               variant="must"
               onOpen={() => router.push(`/accounts/${a.id}`)}
               onLog={() => openQuickLog(a)}
@@ -200,6 +319,9 @@ export default function TodayPage() {
               account={a}
               contacts={a.contacts}
               missingAreas={a.missingAreas}
+              dueLabel={a.dueLabel}
+              urgencyReason={a.urgencyReason}
+              compact={compact}
               variant="default"
               onOpen={() => router.push(`/accounts/${a.id}`)}
               onLog={() => openQuickLog(a)}
@@ -213,9 +335,28 @@ export default function TodayPage() {
           onClose={() => setQlOpen(false)}
           accountId={qlAccount.id}
           accountName={qlAccount.name}
+          accountLastInteractionAt={qlAccount.last_interaction_at}
           contacts={qlAccount.contacts}
-          onSaved={loadAll}
+          onSaved={handleQuickLogSaved}
         />
+      )}
+
+      {toast && (
+        <div className="toastBar">
+          <span>{toast.text}</span>
+          {toast.undo && (
+            <button
+              className="btn"
+              style={{ height: 34 }}
+              onClick={() => {
+                void toast.undo?.();
+                setToast(null);
+              }}
+            >
+              Undo
+            </button>
+          )}
+        </div>
       )}
     </main>
   );

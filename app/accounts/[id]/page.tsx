@@ -274,8 +274,11 @@ export default function AccountDetailPage() {
           onClose={() => setLogOpen(false)}
           accountId={account.id}
           accountName={account.name}
+          accountLastInteractionAt={account.last_interaction_at}
           contacts={contacts}
-          onSaved={loadAll}
+          onSaved={async () => {
+            await loadAll();
+          }}
         />
       )}
 
