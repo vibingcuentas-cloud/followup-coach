@@ -42,6 +42,23 @@ const AREAS: ContactArea[] = [
   "Directors",
 ];
 
+type ContactPickerContact = {
+  name?: string[];
+  email?: string[];
+  tel?: string[];
+};
+
+type ContactPicker = {
+  select: (
+    properties: Array<"name" | "email" | "tel">,
+    options: { multiple: boolean }
+  ) => Promise<ContactPickerContact[]>;
+};
+
+type NavigatorWithContacts = Navigator & {
+  contacts?: ContactPicker;
+};
+
 function clean(v: string) {
   const t = v.trim();
   return t ? t : "";
@@ -71,6 +88,7 @@ export default function AddContactSheet({
 
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [canUseContactPicker, setCanUseContactPicker] = useState(false);
 
   const title = mode === "edit" ? "Edit contact" : "Add contact";
   const primaryLabel = mode === "edit" ? "Save changes" : "Add contact";
@@ -92,6 +110,11 @@ export default function AddContactSheet({
     setPreferred(pr);
     setHook(hk);
   }, [open, initial]);
+
+  useEffect(() => {
+    const nav = navigator as NavigatorWithContacts;
+    setCanUseContactPicker(Boolean(nav.contacts?.select));
+  }, []);
 
   const isValid = useMemo(() => !!clean(name), [name]);
 
@@ -154,6 +177,43 @@ export default function AddContactSheet({
     }
   }
 
+  async function importFromPhone() {
+    setMsg(null);
+    const nav = navigator as NavigatorWithContacts;
+    const picker = nav.contacts;
+
+    if (!picker?.select) {
+      setMsg("Contact import is not supported on this device/browser.");
+      return;
+    }
+
+    try {
+      const picked = await picker.select(["name", "email", "tel"], {
+        multiple: false,
+      });
+      const first = picked[0];
+      if (!first) return;
+
+      const importedName = first.name?.[0]?.trim() ?? "";
+      const importedEmail = first.email?.[0]?.trim() ?? "";
+      const importedPhone = first.tel?.[0]?.trim() ?? "";
+
+      if (importedName) setName(importedName);
+      if (importedEmail) setEmail(importedEmail);
+      if (importedPhone) {
+        setHook((prev) => {
+          const cleanPrev = prev.trim();
+          const phoneText = `Phone: ${importedPhone}`;
+          if (!cleanPrev) return phoneText;
+          if (cleanPrev.includes(phoneText)) return cleanPrev;
+          return `${cleanPrev} • ${phoneText}`;
+        });
+      }
+    } catch (error: unknown) {
+      setMsg(getErrorMessage(error, "Could not import contact from phone."));
+    }
+  }
+
   return (
     <div
       onClick={onClose}
@@ -197,9 +257,24 @@ export default function AddContactSheet({
               Minimal. Fast. Useful.
             </div>
           </div>
-          <button className="btn" onClick={onClose} style={{ height: 36 }}>
-            Close
-          </button>
+          <div className="row" style={{ gap: 8 }}>
+            <button
+              className="btn"
+              onClick={importFromPhone}
+              style={{ height: 36 }}
+              disabled={!canUseContactPicker}
+              title={
+                canUseContactPicker
+                  ? "Import name/email/phone from phone contacts"
+                  : "Contact import not available on this browser"
+              }
+            >
+              Import from phone
+            </button>
+            <button className="btn" onClick={onClose} style={{ height: 36 }}>
+              Close
+            </button>
+          </div>
         </div>
 
         <div style={{ height: 12 }} />
