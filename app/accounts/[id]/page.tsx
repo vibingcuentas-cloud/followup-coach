@@ -220,7 +220,7 @@ export default function AccountDetailPage() {
                       Edit
                     </button>
                     <button
-                      className="btn"
+                      className="btn btnDanger"
                       onClick={() => deleteContact(c.id)}
                       style={{ height: 40 }}
                     >

@@ -32,6 +32,10 @@ export default function TodayPage() {
     () => allSorted.filter((a) => a.score.total >= 80).length,
     [allSorted]
   );
+  const riskCount = useMemo(
+    () => allSorted.filter((a) => a.score.total < 55).length,
+    [allSorted]
+  );
 
   function openQuickLog(acc: EnrichedAccount) {
     setQlAccount(acc);
@@ -68,17 +72,21 @@ export default function TodayPage() {
         </div>
       )}
 
-      <div className="todayKpiGrid" style={{ marginBottom: 14 }}>
-        <div className="card todayKpiCard">
+      <div className="todayKpiGrid todayCommandBar" style={{ marginBottom: 14 }}>
+        <div className="card todayKpiCard cardElevated">
           <div className="todayKpiLabel">Must contact</div>
           <div className="todayKpiValue">{mustContact.length}</div>
         </div>
-        <div className="card todayKpiCard">
-          <div className="todayKpiLabel">Healthy accounts</div>
+        <div className="card todayKpiCard cardUrgent">
+          <div className="todayKpiLabel">At risk</div>
+          <div className="todayKpiValue">{riskCount}</div>
+        </div>
+        <div className="card todayKpiCard cardElevated">
+          <div className="todayKpiLabel">Healthy</div>
           <div className="todayKpiValue">{healthyCount}</div>
         </div>
-        <div className="card todayKpiCard">
-          <div className="todayKpiLabel">Showing</div>
+        <div className="card todayKpiCard cardElevated">
+          <div className="todayKpiLabel">Total</div>
           <div className="todayKpiValue">{totalShowing}</div>
         </div>
       </div>
@@ -129,7 +137,7 @@ export default function TodayPage() {
         </div>
       </div>
 
-      <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+      <div className="row todaySectionHeader" style={{ justifyContent: "space-between", alignItems: "center" }}>
         <div>
           <h2 className="h2">Must contact</h2>
           <div className="subtle" style={{ marginTop: 4 }}>
@@ -144,8 +152,10 @@ export default function TodayPage() {
       <div style={{ height: 10 }} />
 
       {loading && (
-        <div className="card">
-          <div className="subtle">Loading...</div>
+        <div style={{ display: "grid", gap: 14 }}>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="card skeletonCard" />
+          ))}
         </div>
       )}
 
@@ -172,7 +182,7 @@ export default function TodayPage() {
 
       <div style={{ height: 18 }} />
 
-      <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+      <div className="row todaySectionHeader" style={{ justifyContent: "space-between", alignItems: "center" }}>
         <h2 className="h2">All accounts</h2>
         <span className="pill" style={{ opacity: 0.95 }}>
           {allSorted.length}

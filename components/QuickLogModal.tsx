@@ -176,7 +176,7 @@ export default function QuickLogModal({
             </div>
           </div>
 
-          <div className="row" style={{ gap: 10 }}>
+          <div className="row quickLogActions" style={{ gap: 10 }}>
             <button className="btn" onClick={onClose} disabled={loading}>
               Cerrar
             </button>
@@ -219,19 +219,6 @@ export default function QuickLogModal({
               </div>
             )}
           </label>
-
-          <label style={{ display: "grid", gap: 6 }}>
-            <div className="label">Canal</div>
-            <select
-              className="field"
-              value={channel}
-              onChange={(e) => setChannel(e.target.value as Channel)}
-            >
-              <option value="whatsapp">whatsapp</option>
-              <option value="call">call</option>
-              <option value="email">email</option>
-            </select>
-          </label>
         </div>
 
         <div style={{ height: 10 }} />
@@ -262,15 +249,30 @@ export default function QuickLogModal({
           </label>
 
           <label style={{ display: "grid", gap: 6 }}>
-            <div className="label">Fecha próximo paso</div>
-            <input
+            <div className="label">Canal</div>
+            <select
               className="field"
-              type="date"
-              value={nextStepDate}
-              onChange={(e) => setNextStepDate(e.target.value)}
-            />
+              value={channel}
+              onChange={(e) => setChannel(e.target.value as Channel)}
+            >
+              <option value="whatsapp">whatsapp</option>
+              <option value="call">call</option>
+              <option value="email">email</option>
+            </select>
           </label>
         </div>
+
+        <div style={{ height: 10 }} />
+
+        <label style={{ display: "grid", gap: 6 }}>
+          <div className="label">Fecha próximo paso</div>
+          <input
+            className="field"
+            type="date"
+            value={nextStepDate}
+            onChange={(e) => setNextStepDate(e.target.value)}
+          />
+        </label>
 
         <div style={{ marginTop: 10 }} className="subtle">
           Cada interacción debe estar vinculada a un contacto para trackear la intimacy correctamente.

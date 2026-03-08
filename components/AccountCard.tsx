@@ -90,7 +90,7 @@ export default function AccountCard({
   const recLastTouch = rec ? fmtLastTouch(daysSince(rec.last_touch_at)) : "—";
 
   return (
-    <div className={`accCard ${variant === "must" ? "accCardMust" : ""}`}>
+    <div className={`accCard ${variant === "must" ? "accCardMust cardUrgent" : "cardElevated"}`}>
       <div className="accCardRow">
         <ScoreCircle score={score.total} status={scoreToneToStatus(score.tone)} />
 
@@ -121,7 +121,7 @@ export default function AccountCard({
                 title={contacts.length === 0 ? "Add a contact first" : "Quick log"}
                 style={{ height: 40, borderRadius: 14 }}
               >
-                Log
+                {variant === "must" ? "Log now" : "Log"}
               </button>
             </div>
           </div>
@@ -145,7 +145,9 @@ export default function AccountCard({
           </div>
 
           <div className="accRecBox">
-            <div className="accRecLabel">RECOMMENDED NEXT TOUCH</div>
+            <div className="accRecLabel">
+              {variant === "must" ? "NEXT BEST CONTACT (PRIORITY)" : "RECOMMENDED NEXT TOUCH"}
+            </div>
 
             {rec ? (
               <>

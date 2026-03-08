@@ -1,5 +1,9 @@
 :root {
   --bg: #0b0b0f;
+  --surface: rgba(19, 22, 30, 0.9);
+  --surface-elevated: rgba(26, 30, 40, 0.94);
+  --surface-urgent: rgba(54, 24, 29, 0.92);
+  --surface-soft: rgba(255, 255, 255, 0.03);
 
   --panel: rgba(255, 255, 255, 0.06);
   --panel-strong: rgba(255, 255, 255, 0.09);
@@ -18,6 +22,9 @@
   --shadow-soft: 0 8px 18px rgba(0, 0, 0, 0.25);
 
   --focus: rgba(255, 255, 255, 0.22);
+  --good: rgba(96, 231, 164, 0.9);
+  --warn: rgba(255, 132, 132, 0.95);
+  --neutral: rgba(255, 210, 120, 0.9);
 }
 
 * {
@@ -129,9 +136,9 @@ textarea {
 }
 
 .h1 {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 900;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   margin: 0;
 }
 
@@ -144,21 +151,33 @@ textarea {
 
 .subtle {
   color: var(--muted);
-  margin-top: 6px;
+  margin-top: 4px;
   font-size: 13px;
 }
 
-/* Card (premium glass) */
+/* Card */
 .card {
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface);
   border-radius: var(--radius);
-  padding: 14px;
+  padding: 16px;
   box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+    0 10px 28px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 120ms ease;
+}
+
+.cardElevated {
+  background: var(--surface-elevated);
+}
+
+.cardUrgent {
+  background: var(--surface-urgent);
+  border-color: rgba(255, 120, 120, 0.22);
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 .card + .card {
@@ -174,7 +193,7 @@ textarea {
   background: transparent;
   color: var(--text);
   cursor: pointer;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
   transition:
     transform 0.08s ease,
     border-color 0.18s ease,
@@ -195,8 +214,8 @@ textarea {
 }
 
 .btnPrimary {
-  border: none;
-  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.96);
   color: rgba(0, 0, 0, 0.9);
   font-weight: 900;
 }
@@ -318,8 +337,8 @@ textarea {
 
 /* -------------------- Today / Account Cards (premium) -------------------- */
 .accCard {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: var(--surface-elevated);
   border-radius: 22px;
   padding: 14px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
@@ -335,10 +354,8 @@ textarea {
 .accCardMust {
   position: relative;
   overflow: hidden;
-  border-color: rgba(255, 120, 120, 0.18);
-  background:
-    linear-gradient(180deg, rgba(255, 120, 120, 0.08), rgba(255, 255, 255, 0.03)),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.02));
+  border-color: rgba(255, 120, 120, 0.26);
+  background: linear-gradient(180deg, rgba(78, 30, 38, 0.92), rgba(44, 25, 32, 0.9));
 }
 
 .accCardMust::before {
@@ -495,7 +512,7 @@ textarea {
 .todayKpiGrid {
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .todayKpiCard {
@@ -511,10 +528,50 @@ textarea {
 
 .todayKpiValue {
   margin-top: 6px;
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 950;
   letter-spacing: -0.03em;
   line-height: 1;
+}
+
+.todayCommandBar {
+  position: sticky;
+  top: calc(10px + env(safe-area-inset-top));
+  z-index: 25;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.todaySectionHeader {
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+
+.skeletonCard {
+  min-height: 160px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.skeletonCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.02) 20%,
+    rgba(255, 255, 255, 0.08) 42%,
+    rgba(255, 255, 255, 0.02) 64%
+  );
+  transform: translateX(-100%);
+  animation: shimmer 1.35s infinite;
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
 }
 
 .quickLogOverlay {
@@ -526,15 +583,34 @@ textarea {
 .quickLogModal {
   max-height: calc(100dvh - 24px);
   overflow: auto;
-  background: rgba(18, 18, 20, 0.92);
+  background: var(--surface-elevated);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   transform: translateZ(0);
   will-change: transform;
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .quickLogGridTwoCols {
   grid-template-columns: minmax(0, 1.4fr) minmax(140px, 1fr);
+}
+
+.quickLogHeader {
+  position: sticky;
+  top: -16px;
+  z-index: 10;
+  background: linear-gradient(180deg, rgba(26, 30, 40, 0.98), rgba(26, 30, 40, 0.92));
+  padding: 8px 0 10px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.quickLogActions {
+  justify-content: flex-end;
+}
+
+.quickLogActions .btn {
+  min-width: 118px;
 }
 
 .accountsAddGrid {
@@ -734,7 +810,7 @@ textarea {
   }
 
   .todayKpiGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 
   .accountsAddGrid {
@@ -748,6 +824,7 @@ textarea {
 
   .quickLogHeader {
     align-items: flex-start;
+    top: -14px;
   }
 
   .quickLogGridTwoCols {
@@ -763,6 +840,19 @@ textarea {
   .quickLogModal {
     max-height: calc(100dvh - 12px - env(safe-area-inset-bottom));
     padding: 14px !important;
+  }
+
+  .quickLogActions {
+    width: 100%;
+  }
+
+  .quickLogActions .btn {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .todayKpiGrid {
+    grid-template-columns: 1fr;
   }
 
   .quickLogOverlay {

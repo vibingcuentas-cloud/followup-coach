@@ -129,8 +129,10 @@ export default function AccountsPage() {
       <div style={{ height: 12 }} />
 
       {loading && (
-        <div className="card">
-          <div style={{ fontSize: 13, opacity: 0.85 }}>Loading...</div>
+        <div style={{ display: "grid", gap: 12 }}>
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={i} className="card skeletonCard" />
+          ))}
         </div>
       )}
 
@@ -168,7 +170,7 @@ export default function AccountsPage() {
                   Open
                 </button>
                 <button
-                  className="btn"
+                  className="btn btnDanger"
                   onClick={() => deleteAccount(a.id)}
                   style={{ height: 40, borderRadius: 14 }}
                 >
