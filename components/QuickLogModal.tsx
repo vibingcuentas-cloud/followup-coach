@@ -167,10 +167,10 @@ export default function QuickLogModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="card"
+        className="card quickLogModal"
         style={{ width: "100%", maxWidth: 680, padding: 16 }}
       >
-        <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
+        <div className="row quickLogHeader" style={{ justifyContent: "space-between", gap: 12 }}>
           <div style={{ minWidth: 0 }}>
             <div style={{ fontWeight: 950, fontSize: 18 }}>Quick log</div>
             <div className="subtle" style={{ marginTop: 4 }}>
@@ -196,7 +196,7 @@ export default function QuickLogModal({
 
         <div style={{ height: 12 }} />
 
-        <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1.4fr 160px" }}>
+        <div className="quickLogGridTwoCols" style={{ display: "grid", gap: 10 }}>
           <label style={{ display: "grid", gap: 6 }}>
             <div className="label">Contacto (requerido)</div>
             <select
@@ -252,7 +252,7 @@ export default function QuickLogModal({
 
         <div style={{ height: 10 }} />
 
-        <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr 200px" }}>
+        <div className="quickLogGridTwoCols" style={{ display: "grid", gap: 10 }}>
           <label style={{ display: "grid", gap: 6 }}>
             <div className="label">Próximo paso (requerido)</div>
             <input

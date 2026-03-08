@@ -517,6 +517,15 @@ textarea {
   line-height: 1;
 }
 
+.quickLogModal {
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+}
+
+.quickLogGridTwoCols {
+  grid-template-columns: minmax(0, 1.4fr) minmax(140px, 1fr);
+}
+
 .accountsAddGrid {
   display: grid;
   gap: 10px;
@@ -725,10 +734,23 @@ textarea {
     grid-column: 1 / -1;
     width: 100%;
   }
+
+  .quickLogHeader {
+    align-items: flex-start;
+  }
+
+  .quickLogGridTwoCols {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 480px) {
   .accountsAddGrid {
     grid-template-columns: 1fr;
+  }
+
+  .quickLogModal {
+    max-height: calc(100dvh - 12px);
+    padding: 14px !important;
   }
 }
