@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 
 export type ContactArea =
@@ -72,6 +72,33 @@ function getErrorMessage(error: unknown, fallback: string): string {
   return fallback;
 }
 
+function parseVcf(text: string): { name: string; email: string; phone: string } {
+  const cleaned = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  const joined = cleaned.replace(/\n[ \t]/g, "");
+
+  const nameMatch =
+    joined.match(/^FN[:;](.+)$/im) ??
+    joined.match(/^N:[^;]*;([^;]+);([^;]*);?.*$/im);
+  const emailMatch = joined.match(/^EMAIL[^:]*:(.+)$/im);
+  const phoneMatch = joined.match(/^TEL[^:]*:(.+)$/im);
+
+  let name = "";
+  if (nameMatch) {
+    if (nameMatch[1] && nameMatch[2] != null) {
+      const last = (nameMatch[1] ?? "").trim();
+      const first = (nameMatch[2] ?? "").trim();
+      name = `${first} ${last}`.trim();
+    } else {
+      name = (nameMatch[1] ?? "").trim();
+    }
+  }
+
+  const email = (emailMatch?.[1] ?? "").trim();
+  const phone = (phoneMatch?.[1] ?? "").trim();
+
+  return { name, email, phone };
+}
+
 export default function AddContactSheet({
   open,
   mode,
@@ -89,6 +116,7 @@ export default function AddContactSheet({
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [canUseContactPicker, setCanUseContactPicker] = useState(false);
+  const vcfInputRef = useRef<HTMLInputElement | null>(null);
 
   const title = mode === "edit" ? "Edit contact" : "Add contact";
   const primaryLabel = mode === "edit" ? "Save changes" : "Add contact";
@@ -183,7 +211,9 @@ export default function AddContactSheet({
     const picker = nav.contacts;
 
     if (!picker?.select) {
-      setMsg("Contact import is not supported on this device/browser.");
+      setMsg(
+        "Direct phone contacts are not supported on this browser. Use Import .vcf instead."
+      );
       return;
     }
 
@@ -211,6 +241,36 @@ export default function AddContactSheet({
       }
     } catch (error: unknown) {
       setMsg(getErrorMessage(error, "Could not import contact from phone."));
+    }
+  }
+
+  function openVcfPicker() {
+    setMsg(null);
+    vcfInputRef.current?.click();
+  }
+
+  async function importFromVcfFile(file: File) {
+    try {
+      const text = await file.text();
+      const parsed = parseVcf(text);
+
+      if (parsed.name) setName(parsed.name);
+      if (parsed.email) setEmail(parsed.email);
+      if (parsed.phone) {
+        setHook((prev) => {
+          const cleanPrev = prev.trim();
+          const phoneText = `Phone: ${parsed.phone}`;
+          if (!cleanPrev) return phoneText;
+          if (cleanPrev.includes(phoneText)) return cleanPrev;
+          return `${cleanPrev} • ${phoneText}`;
+        });
+      }
+
+      if (!parsed.name && !parsed.email && !parsed.phone) {
+        setMsg("Could not read this .vcf file.");
+      }
+    } catch (error: unknown) {
+      setMsg(getErrorMessage(error, "Could not import .vcf contact."));
     }
   }
 
@@ -271,11 +331,27 @@ export default function AddContactSheet({
             >
               Import from phone
             </button>
+            <button className="btn" onClick={openVcfPicker} style={{ height: 36 }}>
+              Import .vcf
+            </button>
             <button className="btn" onClick={onClose} style={{ height: 36 }}>
               Close
             </button>
           </div>
         </div>
+        <input
+          ref={vcfInputRef}
+          type="file"
+          accept=".vcf,text/vcard,text/x-vcard"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              void importFromVcfFile(file);
+            }
+            e.currentTarget.value = "";
+          }}
+        />
 
         <div style={{ height: 12 }} />
 
@@ -362,7 +438,7 @@ export default function AddContactSheet({
           </button>
 
           <div style={{ fontSize: 12, opacity: 0.6 }}>
-            Hooks are per contact. Keep it short and actionable.
+            Tip: on iPhone you can Share Contact as .vcf and import it here.
           </div>
         </div>
       </div>
