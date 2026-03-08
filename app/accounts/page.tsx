@@ -66,14 +66,7 @@ export default function AccountsPage() {
 
       {/* Formulario agregar cuenta */}
       <div className="card">
-        <div
-          style={{
-            display: "grid",
-            gap: 10,
-            gridTemplateColumns: "1.4fr 140px 1fr 180px auto",
-            alignItems: "end",
-          }}
-        >
+        <div className="accountsAddGrid">
           <label style={{ display: "grid", gap: 6 }}>
             <div className="label">Account name</div>
             <input
@@ -120,10 +113,9 @@ export default function AccountsPage() {
           </label>
 
           <button
-            className="btn btnPrimary"
+            className="btn btnPrimary accountsAddBtn"
             onClick={handleAdd}
             disabled={loading}
-            style={{ height: 44, borderRadius: 16, padding: "0 16px" }}
           >
             Add account
           </button>
