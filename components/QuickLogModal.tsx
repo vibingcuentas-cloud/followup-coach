@@ -154,14 +154,12 @@ export default function QuickLogModal({
 
   return (
     <div
+      className="quickLogOverlay"
       onClick={onClose}
       style={{
         position: "fixed",
         inset: 0,
         background: "rgba(0,0,0,0.55)",
-        display: "grid",
-        placeItems: "center",
-        padding: 16,
         zIndex: 80,
       }}
     >
