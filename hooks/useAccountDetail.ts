@@ -4,7 +4,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabaseClient";
-import { computeIntimacyScore, type Tier, type Area, type Channel, type IntimacyScore } from "../lib/intimacy";
+import {
+  computeIntimacyScore,
+  type Tier,
+  type Area,
+  type Channel,
+  type IntimacyScore,
+} from "../lib/intimacy";
 
 export type AccountDetail = {
   id: string;
@@ -23,7 +29,7 @@ export type Contact = {
   area: Area;
   preferred_channel: Channel | null;
   personal_hook: string | null;
-  last_touch_at?: string | null;
+  last_touch_at: string | null;
   created_at: string;
 };
 
@@ -39,7 +45,17 @@ export type Interaction = {
 };
 
 function isUuid(v: string) {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    v
+  );
+}
+
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (error && typeof error === "object" && "message" in error) {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+  return fallback;
 }
 
 export function useAccountDetail(accountId: string | undefined) {
@@ -87,12 +103,16 @@ export function useAccountDetail(accountId: string | undefined) {
           .single(),
         supabase
           .from("contacts")
-          .select("id,account_id,name,email,area,preferred_channel,personal_hook,last_touch_at,created_at")
+          .select(
+            "id,account_id,name,email,area,preferred_channel,personal_hook,last_touch_at,created_at"
+          )
           .eq("account_id", accountId)
           .order("created_at", { ascending: false }),
         supabase
           .from("interactions")
-          .select("id,account_id,contact_id,channel,summary,next_step,next_step_date,created_at")
+          .select(
+            "id,account_id,contact_id,channel,summary,next_step,next_step_date,created_at"
+          )
           .eq("account_id", accountId)
           .order("created_at", { ascending: false })
           .limit(30),
@@ -109,9 +129,9 @@ export function useAccountDetail(accountId: string | undefined) {
       setContacts(ctsData);
       setInteractions((its ?? []) as Interaction[]);
       setScore(computeIntimacyScore(accData, ctsData));
-    } catch (e: any) {
-      const m = e?.message ?? "No se pudo cargar la cuenta.";
-      if (String(m).toLowerCase().includes("not signed")) {
+    } catch (error: unknown) {
+      const m = getErrorMessage(error, "No se pudo cargar la cuenta.");
+      if (m.toLowerCase().includes("not signed")) {
         router.push("/login");
         return;
       }
@@ -122,7 +142,7 @@ export function useAccountDetail(accountId: string | undefined) {
   }
 
   useEffect(() => {
-    loadAll();
+    void loadAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId]);
 
@@ -133,8 +153,8 @@ export function useAccountDetail(accountId: string | undefined) {
       const { error } = await supabase.from("contacts").delete().eq("id", id);
       if (error) throw error;
       await loadAll();
-    } catch (e: any) {
-      setError(e?.message ?? "No se pudo eliminar el contacto.");
+    } catch (error: unknown) {
+      setError(getErrorMessage(error, "No se pudo eliminar el contacto."));
     } finally {
       setLoading(false);
     }

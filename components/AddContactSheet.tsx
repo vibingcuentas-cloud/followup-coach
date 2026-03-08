@@ -31,14 +31,28 @@ type Props = {
   accountId: string;
   initial?: Partial<Contact> | null;
   onClose: () => void;
-  onSaved: () => void; // reload parent
+  onSaved: () => void | Promise<void>;
 };
 
-const AREAS: ContactArea[] = ["Marketing", "R&D", "Procurement", "Commercial", "Directors"];
+const AREAS: ContactArea[] = [
+  "Marketing",
+  "R&D",
+  "Procurement",
+  "Commercial",
+  "Directors",
+];
 
 function clean(v: string) {
   const t = v.trim();
   return t ? t : "";
+}
+
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (error && typeof error === "object" && "message" in error) {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+  return fallback;
 }
 
 export default function AddContactSheet({
@@ -68,13 +82,14 @@ export default function AddContactSheet({
     const nm = clean(initial?.name ?? "");
     const em = clean(initial?.email ?? "");
     const ar = (initial?.area as ContactArea) ?? "R&D";
-    const pr = (initial?.preferred_channel as PreferredChannel) ?? "whatsapp";
+    const pr =
+      (initial?.preferred_channel as PreferredChannel | null) ?? "whatsapp";
     const hk = clean(initial?.personal_hook ?? "");
 
     setName(nm);
     setEmail(em);
     setArea(AREAS.includes(ar) ? ar : "R&D");
-    setPreferred(pr ?? "whatsapp");
+    setPreferred(pr);
     setHook(hk);
   }, [open, initial]);
 
@@ -93,7 +108,10 @@ export default function AddContactSheet({
     setMsg(null);
 
     const nm = clean(name);
-    if (!nm) return setMsg("Name is required.");
+    if (!nm) {
+      setMsg("Name is required.");
+      return;
+    }
 
     const em = clean(email);
     const hk = clean(hook);
@@ -106,10 +124,10 @@ export default function AddContactSheet({
         const { error } = await supabase.from("contacts").insert({
           account_id: accountId,
           name: nm,
-          email: em ? em : null,
+          email: em || null,
           area,
           preferred_channel: preferred,
-          personal_hook: hk ? hk : null,
+          personal_hook: hk || null,
         });
         if (error) throw error;
       } else {
@@ -118,19 +136,19 @@ export default function AddContactSheet({
           .from("contacts")
           .update({
             name: nm,
-            email: em ? em : null,
+            email: em || null,
             area,
             preferred_channel: preferred,
-            personal_hook: hk ? hk : null,
+            personal_hook: hk || null,
           })
           .eq("id", initial.id);
         if (error) throw error;
       }
 
-      onSaved();
+      await onSaved();
       onClose();
-    } catch (e: any) {
-      setMsg(e?.message ?? "Could not save contact");
+    } catch (error: unknown) {
+      setMsg(getErrorMessage(error, "Could not save contact"));
     } finally {
       setLoading(false);
     }
@@ -162,7 +180,6 @@ export default function AddContactSheet({
           boxShadow: "0 -20px 60px rgba(0,0,0,0.45)",
         }}
       >
-        {/* drag handle */}
         <div
           style={{
             width: 44,
@@ -187,7 +204,6 @@ export default function AddContactSheet({
 
         <div style={{ height: 12 }} />
 
-        {/* iOS-like form: vertical, roomy */}
         <div style={{ display: "grid", gap: 10 }}>
           <label style={{ display: "grid", gap: 6 }}>
             <div className="label">Name (required)</div>
@@ -221,7 +237,9 @@ export default function AddContactSheet({
               <select
                 className="field"
                 value={preferred}
-                onChange={(e) => setPreferred(e.target.value as PreferredChannel)}
+                onChange={(e) =>
+                  setPreferred(e.target.value as PreferredChannel)
+                }
               >
                 <option value="call">call</option>
                 <option value="whatsapp">whatsapp</option>

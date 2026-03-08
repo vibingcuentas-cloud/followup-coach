@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAccountList } from "../../hooks/useAccountList";
-import { fmtMoney, type Tier } from "../../lib/intimacy";
+import { type Tier } from "../../lib/intimacy";
 
 export const dynamic = "force-dynamic";
 
@@ -37,15 +37,24 @@ export default function AccountsPage() {
   return (
     <main>
       <div className="topbar">
-        <div>
+        <div className="topbarTitle">
           <h1 className="h1">Accounts</h1>
           <div className="subtle">Ordenado por valor. Estado visible de un vistazo.</div>
         </div>
-        <div className="row" style={{ gap: 10, flexWrap: "wrap" }}>
-          <button className="btn" onClick={() => router.push("/today")}>Today</button>
-          <button className="btn" onClick={() => router.push("/weekly")}>Weekly Pack</button>
-          <button className="btn" onClick={load} disabled={loading}>Refresh</button>
-          <button className="btn btnPrimary" onClick={signOut}>Sign out</button>
+
+        <div className="topbarActions">
+          <button className="btn" onClick={() => router.push("/today")}>
+            Today
+          </button>
+          <button className="btn" onClick={() => router.push("/weekly")}>
+            Weekly Pack
+          </button>
+          <button className="btn" onClick={load} disabled={loading}>
+            Refresh
+          </button>
+          <button className="btn btnPrimary" onClick={signOut}>
+            Sign out
+          </button>
         </div>
       </div>
 

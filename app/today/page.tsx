@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToday, type EnrichedAccount } from "../../hooks/useToday";
 import AccountCard from "../../components/AccountCard";
@@ -28,6 +28,11 @@ export default function TodayPage() {
   const [qlOpen, setQlOpen] = useState(false);
   const [qlAccount, setQlAccount] = useState<EnrichedAccount | null>(null);
 
+  const healthyCount = useMemo(
+    () => allSorted.filter((a) => a.score.total >= 80).length,
+    [allSorted]
+  );
+
   function openQuickLog(acc: EnrichedAccount) {
     setQlAccount(acc);
     setQlOpen(true);
@@ -36,15 +41,12 @@ export default function TodayPage() {
   return (
     <main>
       <div className="topbar">
-        <div>
+        <div className="topbarTitle">
           <h1 className="h1">Today</h1>
-          <div className="subtle">Intimacy cockpit • A=7d • B=14d • C=30d</div>
+          <div className="subtle">Intimacy command center • A=7d • B=14d • C=30d</div>
         </div>
 
-        <div
-          className="row"
-          style={{ gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}
-        >
+        <div className="topbarActions">
           <button className="btn" onClick={() => router.push("/accounts")}>
             Accounts
           </button>
@@ -66,7 +68,21 @@ export default function TodayPage() {
         </div>
       )}
 
-      {/* Filters */}
+      <div className="todayKpiGrid" style={{ marginBottom: 14 }}>
+        <div className="card todayKpiCard">
+          <div className="todayKpiLabel">Must contact</div>
+          <div className="todayKpiValue">{mustContact.length}</div>
+        </div>
+        <div className="card todayKpiCard">
+          <div className="todayKpiLabel">Healthy accounts</div>
+          <div className="todayKpiValue">{healthyCount}</div>
+        </div>
+        <div className="card todayKpiCard">
+          <div className="todayKpiLabel">Showing</div>
+          <div className="todayKpiValue">{totalShowing}</div>
+        </div>
+      </div>
+
       <div className="card" style={{ marginBottom: 14, padding: 14 }}>
         <div
           className="row"
@@ -109,20 +125,17 @@ export default function TodayPage() {
             >
               Clear
             </button>
-
-            <div className="subtle" style={{ textAlign: "right", minWidth: 120 }}>
-              <div style={{ fontSize: 12 }}>Showing</div>
-              <div style={{ fontWeight: 950, fontSize: 20, opacity: 0.95 }}>
-                {totalShowing}
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* MUST CONTACT */}
       <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
-        <h2 className="h2">Must contact</h2>
+        <div>
+          <h2 className="h2">Must contact</h2>
+          <div className="subtle" style={{ marginTop: 4 }}>
+            Highest risk accounts first. Keep cadence and coverage disciplined.
+          </div>
+        </div>
         <span className="pill" style={{ opacity: 0.95 }}>
           {mustContact.length}
         </span>
@@ -138,9 +151,7 @@ export default function TodayPage() {
 
       {!loading && mustContact.length === 0 && (
         <div className="card">
-          <div style={{ fontSize: 13, opacity: 0.85 }}>
-            No hay cuentas pendientes ahora.
-          </div>
+          <div style={{ fontSize: 13, opacity: 0.85 }}>No hay cuentas pendientes ahora.</div>
         </div>
       )}
 
@@ -161,7 +172,6 @@ export default function TodayPage() {
 
       <div style={{ height: 18 }} />
 
-      {/* ALL ACCOUNTS */}
       <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
         <h2 className="h2">All accounts</h2>
         <span className="pill" style={{ opacity: 0.95 }}>
@@ -186,7 +196,6 @@ export default function TodayPage() {
           ))}
       </div>
 
-      {/* Quick Log Modal */}
       {qlAccount && (
         <QuickLogModal
           open={qlOpen}

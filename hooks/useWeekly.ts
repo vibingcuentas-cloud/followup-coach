@@ -25,6 +25,14 @@ type Interaction = {
   summary: string;
 };
 
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (error && typeof error === "object" && "message" in error) {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+  return fallback;
+}
+
 export function useWeekly() {
   const router = useRouter();
 
@@ -43,13 +51,16 @@ export function useWeekly() {
   }
 
   async function loadAll() {
-    const user = await requireAuth();
-    if (!user) return;
-
     setLoading(true);
     setError(null);
 
     try {
+      const user = await requireAuth();
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
       const since = new Date();
       since.setDate(since.getDate() - 14);
 
@@ -72,19 +83,18 @@ export function useWeekly() {
 
       setAccounts((acc as Account[]) ?? []);
       setInteractions((ints as Interaction[]) ?? []);
-    } catch (e: any) {
-      setError(e?.message ?? "No se pudo cargar el weekly pack.");
+    } catch (error: unknown) {
+      setError(getErrorMessage(error, "No se pudo cargar el weekly pack."));
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    loadAll();
+    void loadAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Genera el texto listo para copiar/pegar
   const weeklyText = useMemo(() => {
     const topByValue = [...accounts]
       .sort((a, b) => (b.value_usd ?? 0) - (a.value_usd ?? 0))

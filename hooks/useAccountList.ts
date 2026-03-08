@@ -15,7 +15,6 @@ export type AccountRow = {
   value_usd: number | null;
   last_interaction_at: string | null;
   created_at: string;
-  // Campos calculados — listos para renderizar
   lastTouch: string;
   badge: "ok" | "due" | "never";
   valueFormatted: string;
@@ -28,6 +27,14 @@ type AddAccountInput = {
   valueUsd: string;
 };
 
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (error && typeof error === "object" && "message" in error) {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+  return fallback;
+}
+
 export function useAccountList() {
   const router = useRouter();
 
@@ -35,16 +42,12 @@ export function useAccountList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // ─── Auth ────────────────────────────────────────────────────────────────────
-
   async function requireUser() {
     const { data, error } = await supabase.auth.getUser();
     if (error) throw error;
     if (!data.user) throw new Error("Not signed in");
     return data.user;
   }
-
-  // ─── Fetch ───────────────────────────────────────────────────────────────────
 
   async function load() {
     setError(null);
@@ -64,8 +67,7 @@ export function useAccountList() {
         const limit = cadenceDays(a.tier as Tier);
         const badge: AccountRow["badge"] =
           d == null ? "never" : d <= limit ? "ok" : "due";
-        const lastTouch =
-          d == null ? "nunca" : d === 0 ? "hoy" : `${d}d`;
+        const lastTouch = d == null ? "nunca" : d === 0 ? "hoy" : `${d}d`;
 
         return {
           ...a,
@@ -77,9 +79,9 @@ export function useAccountList() {
       });
 
       setAccounts(rows);
-    } catch (e: any) {
-      const m = e?.message ?? "No se pudieron cargar las cuentas.";
-      if (String(m).toLowerCase().includes("not signed")) {
+    } catch (error: unknown) {
+      const m = getErrorMessage(error, "No se pudieron cargar las cuentas.");
+      if (m.toLowerCase().includes("not signed")) {
         router.push("/login");
         return;
       }
@@ -90,11 +92,9 @@ export function useAccountList() {
   }
 
   useEffect(() => {
-    load();
+    void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // ─── Mutaciones ───────────────────────────────────────────────────────────────
 
   async function addAccount(input: AddAccountInput): Promise<string | null> {
     const nm = input.name.trim();
@@ -119,9 +119,9 @@ export function useAccountList() {
 
       if (error) throw error;
       await load();
-      return null; // null = sin error
-    } catch (e: any) {
-      const m = e?.message ?? "No se pudo agregar la cuenta.";
+      return null;
+    } catch (error: unknown) {
+      const m = getErrorMessage(error, "No se pudo agregar la cuenta.");
       setError(m);
       return m;
     } finally {
@@ -136,8 +136,8 @@ export function useAccountList() {
       const { error } = await supabase.from("accounts").delete().eq("id", id);
       if (error) throw error;
       await load();
-    } catch (e: any) {
-      setError(e?.message ?? "No se pudo eliminar la cuenta.");
+    } catch (error: unknown) {
+      setError(getErrorMessage(error, "No se pudo eliminar la cuenta."));
     } finally {
       setLoading(false);
     }

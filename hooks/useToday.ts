@@ -20,8 +20,6 @@ import {
   type IntimacyScore,
 } from "../lib/intimacy";
 
-// ─── Tipos ────────────────────────────────────────────────────────────────────
-
 type RawAccount = {
   id: string;
   name: string;
@@ -44,7 +42,6 @@ type RawContact = {
   created_at: string;
 };
 
-// Fila enriquecida que la página puede renderizar directamente
 export type EnrichedAccount = {
   id: string;
   name: string;
@@ -52,7 +49,6 @@ export type EnrichedAccount = {
   country: string | null;
   value_usd: number | null;
   last_interaction_at: string | null;
-  // Calculados
   score: IntimacyScore;
   lastTouch: string;
   valueFormatted: string;
@@ -64,7 +60,13 @@ export type EnrichedAccount = {
   missingAreas: Area[];
 };
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (error && typeof error === "object" && "message" in error) {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+  return fallback;
+}
 
 export function useToday() {
   const router = useRouter();
@@ -74,7 +76,6 @@ export function useToday() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Filtros de UI
   const [search, setSearch] = useState("");
   const [tierFilter, setTierFilter] = useState<"all" | Tier>("all");
 
@@ -108,14 +109,19 @@ export function useToday() {
 
       const { data: cts, error: cErr } = await supabase
         .from("contacts")
-        .select("id,account_id,name,email,area,preferred_channel,personal_hook,last_touch_at,created_at")
-        .in("account_id", accList.map((a) => a.id));
+        .select(
+          "id,account_id,name,email,area,preferred_channel,personal_hook,last_touch_at,created_at"
+        )
+        .in(
+          "account_id",
+          accList.map((a) => a.id)
+        );
 
       if (cErr) throw cErr;
       setRawContacts((cts ?? []) as RawContact[]);
-    } catch (e: any) {
-      const m = e?.message ?? "No se pudo cargar.";
-      if (String(m).toLowerCase().includes("not signed")) {
+    } catch (error: unknown) {
+      const m = getErrorMessage(error, "No se pudo cargar.");
+      if (m.toLowerCase().includes("not signed")) {
         router.push("/login");
         return;
       }
@@ -126,19 +132,15 @@ export function useToday() {
   }
 
   useEffect(() => {
-    loadAll();
+    void loadAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // ─── Enriquecer cuentas ───────────────────────────────────────────────────────
-  // Este useMemo es el núcleo del "Today" cockpit.
-  // Aplica filtros y calcula todo lo que la página necesita mostrar.
 
   const contactsByAccount = useMemo(() => {
     const map = new Map<string, RawContact[]>();
     for (const c of rawContacts) {
       if (!map.has(c.account_id)) map.set(c.account_id, []);
-      map.get(c.account_id)!.push(c);
+      map.get(c.account_id)?.push(c);
     }
     return map;
   }, [rawContacts]);
@@ -183,7 +185,6 @@ export function useToday() {
       });
   }, [rawAccounts, contactsByAccount, search, tierFilter]);
 
-  // Cuentas que requieren contacto — ordenadas por score ASC (más crítico primero)
   const mustContact = useMemo(
     () =>
       allEnriched
@@ -195,7 +196,6 @@ export function useToday() {
     [allEnriched]
   );
 
-  // Todas las cuentas ordenadas por score ASC (las más en riesgo arriba)
   const allSorted = useMemo(
     () => [...allEnriched].sort((x, y) => x.score.total - y.score.total),
     [allEnriched]
@@ -207,19 +207,15 @@ export function useToday() {
   }
 
   return {
-    // Data
     mustContact,
     allSorted,
     totalShowing: allEnriched.length,
-    // Estado
     loading,
     error,
-    // Filtros
     search,
     setSearch,
     tierFilter,
     setTierFilter,
-    // Acciones
     loadAll,
     signOut,
   };

@@ -6,7 +6,13 @@ import { useAccountDetail } from "../../../hooks/useAccountDetail";
 import QuickLogModal from "../../../components/QuickLogModal";
 import AddContactSheet from "../../../components/AddContactSheet";
 import { ScorePill, CoverageChips } from "../../../components/IntimacyWidgets";
-import { fmtMoney, fmtLastTouch, daysSince, channelLabel, AREAS } from "../../../lib/intimacy";
+import {
+  fmtMoney,
+  fmtLastTouch,
+  daysSince,
+  channelLabel,
+  AREAS,
+} from "../../../lib/intimacy";
 
 export const dynamic = "force-dynamic";
 
@@ -29,18 +35,26 @@ export default function AccountDetailPage() {
 
   const [logOpen, setLogOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [editingContact, setEditingContact] = useState<(typeof contacts)[0] | null>(null);
+  const [editingContact, setEditingContact] = useState<(typeof contacts)[0] | null>(
+    null
+  );
 
   if (!accountId) {
     return (
       <main>
         <div className="topbar">
-          <div><h1 className="h1">Account</h1></div>
+          <div className="topbarTitle">
+            <h1 className="h1">Account</h1>
+          </div>
         </div>
         <div className="card">
-          <div style={{ fontSize: 13, opacity: 0.9 }}>No account id. Go back to Accounts.</div>
+          <div style={{ fontSize: 13, opacity: 0.9 }}>
+            No account id. Go back to Accounts.
+          </div>
           <div style={{ height: 12 }} />
-          <button className="btn" onClick={() => router.push("/accounts")}>Back to Accounts</button>
+          <button className="btn" onClick={() => router.push("/accounts")}>
+            Back to Accounts
+          </button>
         </div>
       </main>
     );
@@ -48,11 +62,18 @@ export default function AccountDetailPage() {
 
   return (
     <main>
-      {/* Header */}
       <div className="topbar">
-        <div style={{ minWidth: 0 }}>
-          <h1 className="h1" style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-            <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <div className="topbarTitle" style={{ minWidth: 0 }}>
+          <h1
+            className="h1"
+            style={{
+              display: "flex",
+              gap: 10,
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <span style={{ minWidth: 0, overflowWrap: "anywhere", whiteSpace: "normal" }}>
               {account?.name ?? "Account"}
             </span>
             {score && <ScorePill total={score.total} label={score.label} tone={score.tone} />}
@@ -62,21 +83,35 @@ export default function AccountDetailPage() {
               <>
                 {account.tier} • {account.country ?? "—"} • {fmtMoney(account.value_usd)}
                 {score && (
-                  <> • last touch: {fmtLastTouch(score.d)} • cadence: {score.cadence}d • coverage: {score.coveredAreas}/{AREAS.length}</>
+                  <>
+                    {" "}
+                    • last touch: {fmtLastTouch(score.d)} • cadence: {score.cadence}d • coverage: {score.coveredAreas}/
+                    {AREAS.length}
+                  </>
                 )}
               </>
-            ) : "Loading…"}
+            ) : (
+              "Loading…"
+            )}
           </div>
         </div>
 
-        <div className="row" style={{ gap: 10, flexWrap: "wrap" }}>
-          <div className="segmented">
-            <button className="segBtn" onClick={() => router.push("/today")}>Today</button>
-            <button className="segBtn" onClick={() => router.push("/accounts")}>Accounts</button>
-            <button className="segBtn" onClick={() => router.push("/weekly")}>Weekly Pack</button>
-          </div>
-          <button className="btn" onClick={loadAll} disabled={loading}>Refresh</button>
-          <button className="btn btnPrimary" onClick={signOut}>Sign out</button>
+        <div className="topbarActions">
+          <button className="btn" onClick={() => router.push("/today")}>
+            Today
+          </button>
+          <button className="btn" onClick={() => router.push("/accounts")}>
+            Accounts
+          </button>
+          <button className="btn" onClick={() => router.push("/weekly")}>
+            Weekly Pack
+          </button>
+          <button className="btn" onClick={loadAll} disabled={loading}>
+            Refresh
+          </button>
+          <button className="btn btnPrimary" onClick={signOut}>
+            Sign out
+          </button>
         </div>
       </div>
 
@@ -86,18 +121,28 @@ export default function AccountDetailPage() {
         </div>
       )}
 
-      {/* Intimacy Score */}
       {score ? (
         <div className="card" style={{ padding: 16 }}>
-          <div className="row" style={{ justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+          <div
+            className="row"
+            style={{ justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}
+          >
             <div>
-              <div style={{ fontWeight: 950, fontSize: 16, letterSpacing: -0.2 }}>Intimacy score</div>
+              <div style={{ fontWeight: 950, fontSize: 16, letterSpacing: -0.2 }}>
+                Intimacy score
+              </div>
               <div className="subtle" style={{ marginTop: 4 }}>
                 Recency: {score.recency}/60 • Coverage: {score.coverage}/40
-                {score.missing.length > 0 ? ` • Missing: ${score.missing.join(", ")}` : " • Coverage: full"}
+                {score.missing.length > 0
+                  ? ` • Missing: ${score.missing.join(", ")}`
+                  : " • Coverage: full"}
               </div>
             </div>
-            <button className="btn btnPrimary" onClick={() => setLogOpen(true)} disabled={!account}>
+            <button
+              className="btn btnPrimary"
+              onClick={() => setLogOpen(true)}
+              disabled={!account}
+            >
               Quick log
             </button>
           </div>
@@ -112,16 +157,20 @@ export default function AccountDetailPage() {
 
       <div style={{ height: 12 }} />
 
-      {/* Contacts */}
       <div className="card">
         <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
           <div>
             <div style={{ fontWeight: 900, fontSize: 16 }}>Contacts ({contacts.length})</div>
-            <div className="subtle" style={{ marginTop: 4 }}>Cubre todas las áreas. Hooks cortos y útiles.</div>
+            <div className="subtle" style={{ marginTop: 4 }}>
+              Cubre todas las áreas. Hooks cortos y útiles.
+            </div>
           </div>
           <button
             className="btn btnPrimary"
-            onClick={() => { setEditingContact(null); setSheetOpen(true); }}
+            onClick={() => {
+              setEditingContact(null);
+              setSheetOpen(true);
+            }}
           >
             Add contact
           </button>
@@ -145,18 +194,36 @@ export default function AccountDetailPage() {
                         {c.area} • {channelLabel(c.preferred_channel)} • {fmtLastTouch(daysSince(c.last_touch_at))}
                       </span>
                     </div>
-                    {c.personal_hook
-                      ? <div style={{ marginTop: 6, fontSize: 13, opacity: 0.9 }}>Hook: {c.personal_hook}</div>
-                      : <div style={{ marginTop: 6, fontSize: 13, opacity: 0.5 }}>Hook: —</div>
-                    }
-                    {c.email && <div style={{ marginTop: 4, fontSize: 12, opacity: 0.6 }}>{c.email}</div>}
+                    {c.personal_hook ? (
+                      <div style={{ marginTop: 6, fontSize: 13, opacity: 0.9 }}>
+                        Hook: {c.personal_hook}
+                      </div>
+                    ) : (
+                      <div style={{ marginTop: 6, fontSize: 13, opacity: 0.5 }}>
+                        Hook: —
+                      </div>
+                    )}
+                    {c.email && (
+                      <div style={{ marginTop: 4, fontSize: 12, opacity: 0.6 }}>{c.email}</div>
+                    )}
                   </div>
 
                   <div className="row" style={{ gap: 10 }}>
-                    <button className="btn" onClick={() => { setEditingContact(c); setSheetOpen(true); }} style={{ height: 40 }}>
+                    <button
+                      className="btn"
+                      onClick={() => {
+                        setEditingContact(c);
+                        setSheetOpen(true);
+                      }}
+                      style={{ height: 40 }}
+                    >
                       Edit
                     </button>
-                    <button className="btn" onClick={() => deleteContact(c.id)} style={{ height: 40 }}>
+                    <button
+                      className="btn"
+                      onClick={() => deleteContact(c.id)}
+                      style={{ height: 40 }}
+                    >
                       Delete
                     </button>
                   </div>
@@ -169,14 +236,17 @@ export default function AccountDetailPage() {
 
       <div style={{ height: 12 }} />
 
-      {/* Recent interactions */}
       <div className="card">
         <div style={{ fontWeight: 900, fontSize: 16 }}>Recent interactions</div>
-        <div className="subtle" style={{ marginTop: 4 }}>Últimas 30 (por cuenta)</div>
+        <div className="subtle" style={{ marginTop: 4 }}>
+          Últimas 30 (por cuenta)
+        </div>
         <div style={{ height: 12 }} />
 
         {interactions.length === 0 ? (
-          <div className="subtle" style={{ fontSize: 13 }}>Sin interacciones aún.</div>
+          <div className="subtle" style={{ fontSize: 13 }}>
+            Sin interacciones aún.
+          </div>
         ) : (
           <div style={{ display: "grid", gap: 10 }}>
             {interactions.map((it) => {
@@ -197,7 +267,6 @@ export default function AccountDetailPage() {
         )}
       </div>
 
-      {/* Modals */}
       {account && (
         <QuickLogModal
           open={logOpen}
@@ -214,7 +283,10 @@ export default function AccountDetailPage() {
         mode={editingContact ? "edit" : "create"}
         accountId={accountId ?? ""}
         initial={editingContact}
-        onClose={() => { setSheetOpen(false); setEditingContact(null); }}
+        onClose={() => {
+          setSheetOpen(false);
+          setEditingContact(null);
+        }}
         onSaved={loadAll}
       />
     </main>

@@ -117,6 +117,17 @@ textarea {
   margin-bottom: 18px;
 }
 
+.topbarTitle {
+  min-width: 0;
+}
+
+.topbarActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .h1 {
   font-size: 28px;
   font-weight: 900;
@@ -324,6 +335,10 @@ textarea {
 .accCardMust {
   position: relative;
   overflow: hidden;
+  border-color: rgba(255, 120, 120, 0.18);
+  background:
+    linear-gradient(180deg, rgba(255, 120, 120, 0.08), rgba(255, 255, 255, 0.03)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.02));
 }
 
 .accCardMust::before {
@@ -336,6 +351,11 @@ textarea {
   border-radius: 999px;
   background: rgba(255, 120, 120, 0.9);
   box-shadow: 0 0 0 6px rgba(255, 120, 120, 0.08);
+}
+
+.accCardMust .scoreCircle {
+  border-color: rgba(255, 120, 120, 0.3);
+  box-shadow: 0 0 0 8px rgba(255, 120, 120, 0.1);
 }
 
 .accCardRow {
@@ -470,6 +490,31 @@ textarea {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 16px;
   padding: 12px;
+}
+
+.todayKpiGrid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.todayKpiCard {
+  padding: 12px 14px;
+}
+
+.todayKpiLabel {
+  font-size: 12px;
+  color: var(--faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.todayKpiValue {
+  margin-top: 6px;
+  font-size: 30px;
+  font-weight: 950;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
 .accRecLabel {
@@ -622,11 +667,6 @@ textarea {
   padding-right: calc(14px + env(safe-area-inset-right));
 }
 
-/* Title block helper */
-.topbarTitle {
-  min-width: 0;
-}
-
 .topbarTitle h1 {
   word-break: break-word;
 }
@@ -658,5 +698,9 @@ textarea {
 
   .topbarActions .segmented {
     width: 100%;
+  }
+
+  .todayKpiGrid {
+    grid-template-columns: 1fr;
   }
 }

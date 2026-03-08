@@ -6,6 +6,14 @@ import { supabase } from "../../lib/supabaseClient";
 
 export const dynamic = "force-dynamic";
 
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (error && typeof error === "object" && "message" in error) {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+  return fallback;
+}
+
 export default function LoginPage() {
   const router = useRouter();
 
@@ -16,7 +24,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
-  // If already logged in, go to Today
   useEffect(() => {
     (async () => {
       const { data } = await supabase.auth.getUser();
@@ -28,9 +35,18 @@ export default function LoginPage() {
     setMsg(null);
 
     const e = email.trim().toLowerCase();
-    if (!e) return setMsg("Email is required.");
-    if (!password) return setMsg("Password is required.");
-    if (password.length < 6) return setMsg("Password must be at least 6 characters.");
+    if (!e) {
+      setMsg("Email is required.");
+      return;
+    }
+    if (!password) {
+      setMsg("Password is required.");
+      return;
+    }
+    if (password.length < 6) {
+      setMsg("Password must be at least 6 characters.");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -45,38 +61,33 @@ export default function LoginPage() {
         return;
       }
 
-      // SIGN UP
       const redirectTo =
-        typeof window !== "undefined" ? `${window.location.origin}/today` : undefined;
+        typeof window !== "undefined"
+          ? `${window.location.origin}/today`
+          : undefined;
 
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email: e,
         password,
         options: {
-          // Used only if email confirmation is enabled
           emailRedirectTo: redirectTo,
         },
       });
 
       if (error) throw error;
 
-      // If email confirmation is ON, user may not exist as a session yet.
-      // Supabase returns identities/session depending on your settings.
       const { data: userData } = await supabase.auth.getUser();
 
       if (userData.user) {
-        // Confirmation OFF (or instant session) -> go in
         router.push("/today");
       } else {
-        // Confirmation ON -> tell user to check email
         setMsg(
           "Account created. Check your email to confirm your account, then sign in."
         );
         setMode("signin");
       }
-    } catch (e: any) {
-      // Common: "Email rate limit exceeded", "User already registered", etc.
-      setMsg(e?.message ?? "Could not authenticate.");
+    } catch (error: unknown) {
+      setMsg(getErrorMessage(error, "Could not authenticate."));
     } finally {
       setLoading(false);
     }
@@ -111,7 +122,8 @@ export default function LoginPage() {
               padding: "10px 12px",
               borderRadius: 14,
               border: "1px solid rgba(255,255,255,0.14)",
-              background: mode === "signin" ? "rgba(255,255,255,0.10)" : "transparent",
+              background:
+                mode === "signin" ? "rgba(255,255,255,0.10)" : "transparent",
               color: "white",
               cursor: "pointer",
               fontWeight: 800,
@@ -128,7 +140,8 @@ export default function LoginPage() {
               padding: "10px 12px",
               borderRadius: 14,
               border: "1px solid rgba(255,255,255,0.14)",
-              background: mode === "signup" ? "rgba(255,255,255,0.10)" : "transparent",
+              background:
+                mode === "signup" ? "rgba(255,255,255,0.10)" : "transparent",
               color: "white",
               cursor: "pointer",
               fontWeight: 800,
