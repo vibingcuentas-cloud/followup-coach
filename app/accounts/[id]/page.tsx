@@ -64,6 +64,7 @@ export default function AccountDetailPage() {
     <main>
       <div className="topbar">
         <div className="topbarTitle" style={{ minWidth: 0 }}>
+          <div className="brandTag">Forge</div>
           <h1
             className="h1"
             style={{

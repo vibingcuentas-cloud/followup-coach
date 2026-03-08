@@ -46,6 +46,7 @@ export default function TodayPage() {
     <main>
       <div className="topbar">
         <div className="topbarTitle">
+          <div className="brandTag">Forge</div>
           <h1 className="h1">Today</h1>
           <div className="subtle">Intimacy command center • A=7d • B=14d • C=30d</div>
         </div>

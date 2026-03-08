@@ -24,11 +24,12 @@ export default function WeeklyPage() {
   return (
     <main>
       <div className="topbar">
-        <div>
+        <div className="topbarTitle">
+          <div className="brandTag">Forge</div>
           <h1 className="h1">Weekly Pack</h1>
           <div className="subtle">Resumen listo para copiar/pegar a tu equipo o manager.</div>
         </div>
-        <div className="row" style={{ justifyContent: "flex-end", gap: 10 }}>
+        <div className="topbarActions">
           <button className="btn" onClick={() => router.push("/today")}>Today</button>
           <button className="btn" onClick={() => router.push("/accounts")}>Accounts</button>
           <button className="btn" onClick={loadAll}>Refresh</button>

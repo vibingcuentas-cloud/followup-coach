@@ -1,6 +1,6 @@
-# Followup Coach
+# Forge
 
-A minimal follow-up webapp to improve sales execution and customer intimacy.
+Forge is an intimacy-first operating system for strategic account execution.
 
 ## What it does
 

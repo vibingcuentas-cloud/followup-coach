@@ -1,8 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Followup Coach",
-  description: "Intimacy-first follow-up tracker",
+  title: "Forge",
+  description: "Forge | Intimacy OS for Strategic Accounts",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

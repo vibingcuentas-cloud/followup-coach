@@ -38,6 +38,7 @@ export default function AccountsPage() {
     <main>
       <div className="topbar">
         <div className="topbarTitle">
+          <div className="brandTag">Forge</div>
           <h1 className="h1">Accounts</h1>
           <div className="subtle">Ordenado por valor. Estado visible de un vistazo.</div>
         </div>

@@ -128,6 +128,15 @@ textarea {
   min-width: 0;
 }
 
+.brandTag {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
 .topbarActions {
   display: flex;
   gap: 10px;

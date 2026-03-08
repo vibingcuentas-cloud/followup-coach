@@ -104,11 +104,14 @@ export default function LoginPage() {
         }}
       >
         <div>
+          <div style={{ fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.72, fontWeight: 700 }}>
+            Forge
+          </div>
           <h1 style={{ fontSize: 34, fontWeight: 900, letterSpacing: -0.5 }}>
             {mode === "signin" ? "Sign in" : "Sign up"}
           </h1>
           <div style={{ marginTop: 6, opacity: 0.7 }}>
-            Minimal. Fast. Built for follow-up discipline.
+            Intimacy OS for strategic account execution.
           </div>
         </div>
 
