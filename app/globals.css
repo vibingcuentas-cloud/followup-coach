@@ -813,6 +813,28 @@ textarea {
     grid-template-columns: 1fr 1fr;
   }
 
+  .todayCommandBar {
+    position: static;
+    top: auto;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .todayKpiCard {
+    padding: 10px 12px;
+    min-height: 78px;
+  }
+
+  .todayKpiLabel {
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+
+  .todayKpiValue {
+    margin-top: 4px;
+    font-size: 24px;
+  }
+
   .accountsAddGrid {
     grid-template-columns: 1fr 1fr;
   }
@@ -852,7 +874,8 @@ textarea {
   }
 
   .todayKpiGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
 
   .quickLogOverlay {
