@@ -124,39 +124,40 @@ export default function AccountCard({
         <div className="accMain">
           <div className="accTitleRow">
             <div className="accTitle">
-              {account.name}
-              <span className="accMeta">
-                {account.tier} • {account.country ?? "—"}
-              </span>
-              <span className={`accBadge ${due ? "due" : "ok"}`}>
-                {due ? "due" : "ok"}
-              </span>
-              <span className="accBadge" style={{ marginLeft: 8, opacity: 0.9 }}>
-                {reminderLabel}
-              </span>
+              <div className="accIdentity">
+                <span className="accName">{account.name}</span>
+                <span className="accMeta">
+                  {account.tier} • {account.country ?? "—"}
+                </span>
+              </div>
+              <div className="accBadges">
+                <span className={`accBadge ${due ? "due" : "ok"}`}>
+                  {due ? "due" : "ok"}
+                </span>
+                <span className="accBadge" style={{ opacity: 0.9 }}>
+                  {reminderLabel}
+                </span>
+              </div>
             </div>
 
             <div className="accActions">
               <button
-                className="btn"
+                className="btn accActionBtn"
                 onClick={onOpen}
-                style={{ height: 40, borderRadius: 14 }}
               >
                 Open
               </button>
               <button
-                className="btn btnPrimary"
+                className="btn btnPrimary accActionBtn"
                 onClick={onLog}
                 disabled={contacts.length === 0}
                 title={contacts.length === 0 ? "Add a contact first" : "Quick log"}
-                style={{ height: 40, borderRadius: 14 }}
               >
                 {variant === "must" ? "Log now" : "Log"}
               </button>
               <button
-                className="btn"
+                className="btn accActionBtn"
                 onClick={() => setExpanded((v) => !v)}
-                style={{ height: 40, borderRadius: 14 }}
               >
                 {expanded ? "Hide details" : "Details"}
               </button>

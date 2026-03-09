@@ -494,23 +494,41 @@ html[data-density="compact"] .field {
 }
 
 .accTitle {
-  font-weight: 900;
-  font-size: 18px;
-  line-height: 1.2;
+  display: grid;
+  gap: 8px;
   min-width: 0;
 }
 
+.accIdentity {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.accName {
+  font-weight: 900;
+  font-size: 18px;
+  line-height: 1;
+}
+
 .accMeta {
-  margin-left: 10px;
   font-weight: 700;
   font-size: 13px;
   opacity: 0.7;
 }
 
+.accBadges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .accBadge {
   display: inline-flex;
   align-items: center;
-  margin-left: 10px;
   padding: 4px 10px;
   border-radius: 999px;
   font-size: 12px;
@@ -531,8 +549,15 @@ html[data-density="compact"] .field {
 .accActions {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
+  justify-content: flex-end;
+}
+
+.accActionBtn {
+  height: 40px;
+  min-width: 108px;
+  border-radius: 14px;
 }
 
 .accSubRow {
@@ -577,6 +602,37 @@ html[data-density="compact"] .field {
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.todayFiltersCard {
+  padding: 14px;
+}
+
+.todayFiltersHeader {
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.todayFiltersGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(220px, 0.7fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.todayFilterSearch {
+  min-width: 280px;
+}
+
+.todayFilterTier {
+  min-width: 220px;
+}
+
+.todayFilterActions {
+  gap: 10px;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
 }
 
 .todayKpiCard {
@@ -866,12 +922,17 @@ html[data-density="compact"] .field {
 
   .accActions {
     width: 100%;
+    flex-wrap: wrap;
   }
 
   /* Actions become full width with two buttons */
   .accActions .btn {
     flex: 1;
     min-width: 0;
+  }
+
+  .accName {
+    font-size: 18px;
   }
 
   .accMeta,
@@ -1033,6 +1094,25 @@ html[data-density="compact"] .field {
     width: min(96vw, 460px);
   }
 
+  .todayFiltersGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .todayFilterSearch,
+  .todayFilterTier {
+    min-width: 0;
+  }
+
+  .todayFilterActions {
+    justify-content: stretch;
+    flex-wrap: wrap;
+  }
+
+  .todayFilterActions .btn {
+    flex: 1;
+    min-width: 0;
+  }
+
   .quickLogOverlay {
     place-items: end center;
     padding:
@@ -1065,5 +1145,24 @@ html[data-density="compact"] .field {
   .todayKpiValue {
     font-size: 22px;
     margin-top: 2px;
+  }
+
+  .todayFiltersGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .todayFilterSearch,
+  .todayFilterTier {
+    min-width: 0;
+  }
+
+  .todayFilterActions {
+    justify-content: stretch;
+    flex-wrap: wrap;
+  }
+
+  .todayFilterActions .btn {
+    flex: 1;
+    min-width: 0;
   }
 }

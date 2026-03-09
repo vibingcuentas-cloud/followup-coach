@@ -146,8 +146,8 @@ export default function TodayPage() {
         </div>
       </div>
 
-      <div className="card" style={{ marginBottom: 14, padding: 14 }}>
-        <div className="row" style={{ justifyContent: "space-between", marginBottom: 10 }}>
+      <div className="card todayFiltersCard" style={{ marginBottom: 14 }}>
+        <div className="row todayFiltersHeader">
           <div className="label" style={{ marginBottom: 0 }}>
             Filters
           </div>
@@ -156,11 +156,8 @@ export default function TodayPage() {
           </button>
         </div>
         {showFilters && (
-        <div
-          className="row"
-          style={{ justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}
-        >
-          <div style={{ flex: 1, minWidth: 280 }}>
+        <div className="todayFiltersGrid">
+          <div className="todayFilterSearch">
             <div className="label" style={{ marginBottom: 6 }}>
               Search
             </div>
@@ -172,7 +169,7 @@ export default function TodayPage() {
             />
           </div>
 
-          <div style={{ minWidth: 220 }}>
+          <div className="todayFilterTier">
             <div className="label" style={{ marginBottom: 6 }}>
               Tier
             </div>
@@ -189,11 +186,10 @@ export default function TodayPage() {
             </div>
           </div>
 
-          <div className="row" style={{ gap: 10, alignItems: "flex-end" }}>
+          <div className="row todayFilterActions">
             <button
               className="btn"
               onClick={() => setSearch("")}
-              style={{ height: 44, borderRadius: 16 }}
             >
               Clear
             </button>
