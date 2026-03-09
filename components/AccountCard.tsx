@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   channelLabel,
   computeIntimacyScore,
@@ -88,6 +89,7 @@ export default function AccountCard({
   compact?: boolean;
   variant?: "default" | "must";
 }) {
+  const [expanded, setExpanded] = useState(!compact);
   const due = isAccountDue(account);
   const score = computeIntimacyScore(account, contacts);
   const rec = pickRecommendedContact(contacts);
@@ -151,71 +153,82 @@ export default function AccountCard({
               >
                 {variant === "must" ? "Log now" : "Log"}
               </button>
+              <button
+                className="btn"
+                onClick={() => setExpanded((v) => !v)}
+                style={{ height: 40, borderRadius: 14 }}
+              >
+                {expanded ? "Hide details" : "Details"}
+              </button>
             </div>
           </div>
 
-          <div className="accSubRow">
-            <div className="accSub">
-              <span className="accSubItem">Recency: {score.recency}/60</span>
-              <span className="dot">•</span>
-              <span className="accSubItem">Coverage: {score.coveredAreas}/5</span>
-              <span className="dot">•</span>
-              <span className="accSubItem">Value: {fmtMoney(account.value_usd)}</span>
-              <span className="dot">•</span>
-              <span className="accSubItem">Last touch: {lastTouch}</span>
-            </div>
-            {urgencyReason && <div className="accMissing">{urgencyReason}</div>}
-
-            {missingAreas.length > 0 ? (
-              <div className="accMissing">Missing: {missingAreas.join(", ")}</div>
-            ) : (
-              <div className="accMissing ok">Coverage: full</div>
-            )}
-          </div>
-
-          <div className="accRecBox">
-            <div className="accRecLabel">
-              {variant === "must" ? "NEXT BEST CONTACT (PRIORITY)" : "RECOMMENDED NEXT TOUCH"}
-            </div>
-
-            {rec ? (
-              <>
-                <div className="accRecName">
-                  {rec.name}
-                  <span className="accRecMeta">
-                    {rec.area} • {recLastTouch}
-                  </span>
+          {expanded && (
+            <>
+              <div className="accSubRow">
+                <div className="accSub">
+                  <span className="accSubItem">Recency: {score.recency}/60</span>
+                  <span className="dot">•</span>
+                  <span className="accSubItem">Coverage: {score.coveredAreas}/5</span>
+                  <span className="dot">•</span>
+                  <span className="accSubItem">Value: {fmtMoney(account.value_usd)}</span>
+                  <span className="dot">•</span>
+                  <span className="accSubItem">Last touch: {lastTouch}</span>
                 </div>
-                <div className="accRecLine">
-                  Preferred: {channelLabel(rec.preferred_channel)}
-                  {rec.personal_hook ? ` • Hook: ${rec.personal_hook}` : ""}
+                {urgencyReason && <div className="accMissing">{urgencyReason}</div>}
+
+                {missingAreas.length > 0 ? (
+                  <div className="accMissing">Missing: {missingAreas.join(", ")}</div>
+                ) : (
+                  <div className="accMissing ok">Coverage: full</div>
+                )}
+              </div>
+
+              <div className="accRecBox">
+                <div className="accRecLabel">
+                  {variant === "must" ? "NEXT BEST CONTACT (PRIORITY)" : "RECOMMENDED NEXT TOUCH"}
                 </div>
-                {(waHref || telHref || mailHref) && (
-                  <div className="row" style={{ marginTop: 8, gap: 8 }}>
-                    {waHref && (
-                      <a className="btn" href={waHref} target="_blank" rel="noreferrer">
-                        WhatsApp
-                      </a>
+
+                {rec ? (
+                  <>
+                    <div className="accRecName">
+                      {rec.name}
+                      <span className="accRecMeta">
+                        {rec.area} • {recLastTouch}
+                      </span>
+                    </div>
+                    <div className="accRecLine">
+                      Preferred: {channelLabel(rec.preferred_channel)}
+                      {rec.personal_hook ? ` • Hook: ${rec.personal_hook}` : ""}
+                    </div>
+                    {(waHref || telHref || mailHref) && (
+                      <div className="row" style={{ marginTop: 8, gap: 8 }}>
+                        {waHref && (
+                          <a className="btn" href={waHref} target="_blank" rel="noreferrer">
+                            WhatsApp
+                          </a>
+                        )}
+                        {telHref && (
+                          <a className="btn" href={telHref}>
+                            Call
+                          </a>
+                        )}
+                        {mailHref && (
+                          <a className="btn" href={mailHref}>
+                            Email
+                          </a>
+                        )}
+                      </div>
                     )}
-                    {telHref && (
-                      <a className="btn" href={telHref}>
-                        Call
-                      </a>
-                    )}
-                    {mailHref && (
-                      <a className="btn" href={mailHref}>
-                        Email
-                      </a>
-                    )}
+                  </>
+                ) : (
+                  <div className="accRecLine subtle">
+                    No contact yet — add one inside the account.
                   </div>
                 )}
-              </>
-            ) : (
-              <div className="accRecLine subtle">
-                No contact yet — add one inside the account.
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>

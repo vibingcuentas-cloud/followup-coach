@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { useToday, type EnrichedAccount } from "../../hooks/useToday";
 import AccountCard from "../../components/AccountCard";
 import QuickLogModal from "../../components/QuickLogModal";
+import { supabase } from "../../lib/supabaseClient";
 
 export const dynamic = "force-dynamic";
+const DENSITY_KEY = "forge-density";
 
 export default function TodayPage() {
   const router = useRouter();
@@ -27,7 +29,10 @@ export default function TodayPage() {
 
   const [qlOpen, setQlOpen] = useState(false);
   const [qlAccount, setQlAccount] = useState<EnrichedAccount | null>(null);
-  const [compact, setCompact] = useState(true);
+  const [compact, setCompact] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem(DENSITY_KEY) === "compact";
+  });
   const [toast, setToast] = useState<{
     text: string;
     undo?: () => Promise<void>;
@@ -45,6 +50,16 @@ export default function TodayPage() {
   function openQuickLog(acc: EnrichedAccount) {
     setQlAccount(acc);
     setQlOpen(true);
+  }
+
+  function toggleDensity() {
+    setCompact((v) => {
+      const next = !v;
+      const density = next ? "compact" : "comfortable";
+      localStorage.setItem(DENSITY_KEY, density);
+      document.documentElement.setAttribute("data-density", density);
+      return next;
+    });
   }
 
   async function handleQuickLogSaved(meta: {
@@ -144,7 +159,7 @@ export default function TodayPage() {
             <div className="label" style={{ marginBottom: 6 }}>
               Tier
             </div>
-            <div className="segmented">
+            <div className="segmented scroll">
               {(["all", "A", "B", "C"] as const).map((t) => (
                 <button
                   key={t}
@@ -165,7 +180,7 @@ export default function TodayPage() {
             >
               Clear
             </button>
-            <button className="btn" onClick={() => setCompact((v) => !v)}>
+            <button className="btn" onClick={toggleDensity}>
               {compact ? "Comfort view" : "Compact view"}
             </button>
           </div>
@@ -195,8 +210,11 @@ export default function TodayPage() {
       )}
 
       {!loading && mustContact.length === 0 && (
-        <div className="card">
-          <div style={{ fontSize: 13, opacity: 0.85 }}>No hay cuentas pendientes ahora.</div>
+        <div className="card emptyState">
+          <div className="emptyStateIcon">◎</div>
+          <div style={{ fontSize: 13, opacity: 0.9 }}>
+            No hay cuentas pendientes ahora.
+          </div>
           <div className="row" style={{ marginTop: 10 }}>
             <button className="btn" onClick={() => router.push("/accounts")}>
               Add account
@@ -284,6 +302,18 @@ export default function TodayPage() {
           )}
         </div>
       )}
+
+      <div className="todayStickyActions">
+        <button className="btn" onClick={loadAll} disabled={loading}>
+          Refresh
+        </button>
+        <button className="btn" onClick={() => router.push("/accounts")}>
+          Accounts
+        </button>
+        <button className="btn btnPrimary" onClick={() => router.push("/weekly")}>
+          Weekly
+        </button>
+      </div>
     </main>
   );
 }

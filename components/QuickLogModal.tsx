@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { daysSince } from "../lib/intimacy";
 
@@ -74,6 +74,7 @@ export default function QuickLogModal({
   const [nextStepDate, setNextStepDate] = useState(defaultNextStepDate());
   const [useDraftLoaded, setUseDraftLoaded] = useState(false);
   const draftKey = `quicklog-draft:${accountId}`;
+  const summaryRef = useRef<HTMLTextAreaElement | null>(null);
 
   const recommendedId = useMemo(() => {
     if (contacts.length === 0) return "";
@@ -132,6 +133,12 @@ export default function QuickLogModal({
     };
     localStorage.setItem(draftKey, JSON.stringify(payload));
   }, [open, contactId, channel, summary, nextStep, nextStepDate, draftKey]);
+
+  useEffect(() => {
+    if (!summaryRef.current) return;
+    summaryRef.current.style.height = "0px";
+    summaryRef.current.style.height = `${Math.min(240, summaryRef.current.scrollHeight)}px`;
+  }, [summary, open]);
 
   if (!open) return null;
 
@@ -299,12 +306,13 @@ export default function QuickLogModal({
         <label style={{ display: "grid", gap: 6 }}>
           <div className="label">Resumen (requerido)</div>
           <textarea
+            ref={summaryRef}
             className="field"
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
             placeholder="¿Qué pasó? ¿Cuál fue el resultado clave?"
             rows={4}
-            style={{ resize: "vertical" }}
+            style={{ resize: "none", overflowY: "auto" }}
           />
         </label>
 

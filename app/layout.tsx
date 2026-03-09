@@ -1,4 +1,5 @@
 import "./globals.css";
+import DensityBoot from "../components/DensityBoot";
 
 export const metadata = {
   title: "Forge",
@@ -9,6 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
+        <DensityBoot />
         <div className="app-shell">
           <div className="app">{children}</div>
         </div>
