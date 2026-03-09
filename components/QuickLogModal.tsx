@@ -146,23 +146,23 @@ export default function QuickLogModal({
     setMsg(null);
 
     if (contacts.length === 0) {
-      setMsg("Agrega al menos un contacto antes de registrar una interacción.");
+      setMsg("Add at least one contact before logging an interaction.");
       return;
     }
     if (!contactId) {
-      setMsg("Debes seleccionar un contacto.");
+      setMsg("Select a contact.");
       return;
     }
     if (!summary.trim()) {
-      setMsg("El resumen es obligatorio.");
+      setMsg("Summary is required.");
       return;
     }
     if (!nextStep.trim()) {
-      setMsg("El próximo paso es obligatorio.");
+      setMsg("Next step is required.");
       return;
     }
     if (!nextStepDate) {
-      setMsg("La fecha del próximo paso es obligatoria.");
+      setMsg("Next step date is required.");
       return;
     }
 
@@ -209,7 +209,7 @@ export default function QuickLogModal({
       localStorage.removeItem(draftKey);
       onClose();
     } catch (error: unknown) {
-      setMsg(getErrorMessage(error, "No se pudo guardar la interacción."));
+      setMsg(getErrorMessage(error, "Could not save interaction."));
     } finally {
       setLoading(false);
     }
@@ -245,10 +245,10 @@ export default function QuickLogModal({
 
           <div className="row quickLogActions" style={{ gap: 10 }}>
             <button className="btn" onClick={onClose} disabled={loading}>
-              Cerrar
+              Close
             </button>
             <button className="btn btnPrimary" onClick={save} disabled={loading}>
-              {loading ? "Guardando..." : "Guardar"}
+              {loading ? "Saving..." : "Save"}
             </button>
           </div>
         </div>
@@ -276,19 +276,19 @@ export default function QuickLogModal({
 
         <div className="quickLogGridTwoCols" style={{ display: "grid", gap: 10 }}>
           <label style={{ display: "grid", gap: 6 }}>
-            <div className="label">Contacto (requerido)</div>
+            <div className="label">Contact (required)</div>
             <select
               className="field"
               value={contactId}
               onChange={(e) => setContactId(e.target.value)}
             >
-              <option value="">— selecciona un contacto —</option>
+              <option value="">- select a contact -</option>
               {contacts.map((c) => {
                 const d = daysSince(c.last_touch_at);
-                const last = d == null ? "nunca" : d === 0 ? "hoy" : `${d}d`;
+                const last = d == null ? "never" : d === 0 ? "today" : `${d}d`;
                 return (
                   <option key={c.id} value={c.id}>
-                    {c.name} ({c.area}) • último: {last}
+                    {c.name} ({c.area}) • last: {last}
                   </option>
                 );
               })}
@@ -304,13 +304,13 @@ export default function QuickLogModal({
         <div style={{ height: 10 }} />
 
         <label style={{ display: "grid", gap: 6 }}>
-          <div className="label">Resumen (requerido)</div>
+          <div className="label">Summary (required)</div>
           <textarea
             ref={summaryRef}
             className="field"
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
-            placeholder="¿Qué pasó? ¿Cuál fue el resultado clave?"
+            placeholder="What happened? What was the key result?"
             rows={4}
             style={{ resize: "none", overflowY: "auto" }}
           />
@@ -320,17 +320,17 @@ export default function QuickLogModal({
 
         <div className="quickLogGridTwoCols" style={{ display: "grid", gap: 10 }}>
           <label style={{ display: "grid", gap: 6 }}>
-            <div className="label">Próximo paso (requerido)</div>
+            <div className="label">Next step (required)</div>
             <input
               className="field"
               value={nextStep}
               onChange={(e) => setNextStep(e.target.value)}
-              placeholder="ej. Enviar propuesta de muestra"
+              placeholder="e.g. Send sample proposal"
             />
           </label>
 
           <label style={{ display: "grid", gap: 6 }}>
-            <div className="label">Canal</div>
+            <div className="label">Channel</div>
             <select
               className="field"
               value={channel}
@@ -346,7 +346,7 @@ export default function QuickLogModal({
         <div style={{ height: 10 }} />
 
         <label style={{ display: "grid", gap: 6 }}>
-          <div className="label">Fecha próximo paso</div>
+          <div className="label">Next step date</div>
           <input
             className="field"
             type="date"
@@ -356,7 +356,7 @@ export default function QuickLogModal({
         </label>
 
         <div style={{ marginTop: 10 }} className="subtle">
-          Cada interacción debe estar vinculada a un contacto para trackear la intimacy correctamente.
+          Every interaction should be linked to a contact to keep intimacy tracking accurate.
         </div>
       </div>
     </div>

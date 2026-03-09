@@ -1,7 +1,3 @@
-// hooks/useToday.ts
-// Fetch, filtros y cálculos del "Today" cockpit.
-// La página solo renderiza lo que este hook devuelve.
-
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabaseClient";
@@ -124,7 +120,7 @@ export function useToday() {
       if (cErr) throw cErr;
       setRawContacts((cts ?? []) as RawContact[]);
     } catch (error: unknown) {
-      const m = getErrorMessage(error, "No se pudo cargar.");
+      const m = getErrorMessage(error, "Could not load data.");
       if (m.toLowerCase().includes("not signed")) {
         router.push("/login");
         return;

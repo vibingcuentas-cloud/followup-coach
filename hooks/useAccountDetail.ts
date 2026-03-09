@@ -1,6 +1,3 @@
-// hooks/useAccountDetail.ts
-// Maneja fetch, contactos e interacciones de una cuenta específica.
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabaseClient";
@@ -83,7 +80,7 @@ export function useAccountDetail(accountId: string | undefined) {
       return;
     }
     if (!isUuid(accountId)) {
-      setError(`ID inválido: "${accountId}"`);
+      setError(`Invalid id: "${accountId}"`);
       return;
     }
 
@@ -130,7 +127,7 @@ export function useAccountDetail(accountId: string | undefined) {
       setInteractions((its ?? []) as Interaction[]);
       setScore(computeIntimacyScore(accData, ctsData));
     } catch (error: unknown) {
-      const m = getErrorMessage(error, "No se pudo cargar la cuenta.");
+      const m = getErrorMessage(error, "Could not load account.");
       if (m.toLowerCase().includes("not signed")) {
         router.push("/login");
         return;
@@ -154,7 +151,7 @@ export function useAccountDetail(accountId: string | undefined) {
       if (error) throw error;
       await loadAll();
     } catch (error: unknown) {
-      setError(getErrorMessage(error, "No se pudo eliminar el contacto."));
+      setError(getErrorMessage(error, "Could not delete contact."));
     } finally {
       setLoading(false);
     }

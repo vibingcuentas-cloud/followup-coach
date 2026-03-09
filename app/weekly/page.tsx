@@ -17,7 +17,7 @@ export default function WeeklyPage() {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
-      // fallback: el usuario puede seleccionar y copiar manualmente
+      // fallback: user can select and copy manually
     }
   }
 
@@ -27,14 +27,14 @@ export default function WeeklyPage() {
         <div className="topbarTitle">
           <div className="brandTag">Forge</div>
           <h1 className="h1">Weekly Pack</h1>
-          <div className="subtle">Resumen listo para copiar/pegar a tu equipo o manager.</div>
+          <div className="subtle">Weekly summary ready to share with your team or manager.</div>
         </div>
         <div className="topbarActions">
           <button className="btn" onClick={() => router.push("/today")}>Today</button>
           <button className="btn" onClick={() => router.push("/accounts")}>Accounts</button>
           <button className="btn" onClick={loadAll}>Refresh</button>
           <button className="btn btnPrimary" onClick={copyToClipboard}>
-            {copied ? "Copiado ✅" : "Copy"}
+            {copied ? "Copied" : "Copy"}
           </button>
         </div>
       </div>
@@ -49,7 +49,7 @@ export default function WeeklyPage() {
         <div className="card">Loading…</div>
       ) : (
         <div className="card">
-          <div className="label">Texto (listo para copiar)</div>
+          <div className="label">Text (ready to copy)</div>
           <textarea
             className="field"
             readOnly

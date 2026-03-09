@@ -1,14 +1,8 @@
-// lib/intimacy.ts
-// Lógica compartida de intimacy: tipos, score, helpers de UI.
-// Importa desde aquí en cualquier página que lo necesite.
-
 export type Tier = "A" | "B" | "C";
 export type Channel = "call" | "whatsapp" | "email";
 export type Area = "Marketing" | "R&D" | "Procurement" | "Commercial" | "Directors";
 
 export const AREAS: Area[] = ["Marketing", "R&D", "Procurement", "Commercial", "Directors"];
-
-// ─── Helpers de tiempo ────────────────────────────────────────────────────────
 
 export function daysSince(iso: string | null | undefined): number | null {
   if (!iso) return null;
@@ -21,8 +15,6 @@ export function cadenceDays(tier: Tier): number {
   if (tier === "B") return 14;
   return 30;
 }
-
-// ─── Formato ──────────────────────────────────────────────────────────────────
 
 export function fmtMoney(n: number | null): string {
   if (n == null || Number.isNaN(n)) return "—";
@@ -38,8 +30,8 @@ export function fmtMoney(n: number | null): string {
 }
 
 export function fmtLastTouch(d: number | null): string {
-  if (d == null) return "nunca";
-  if (d === 0) return "hoy";
+  if (d == null) return "never";
+  if (d === 0) return "today";
   return `${d}d`;
 }
 
@@ -57,8 +49,6 @@ export function areaShort(a: Area): string {
   };
   return map[a] ?? a;
 }
-
-// ─── Score ────────────────────────────────────────────────────────────────────
 
 export type IntimacyScore = {
   total: number;
@@ -118,8 +108,6 @@ export function computeIntimacyScore(
     d,
   };
 }
-
-// ─── Contacto recomendado ─────────────────────────────────────────────────────
 
 export function pickRecommendedContact<T extends { last_touch_at?: string | null }>(
   contacts: T[]

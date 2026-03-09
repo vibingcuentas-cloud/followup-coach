@@ -1,6 +1,3 @@
-// hooks/useWeekly.ts
-// Fetch y generación del texto del Weekly Pack.
-
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabaseClient";
@@ -84,7 +81,7 @@ export function useWeekly() {
       setAccounts((acc as Account[]) ?? []);
       setInteractions((ints as Interaction[]) ?? []);
     } catch (error: unknown) {
-      setError(getErrorMessage(error, "No se pudo cargar el weekly pack."));
+      setError(getErrorMessage(error, "Could not load weekly pack."));
     } finally {
       setLoading(false);
     }

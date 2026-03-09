@@ -152,7 +152,7 @@ export default function AccountDetailPage() {
         </div>
       ) : (
         <div className="card" style={{ padding: 16 }}>
-          <div className="subtle">Cargando score…</div>
+          <div className="subtle">Loading score…</div>
         </div>
       )}
 
@@ -163,7 +163,7 @@ export default function AccountDetailPage() {
           <div>
             <div style={{ fontWeight: 900, fontSize: 16 }}>Contacts ({contacts.length})</div>
             <div className="subtle" style={{ marginTop: 4 }}>
-              Cubre todas las áreas. Hooks cortos y útiles.
+              Cover all key areas. Keep hooks short and useful.
             </div>
           </div>
           <button
@@ -181,7 +181,7 @@ export default function AccountDetailPage() {
 
         {contacts.length === 0 ? (
           <div className="subtle" style={{ fontSize: 13 }}>
-            Sin contactos aún. Agrega al menos uno por área.
+            No contacts yet. Add at least one per area.
           </div>
         ) : (
           <div style={{ display: "grid", gap: 10 }}>
@@ -240,13 +240,13 @@ export default function AccountDetailPage() {
       <div className="card">
         <div style={{ fontWeight: 900, fontSize: 16 }}>Recent interactions</div>
         <div className="subtle" style={{ marginTop: 4 }}>
-          Últimas 30 (por cuenta)
+          Last 30 (per account)
         </div>
         <div style={{ height: 12 }} />
 
         {interactions.length === 0 ? (
           <div className="subtle" style={{ fontSize: 13 }}>
-            Sin interacciones aún.
+            No interactions yet.
           </div>
         ) : (
           <div style={{ display: "grid", gap: 10 }}>
@@ -255,7 +255,7 @@ export default function AccountDetailPage() {
               return (
                 <div key={it.id} className="card" style={{ padding: 14 }}>
                   <div style={{ fontWeight: 900, fontSize: 13, letterSpacing: 0.2 }}>
-                    {it.channel.toUpperCase()} • {new Date(it.created_at).toLocaleDateString("es-PE")} • {contactName ?? "sin contacto"}
+                    {it.channel.toUpperCase()} • {new Date(it.created_at).toLocaleDateString("en-US")} • {contactName ?? "no contact"}
                   </div>
                   <div style={{ marginTop: 8, fontSize: 13, opacity: 0.9 }}>{it.summary}</div>
                   <div style={{ marginTop: 8, fontSize: 12, opacity: 0.75 }}>

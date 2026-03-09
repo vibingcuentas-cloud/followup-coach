@@ -1,7 +1,3 @@
-// hooks/useAccountList.ts
-// Maneja todo el estado y las operaciones de la página de listado de cuentas.
-// La página solo necesita llamar este hook y renderizar lo que devuelve.
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabaseClient";
@@ -67,7 +63,7 @@ export function useAccountList() {
         const limit = cadenceDays(a.tier as Tier);
         const badge: AccountRow["badge"] =
           d == null ? "never" : d <= limit ? "ok" : "due";
-        const lastTouch = d == null ? "nunca" : d === 0 ? "hoy" : `${d}d`;
+        const lastTouch = d == null ? "never" : d === 0 ? "today" : `${d}d`;
 
         return {
           ...a,
@@ -80,7 +76,7 @@ export function useAccountList() {
 
       setAccounts(rows);
     } catch (error: unknown) {
-      const m = getErrorMessage(error, "No se pudieron cargar las cuentas.");
+      const m = getErrorMessage(error, "Could not load accounts.");
       if (m.toLowerCase().includes("not signed")) {
         router.push("/login");
         return;
@@ -98,12 +94,12 @@ export function useAccountList() {
 
   async function addAccount(input: AddAccountInput): Promise<string | null> {
     const nm = input.name.trim();
-    if (!nm) return "El nombre de la cuenta es obligatorio.";
+    if (!nm) return "Account name is required.";
 
     const ctry = input.country.trim() || null;
     const v = input.valueUsd.trim() ? Number(input.valueUsd.trim()) : null;
     if (input.valueUsd.trim() && (v == null || Number.isNaN(v))) {
-      return "El valor debe ser un número.";
+      return "Value must be a number.";
     }
 
     setLoading(true);
@@ -121,7 +117,7 @@ export function useAccountList() {
       await load();
       return null;
     } catch (error: unknown) {
-      const m = getErrorMessage(error, "No se pudo agregar la cuenta.");
+      const m = getErrorMessage(error, "Could not add account.");
       setError(m);
       return m;
     } finally {
@@ -137,7 +133,7 @@ export function useAccountList() {
       if (error) throw error;
       await load();
     } catch (error: unknown) {
-      setError(getErrorMessage(error, "No se pudo eliminar la cuenta."));
+      setError(getErrorMessage(error, "Could not delete account."));
     } finally {
       setLoading(false);
     }

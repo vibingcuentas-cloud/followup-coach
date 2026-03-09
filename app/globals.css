@@ -1041,3 +1041,29 @@ html[data-density="compact"] .field {
       calc(10px + env(safe-area-inset-bottom));
   }
 }
+
+@media (max-width: 720px) {
+  .todayKpiGrid {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 2px;
+  }
+
+  .todayKpiCard {
+    min-width: 118px;
+    min-height: auto;
+    padding: 8px 10px;
+  }
+
+  .todayKpiLabel {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .todayKpiValue {
+    font-size: 22px;
+    margin-top: 2px;
+  }
+}

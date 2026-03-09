@@ -12,7 +12,6 @@ export default function AccountsPage() {
   const { accounts, loading, error, load, addAccount, deleteAccount, signOut } =
     useAccountList();
 
-  // Estado del formulario — solo vive en la página porque es UI pura
   const [name, setName] = useState("");
   const [tier, setTier] = useState<Tier>("A");
   const [country, setCountry] = useState("");
@@ -40,7 +39,7 @@ export default function AccountsPage() {
         <div className="topbarTitle">
           <div className="brandTag">Forge</div>
           <h1 className="h1">Accounts</h1>
-          <div className="subtle">Ordenado por valor. Estado visible de un vistazo.</div>
+          <div className="subtle">Sorted by value. Account status at a glance.</div>
         </div>
 
         <div className="topbarActions">
@@ -65,7 +64,7 @@ export default function AccountsPage() {
         </div>
       )}
 
-      {/* Formulario agregar cuenta */}
+      {/* Add account form */}
       <div className="card">
         <div className="accountsAddGrid">
           <label style={{ display: "grid", gap: 6 }}>
@@ -75,7 +74,7 @@ export default function AccountsPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-              placeholder="ej. AJE Peru"
+              placeholder="e.g. AJE Peru"
             />
           </label>
 
@@ -98,7 +97,7 @@ export default function AccountsPage() {
               className="field"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              placeholder="ej. Peru"
+              placeholder="e.g. Peru"
             />
           </label>
 
@@ -108,7 +107,7 @@ export default function AccountsPage() {
               className="field"
               value={valueUsd}
               onChange={(e) => setValueUsd(e.target.value)}
-              placeholder="ej. 250000"
+              placeholder="e.g. 250000"
               inputMode="numeric"
             />
           </label>
@@ -139,7 +138,7 @@ export default function AccountsPage() {
 
       {!loading && accounts.length === 0 && (
         <div className="card">
-          <div style={{ fontSize: 13, opacity: 0.85 }}>Sin cuentas aún.</div>
+          <div style={{ fontSize: 13, opacity: 0.85 }}>No accounts yet.</div>
         </div>
       )}
 

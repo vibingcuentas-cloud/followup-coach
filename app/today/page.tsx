@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToday, type EnrichedAccount } from "../../hooks/useToday";
 import AccountCard from "../../components/AccountCard";
@@ -37,6 +37,10 @@ export default function TodayPage() {
     text: string;
     undo?: () => Promise<void>;
   } | null>(null);
+  const [showFilters, setShowFilters] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.innerWidth > 720;
+  });
 
   const healthyCount = useMemo(
     () => allSorted.filter((a) => a.score.total >= 80).length,
@@ -61,6 +65,10 @@ export default function TodayPage() {
       return next;
     });
   }
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-density", compact ? "compact" : "comfortable");
+  }, [compact]);
 
   async function handleQuickLogSaved(meta: {
     interactionId: string;
@@ -139,6 +147,15 @@ export default function TodayPage() {
       </div>
 
       <div className="card" style={{ marginBottom: 14, padding: 14 }}>
+        <div className="row" style={{ justifyContent: "space-between", marginBottom: 10 }}>
+          <div className="label" style={{ marginBottom: 0 }}>
+            Filters
+          </div>
+          <button className="btn" onClick={() => setShowFilters((v) => !v)}>
+            {showFilters ? "Hide" : "Show"}
+          </button>
+        </div>
+        {showFilters && (
         <div
           className="row"
           style={{ justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}
@@ -185,6 +202,7 @@ export default function TodayPage() {
             </button>
           </div>
         </div>
+        )}
       </div>
 
       <div className="row todaySectionHeader" style={{ justifyContent: "space-between", alignItems: "center" }}>
@@ -213,7 +231,7 @@ export default function TodayPage() {
         <div className="card emptyState">
           <div className="emptyStateIcon">◎</div>
           <div style={{ fontSize: 13, opacity: 0.9 }}>
-            No hay cuentas pendientes ahora.
+            No accounts are due right now.
           </div>
           <div className="row" style={{ marginTop: 10 }}>
             <button className="btn" onClick={() => router.push("/accounts")}>
@@ -228,16 +246,16 @@ export default function TodayPage() {
 
       <div style={{ display: "grid", gap: 14 }}>
         {!loading &&
-          mustContact.map((a) => (
+          mustContact.map((a, idx) => (
             <AccountCard
-              key={a.id}
+              key={`${a.id}-${compact ? "c" : "o"}`}
               account={a}
               contacts={a.contacts}
               missingAreas={a.missingAreas}
               dueLabel={a.dueLabel}
               urgencyReason={a.urgencyReason}
               compact={compact}
-              variant="must"
+              variant={idx < 2 ? "must" : "default"}
               onOpen={() => router.push(`/accounts/${a.id}`)}
               onLog={() => openQuickLog(a)}
             />
@@ -259,7 +277,7 @@ export default function TodayPage() {
         {!loading &&
           allSorted.map((a) => (
             <AccountCard
-              key={a.id}
+              key={`${a.id}-${compact ? "c" : "o"}`}
               account={a}
               contacts={a.contacts}
               missingAreas={a.missingAreas}
