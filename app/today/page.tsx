@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useToday, type EnrichedAccount } from "../../hooks/useToday";
 import AccountCard from "../../components/AccountCard";
 import QuickLogModal from "../../components/QuickLogModal";
+import BrandWordmark from "../../components/BrandWordmark";
 import { supabase } from "../../lib/supabaseClient";
 
 export const dynamic = "force-dynamic";
@@ -100,7 +101,7 @@ export default function TodayPage() {
     <main>
       <div className="topbar">
         <div className="topbarTitle">
-          <div className="brandTag">Forge</div>
+          <BrandWordmark />
           <h1 className="h1">Today</h1>
           <div className="subtle">Intimacy command center • A=7d • B=14d • C=30d</div>
         </div>

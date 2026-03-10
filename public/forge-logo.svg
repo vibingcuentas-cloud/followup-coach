@@ -1,0 +1,10 @@
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#0B0B0C"/>
+  <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle"
+        font-family="Inter, Helvetica, Arial, sans-serif"
+        font-size="90"
+        letter-spacing="8"
+        fill="#FFFFFF">
+    FORGE
+  </text>
+</svg>

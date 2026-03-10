@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAccountList } from "../../hooks/useAccountList";
+import BrandWordmark from "../../components/BrandWordmark";
 import { type Tier } from "../../lib/intimacy";
 
 export const dynamic = "force-dynamic";
@@ -37,7 +38,7 @@ export default function AccountsPage() {
     <main>
       <div className="topbar">
         <div className="topbarTitle">
-          <div className="brandTag">Forge</div>
+          <BrandWordmark />
           <h1 className="h1">Accounts</h1>
           <div className="subtle">Sorted by value. Account status at a glance.</div>
         </div>

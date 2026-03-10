@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useAccountDetail } from "../../../hooks/useAccountDetail";
 import QuickLogModal from "../../../components/QuickLogModal";
 import AddContactSheet from "../../../components/AddContactSheet";
+import BrandWordmark from "../../../components/BrandWordmark";
 import { ScorePill, CoverageChips } from "../../../components/IntimacyWidgets";
 import {
   fmtMoney,
@@ -64,7 +65,7 @@ export default function AccountDetailPage() {
     <main>
       <div className="topbar">
         <div className="topbarTitle" style={{ minWidth: 0 }}>
-          <div className="brandTag">Forge</div>
+          <BrandWordmark />
           <h1
             className="h1"
             style={{

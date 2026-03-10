@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWeekly } from "../../hooks/useWeekly";
+import BrandWordmark from "../../components/BrandWordmark";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +26,7 @@ export default function WeeklyPage() {
     <main>
       <div className="topbar">
         <div className="topbarTitle">
-          <div className="brandTag">Forge</div>
+          <BrandWordmark />
           <h1 className="h1">Weekly Pack</h1>
           <div className="subtle">Weekly summary ready to share with your team or manager.</div>
         </div>
