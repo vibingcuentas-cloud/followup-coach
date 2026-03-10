@@ -422,20 +422,20 @@ export default function TodayPage() {
                 <div className="opsCopilotSendActions">
                   {waHref ? (
                     <a className="opsCopilotSendBtn primary" href={waHref} target="_blank" rel="noreferrer">
-                      Send WhatsApp
+                      WhatsApp
                     </a>
                   ) : (
                     <button className="opsCopilotSendBtn primary" disabled>
-                      Send WhatsApp
+                      WhatsApp
                     </button>
                   )}
                   {mailHref ? (
                     <a className="opsCopilotSendBtn" href={mailHref}>
-                      Send Email
+                      Email
                     </a>
                   ) : (
                     <button className="opsCopilotSendBtn" disabled>
-                      Send Email
+                      Email
                     </button>
                   )}
                   {telHref ? (

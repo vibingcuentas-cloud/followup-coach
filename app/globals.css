@@ -3239,29 +3239,40 @@ html[data-density="compact"] .field {
 .opsCopilotSendActions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  gap: 10px;
 }
 
 .opsCopilotSendBtn {
-  height: 36px;
+  min-width: 0;
+  height: 38px;
   border-radius: 10px;
   border: none;
-  padding: 0 14px;
+  padding: 0 10px;
   background: rgba(255, 255, 255, 0.08);
   color: #d5dae6;
-  font-size: 13px;
-  font-weight: 560;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
   letter-spacing: 0;
   text-transform: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
+  transition: transform 120ms ease, filter 120ms ease, background 120ms ease;
 }
 
 .opsCopilotSendBtn.primary {
   background: #2d6cdf;
   color: #ffffff;
+}
+
+.opsCopilotSendBtn:hover:not(:disabled) {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
 }
 
 .opsIntelPrimaryAction {
@@ -3275,7 +3286,9 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotSendBtn:disabled {
-  opacity: 0.44;
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(149, 159, 181, 0.78);
   cursor: not-allowed;
 }
 
