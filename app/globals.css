@@ -3417,6 +3417,12 @@ html[data-density="compact"] .field {
 }
 
 @media (max-width: 720px) {
+  .app-shell {
+    padding-top: calc(12px + env(safe-area-inset-top));
+    padding-left: calc(12px + env(safe-area-inset-left));
+    padding-right: calc(12px + env(safe-area-inset-right));
+  }
+
   .opsTodayFocus .opsWorkspacePanel {
     padding: 16px;
     gap: 16px;
@@ -3442,5 +3448,70 @@ html[data-density="compact"] .field {
 
   .opsEntityHeadline {
     font-size: 2.25rem;
+  }
+}
+
+/* Mobile layout hardening for operator workspace */
+@media (max-width: 720px) {
+  .opsPage {
+    gap: 14px;
+  }
+
+  .opsTopbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding-bottom: 0;
+  }
+
+  .opsTopActions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    justify-content: stretch;
+  }
+
+  .opsTopActions .btn {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+
+  .opsTodayPolish .opsSummaryRow {
+    padding: 8px;
+    gap: 8px;
+    border-radius: 14px;
+  }
+
+  .opsTodayPolish .opsSummaryCell {
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.012);
+  }
+
+  .opsTodayPolish .opsSummaryValue {
+    font-size: 22px;
+  }
+
+  .opsTodayPolish .opsFilters {
+    padding: 10px;
+    gap: 8px;
+    border-radius: 14px;
+  }
+
+  .opsTodayPolish .opsSearch {
+    min-width: 0;
+  }
+
+  .opsTodayPolish .opsTierSeg {
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .opsCommandBar {
+    border-radius: 14px;
   }
 }
