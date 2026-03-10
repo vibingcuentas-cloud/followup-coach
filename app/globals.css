@@ -1561,7 +1561,7 @@ html[data-density="compact"] .field {
 /* -------------------- Forge Operator Workspace -------------------- */
 .opsPage {
   display: grid;
-  gap: var(--space-5);
+  gap: 40px;
   padding-bottom: var(--space-4);
 }
 
@@ -1675,7 +1675,7 @@ html[data-density="compact"] .field {
 .opsShell {
   display: grid;
   grid-template-columns: 148px minmax(0, 1fr) 286px;
-  gap: 32px 24px;
+  gap: 40px 24px;
   align-items: start;
 }
 
@@ -1731,7 +1731,7 @@ html[data-density="compact"] .field {
 .opsMain {
   padding: 0;
   display: grid;
-  gap: 32px;
+  gap: 40px;
 }
 
 .opsBlock {
@@ -1741,7 +1741,7 @@ html[data-density="compact"] .field {
   padding: var(--space-4);
   box-shadow: var(--shadow-diffuse-soft);
   display: grid;
-  gap: var(--space-4);
+  gap: 28px;
 }
 
 .opsBlock + .opsBlock {
@@ -1815,7 +1815,7 @@ html[data-density="compact"] .field {
 
 .opsTierSeg .seg {
   height: 30px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 12px;
   font-weight: 620;
 }
@@ -1841,7 +1841,7 @@ html[data-density="compact"] .field {
 
 .opsQueueSection {
   display: grid;
-  gap: var(--space-4);
+  gap: 28px;
 }
 
 .opsSectionTitle {
@@ -1873,7 +1873,7 @@ html[data-density="compact"] .field {
 
 .opsQueueList {
   display: grid;
-  gap: 0;
+  gap: 18px;
   border-top: none;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0));
   border-radius: 10px;
@@ -1886,24 +1886,26 @@ html[data-density="compact"] .field {
   align-items: center;
   border: none;
   border-bottom: none;
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow: none;
   background: transparent;
   border-radius: 0;
-  padding: 18px 0;
+  padding: 0;
   cursor: pointer;
   transition: background 140ms ease, box-shadow 140ms ease;
 }
 
 .opsQueueItem:hover {
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: none;
   background: transparent;
 }
 
 .opsQueueItem.active {
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: none;
   background:
     linear-gradient(165deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.006)),
     rgba(24, 30, 42, 0.18);
+  border-radius: 14px;
+  padding: 10px 12px;
 }
 
 .opsQueueState {
@@ -2054,7 +2056,7 @@ html[data-density="compact"] .field {
 }
 
 .opsContextIntel {
-  gap: var(--space-5);
+  gap: 28px;
   padding-left: var(--space-5);
 }
 
@@ -2190,7 +2192,7 @@ html[data-density="compact"] .field {
   gap: 8px;
   border: none;
   background: var(--surface-secondary);
-  border-radius: 14px;
+  border-radius: 18px;
   padding: 0 10px;
   box-shadow: var(--shadow-diffuse-soft);
   backdrop-filter: blur(6px);
@@ -2228,7 +2230,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish {
-  gap: 22px;
+  gap: 40px;
 }
 
 .opsTodayPolish .opsTopbar {
@@ -2307,7 +2309,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsShell {
-  gap: 32px 24px;
+  gap: 40px 24px;
 }
 
 .opsTodayPolish .opsRailItem {
@@ -2321,7 +2323,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsMain {
-  gap: 32px;
+  gap: 40px;
 }
 
 .opsTodayPolish .opsFilters {
@@ -2349,14 +2351,14 @@ html[data-density="compact"] .field {
 
 .opsTodayPolish .opsTierSeg .seg {
   height: 30px;
-  border-radius: 7px;
+  border-radius: 10px;
   font-size: 12px;
   font-weight: 620;
 }
 
 .opsTodayPolish .opsFilters .btn {
   height: 34px;
-  border-radius: 9px;
+  border-radius: 10px;
   padding: 0 11px;
   font-size: 13px;
   font-weight: 560;
@@ -2381,7 +2383,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsQueueSection {
-  gap: 14px;
+  gap: 28px;
 }
 
 .opsQueueModeSeg {
@@ -2396,19 +2398,21 @@ html[data-density="compact"] .field {
 .opsTodayPolish .opsQueueItem {
   grid-template-columns: 120px minmax(0, 1fr) auto;
   gap: 18px;
-  padding: 22px 0;
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+  padding: 0;
+  box-shadow: none;
 }
 
 .opsTodayPolish .opsQueueItem:hover {
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.082);
+  box-shadow: none;
 }
 
 .opsTodayPolish .opsQueueItem.active {
   background:
     linear-gradient(165deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.006)),
     rgba(24, 30, 42, 0.17);
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+  border-radius: 14px;
+  padding: 10px 12px;
 }
 
 .opsTodayPolish .opsQueueStatusBadge {
@@ -2497,7 +2501,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsContextIntel {
-  gap: 20px;
+  gap: 28px;
   padding-left: 20px;
 }
 
@@ -2544,13 +2548,13 @@ html[data-density="compact"] .field {
 
 .opsTodayPolish .opsIntelPrimaryAction {
   height: 36px;
-  border-radius: 9px;
+  border-radius: 10px;
 }
 
 .opsTodayPolish .opsCommandBar {
   height: 42px;
   border: none;
-  border-radius: 14px;
+  border-radius: 18px;
   background: var(--surface-secondary);
   padding: 0 10px;
   box-shadow: var(--shadow-diffuse-soft);
@@ -2787,14 +2791,14 @@ html[data-density="compact"] .field {
 /* -------------------- Today Focus Workspace -------------------- */
 .opsTodayFocus .opsShell {
   grid-template-columns: 220px minmax(0, 1fr) 360px;
-  gap: 32px 24px;
+  gap: 40px 24px;
   align-items: start;
 }
 
 .opsTodayFocus .opsMain {
   position: relative;
   isolation: isolate;
-  gap: 32px;
+  gap: 40px;
 }
 
 .opsTodayFocus .opsMain::before {
@@ -2872,7 +2876,7 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsWorkspaceStack {
   display: grid;
-  gap: 18px;
+  gap: 28px;
 }
 
 .opsTodayFocus .opsWorkspaceSection {
@@ -2933,8 +2937,8 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsQueueSection {
-  gap: 12px;
-  margin-top: 32px;
+  gap: 28px;
+  margin-top: 40px;
   width: 100%;
   max-width: 840px;
   justify-self: center;
@@ -2943,7 +2947,7 @@ html[data-density="compact"] .field {
 .opsTodayFocus .opsQueueList {
   border-top: none;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0));
-  border-radius: 12px;
+  border-radius: 14px;
 }
 
 .opsTodayFocus .opsQueueSection .opsSectionTitle {
@@ -2962,8 +2966,8 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsQueueItem {
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
-  padding: 10px 0;
+  gap: 18px;
+  padding: 0;
 }
 
 .opsTodayFocus .opsQueueItemMain {
@@ -3086,14 +3090,14 @@ html[data-density="compact"] .field {
 
 .opsCopilotCard {
   border: none;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  padding: 0;
+  border-radius: 14px;
+  background: var(--surface-secondary);
+  box-shadow: var(--shadow-diffuse-soft);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 14px;
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .opsCopilotContactCard {
@@ -3187,7 +3191,7 @@ html[data-density="compact"] .field {
 
 .opsCopilotSendBtn {
   height: 36px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
   padding: 0 14px;
   background: rgba(255, 255, 255, 0.08);
@@ -3210,7 +3214,7 @@ html[data-density="compact"] .field {
 .opsIntelPrimaryAction {
   height: 36px;
   padding: 0 14px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
   background: #2d6cdf;
   color: #ffffff;
