@@ -6,11 +6,38 @@ import { useToday, type EnrichedAccount } from "../../hooks/useToday";
 import QuickLogModal from "../../components/QuickLogModal";
 import BrandWordmark from "../../components/BrandWordmark";
 import WorkspaceRail from "../../components/WorkspaceRail";
-import { cadenceDays } from "../../lib/intimacy";
+import { cadenceDays, channelLabel, daysSince } from "../../lib/intimacy";
 
 export const dynamic = "force-dynamic";
 
 type MobileTab = "fire" | "next" | "gaps";
+
+function initialsFromName(name: string): string {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
+function touchLabel(iso: string | null | undefined): string {
+  const d = daysSince(iso ?? null);
+  if (d == null) return "never touched";
+  if (d === 0) return "touched today";
+  return `${d}d ago`;
+}
+
+function buildSuggestedMessage(account: EnrichedAccount): string {
+  const contact = account.recommendedContact;
+  if (!contact) {
+    return `Hi team, I'd like to reconnect and map the right stakeholder for ${account.name}. Who should I start with this week?`;
+  }
+
+  const hook = contact.personal_hook ? ` I remember ${contact.personal_hook}.` : "";
+  const urgency = account.isDue ? "quick check-in" : "brief follow-up";
+  return `Hi ${contact.name}, sharing a ${urgency} on ${account.name}.${hook} Are you available for a short sync this week?`;
+}
 
 function getAccountStatus(account: EnrichedAccount) {
   const cadence = cadenceDays(account.tier);
@@ -132,6 +159,29 @@ export default function TodayPage() {
   }
 
   const selectedStatus = selectedAccount ? getAccountStatus(selectedAccount) : null;
+  const copilotContact = selectedAccount?.recommendedContact ?? null;
+  const copilotAvatar = initialsFromName(copilotContact?.name ?? selectedAccount?.name ?? "F");
+  const suggestedMessage = selectedAccount ? buildSuggestedMessage(selectedAccount) : "";
+  const phoneFromHook = copilotContact?.personal_hook?.match(
+    /(?:phone|tel|whatsapp)\s*:\s*([+0-9()\-\s]{6,})/i
+  )?.[1]?.trim();
+  const normalizedPhone = phoneFromHook?.replace(/[^\d+]/g, "") ?? "";
+  const waHref = normalizedPhone ? `https://wa.me/${normalizedPhone.replace(/^\+/, "")}` : null;
+  const telHref = normalizedPhone ? `tel:${normalizedPhone}` : null;
+  const mailHref = copilotContact?.email ? `mailto:${copilotContact.email}` : null;
+  const relationshipHistory = useMemo(() => {
+    if (!selectedAccount) return [];
+    return [...selectedAccount.contacts]
+      .sort((a, b) => {
+        const da = daysSince(a.last_touch_at);
+        const db = daysSince(b.last_touch_at);
+        if (da == null && db == null) return 0;
+        if (da == null) return 1;
+        if (db == null) return -1;
+        return da - db;
+      })
+      .slice(0, 5);
+  }, [selectedAccount]);
 
   return (
     <main className="opsPage opsTodayPolish opsTodayFocus">
@@ -297,61 +347,105 @@ export default function TodayPage() {
           </section>
         </section>
 
-        <aside className="opsContext opsContextIntel opsRightIntel desktopOnly">
-          <div className="opsIntelEyebrow">Intelligence</div>
+        <aside className="opsContext opsContextIntel opsRightIntel opsCopilotPanel desktopOnly">
+          <div className="opsIntelEyebrow">AI Copilot</div>
           {selectedAccount ? (
             <>
-              <div className="opsIntelAccountName">{selectedAccount.name}</div>
-
-              <div className="opsIntelSignalStrip">
-                <span>Score {selectedAccount.score.total}</span>
-                <span>{selectedAccount.score.label}</span>
-                <span>{selectedAccount.score.coveredAreas}/5 covered</span>
-              </div>
-
-              <div className="opsIntelSection">
-                <div className="opsIntelLabel">Next best contact</div>
-                <div className="opsIntelValue">
-                  {selectedAccount.recommendedContact
-                    ? `${selectedAccount.recommendedContact.name} • ${selectedAccount.recommendedContact.area}`
-                    : "No contact yet"}
+              <section className="opsCopilotCard opsCopilotContactCard">
+                <div className="opsCopilotAvatar" aria-hidden="true">{copilotAvatar}</div>
+                <div className="opsCopilotContactMeta">
+                  <div className="opsCopilotContactName">
+                    {copilotContact?.name ?? "No primary contact selected"}
+                  </div>
+                  <div className="opsCopilotContactRole">
+                    {copilotContact
+                      ? `${copilotContact.area} • ${channelLabel(copilotContact.preferred_channel)}`
+                      : "Assign a contact for this account"}
+                  </div>
                 </div>
-              </div>
+              </section>
 
-              <div className="opsIntelDivider" />
+              <section className="opsCopilotCard">
+                <div className="opsCopilotLabel">Recent interaction</div>
+                <div className="opsCopilotText">
+                  {selectedAccount.lastTouch === "never"
+                    ? "No recent interaction recorded."
+                    : `Last interaction ${selectedAccount.lastTouch}.`}
+                </div>
+                <div className="opsCopilotSubtle">{selectedAccount.urgencyReason}</div>
+              </section>
 
-              <div className="opsIntelSection">
-                <div className="opsIntelLabel">Recommended next step</div>
-                <p className="opsIntelRecommendation">
-                  {selectedAccount.recommendedContact
-                    ? `Reach out via ${selectedAccount.recommendedContact.preferred_channel ?? "preferred channel"}`
-                    : "Add a contact in missing functions first."}
-                </p>
-              </div>
+              <section className="opsCopilotCard opsCopilotMessageCard">
+                <div className="opsCopilotLabel">Suggested outreach message</div>
+                <div className="opsCopilotMessageSurface">
+                  <div className="opsCopilotMessageBubble">{suggestedMessage}</div>
+                </div>
+                <div className="opsCopilotSendActions">
+                  {waHref ? (
+                    <a className="opsCopilotSendBtn primary" href={waHref} target="_blank" rel="noreferrer">
+                      Send WhatsApp
+                    </a>
+                  ) : (
+                    <button className="opsCopilotSendBtn primary" disabled>
+                      Send WhatsApp
+                    </button>
+                  )}
+                  {mailHref ? (
+                    <a className="opsCopilotSendBtn" href={mailHref}>
+                      Send Email
+                    </a>
+                  ) : (
+                    <button className="opsCopilotSendBtn" disabled>
+                      Send Email
+                    </button>
+                  )}
+                  {telHref ? (
+                    <a className="opsCopilotSendBtn" href={telHref}>
+                      Call
+                    </a>
+                  ) : (
+                    <button className="opsCopilotSendBtn" disabled>
+                      Call
+                    </button>
+                  )}
+                </div>
+              </section>
 
-              <div className="opsIntelDivider" />
+              <section className="opsCopilotCard">
+                <div className="opsCopilotLabel">Relationship history</div>
+                {relationshipHistory.length > 0 ? (
+                  <div className="opsCopilotHistoryList">
+                    {relationshipHistory.map((contact) => (
+                      <div key={contact.id} className="opsCopilotHistoryRow">
+                        <span className="opsCopilotHistoryAvatar" aria-hidden="true">
+                          {initialsFromName(contact.name)}
+                        </span>
+                        <div>
+                          <div className="opsCopilotHistoryName">{contact.name}</div>
+                          <div className="opsCopilotHistoryMeta">
+                            {contact.area} • {touchLabel(contact.last_touch_at)}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="opsCopilotSubtle">No contact history yet.</div>
+                )}
+              </section>
 
-              <div className="opsIntelSection">
-                <div className="opsIntelLabel">Interaction context</div>
-                <div className="opsIntelValue">{selectedAccount.urgencyReason}</div>
-              </div>
-
-              <div className="opsIntelDivider" />
-
-              <div className="opsIntelSection">
-                <div className="opsIntelLabel">Coverage gaps</div>
+              <section className="opsCopilotCard">
+                <div className="opsCopilotLabel">Missing contacts</div>
                 {selectedAccount.missingAreas.length > 0 ? (
-                  <ul className="opsIntelList">
+                  <ul className="opsCopilotMissingList">
                     {selectedAccount.missingAreas.map((area) => (
                       <li key={area}>{area}</li>
                     ))}
                   </ul>
                 ) : (
-                  <div className="opsIntelValue">No gaps. Coverage is complete.</div>
+                  <div className="opsCopilotSubtle">Coverage complete. No missing roles.</div>
                 )}
-              </div>
-
-              <div className="opsIntelDivider" />
+              </section>
 
               <button
                 className="opsIntelPrimaryAction"
@@ -367,7 +461,7 @@ export default function TodayPage() {
               </button>
             </>
           ) : (
-            <div className="opsInlineHint">Select an account to view context.</div>
+            <div className="opsInlineHint">Select an account to view copilot guidance.</div>
           )}
         </aside>
       </div>

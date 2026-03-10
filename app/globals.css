@@ -2883,7 +2883,7 @@ html[data-density="compact"] .field {
   border-radius: 16px;
   background: var(--surface-diffuse-1);
   box-shadow: var(--shadow-diffuse-soft);
-  gap: 14px;
+  gap: 18px;
 }
 
 .opsTodayFocus .opsRightIntel .opsIntelAccountName {
@@ -2916,6 +2916,190 @@ html[data-density="compact"] .field {
   border-radius: 999px;
   transform: translateY(-50%);
   background: rgba(255, 255, 255, 0.4);
+}
+
+.opsCopilotPanel {
+  align-content: start;
+}
+
+.opsCopilotCard {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+    rgba(24, 30, 43, 0.42);
+  box-shadow: var(--shadow-diffuse-soft);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.opsCopilotContactCard {
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.opsCopilotAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.04)),
+    rgba(34, 41, 56, 0.62);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  font-weight: 670;
+  display: grid;
+  place-items: center;
+}
+
+.opsCopilotContactMeta {
+  min-width: 0;
+}
+
+.opsCopilotContactName {
+  font-size: 16px;
+  font-weight: 640;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.opsCopilotContactRole {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.opsCopilotLabel {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.opsCopilotText {
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.opsCopilotSubtle {
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.opsCopilotMessageCard {
+  gap: 12px;
+}
+
+.opsCopilotMessageSurface {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.012)),
+    rgba(18, 24, 35, 0.52);
+  padding: 10px;
+}
+
+.opsCopilotMessageBubble {
+  border-radius: 10px;
+  background:
+    linear-gradient(160deg, rgba(120, 170, 255, 0.18), rgba(255, 255, 255, 0.04)),
+    rgba(44, 60, 92, 0.45);
+  border: 1px solid rgba(163, 198, 255, 0.22);
+  padding: 10px 11px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(236, 245, 255, 0.96);
+}
+
+.opsCopilotSendActions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.opsCopilotSendBtn {
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.012)),
+    rgba(23, 29, 41, 0.5);
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 12px;
+  font-weight: 580;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.opsCopilotSendBtn.primary {
+  border-color: rgba(175, 205, 255, 0.26);
+  background:
+    linear-gradient(160deg, rgba(116, 165, 255, 0.28), rgba(255, 255, 255, 0.06)),
+    rgba(42, 60, 96, 0.58);
+  color: rgba(242, 248, 255, 0.98);
+}
+
+.opsCopilotSendBtn:disabled {
+  opacity: 0.44;
+  cursor: not-allowed;
+}
+
+.opsCopilotHistoryList {
+  display: grid;
+  gap: 10px;
+}
+
+.opsCopilotHistoryRow {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+
+.opsCopilotHistoryAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.03)),
+    rgba(35, 42, 58, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 10px;
+  font-weight: 660;
+  display: grid;
+  place-items: center;
+}
+
+.opsCopilotHistoryName {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 560;
+}
+
+.opsCopilotHistoryMeta {
+  margin-top: 2px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.opsCopilotMissingList {
+  margin: 0;
+  padding-left: 14px;
+  display: grid;
+  gap: 6px;
+}
+
+.opsCopilotMissingList li {
+  font-size: 12px;
+  color: rgba(255, 210, 210, 0.86);
 }
 
 @media (max-width: 1180px) {
