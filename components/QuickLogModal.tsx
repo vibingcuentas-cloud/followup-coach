@@ -220,25 +220,15 @@ export default function QuickLogModal({
     (contactId ? 1 : 0) + (summary.trim() ? 1 : 0) + (nextStep.trim() && nextStepDate ? 1 : 0);
 
   return (
-    <div
-      className="quickLogOverlay"
-      onClick={onClose}
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.55)",
-        zIndex: 80,
-      }}
-    >
+    <div className="quickLogOverlay quickLogOverlayShell" onClick={onClose}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className="card quickLogModal"
-        style={{ width: "100%", maxWidth: 680, padding: 16 }}
+        className="card quickLogModal quickLogModalFrame"
       >
         <div className="row quickLogHeader" style={{ justifyContent: "space-between", gap: 12 }}>
           <div style={{ minWidth: 0 }}>
-            <div style={{ fontWeight: 950, fontSize: 18 }}>Quick log</div>
-            <div className="subtle" style={{ marginTop: 4 }}>
+            <div className="quickLogTitle">Quick log</div>
+            <div className="subtle quickLogAccountName" style={{ marginTop: 4 }}>
               {accountName}
             </div>
           </div>
@@ -266,11 +256,7 @@ export default function QuickLogModal({
           </div>
         )}
 
-        {msg && (
-          <div className="card" style={{ marginTop: 12, padding: 12 }}>
-            <div style={{ fontSize: 13, opacity: 0.95 }}>{msg}</div>
-          </div>
-        )}
+        {msg && <div className="quickLogMessage">{msg}</div>}
 
         <div style={{ height: 12 }} />
 
