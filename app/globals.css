@@ -145,7 +145,7 @@ textarea {
 
 .app {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1520px;
 }
 
 /* Top bar */
@@ -2827,13 +2827,21 @@ html[data-density="compact"] .field {
 .opsTodayFocus .opsWorkspacePanel {
   border: 1px solid rgba(255, 255, 255, 0.036);
   border-radius: 18px;
-  background: var(--surface-panel-strong);
-  padding: 28px;
+  background: linear-gradient(
+    180deg,
+    rgba(35, 40, 52, 0.95) 0%,
+    rgba(18, 20, 28, 0.95) 100%
+  );
+  padding: 48px 40px;
   display: flex;
   flex-direction: column;
   gap: 22px;
   min-height: 560px;
-  box-shadow: var(--shadow-diffuse);
+  width: 100%;
+  min-width: 720px;
+  max-width: 840px;
+  justify-self: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(10px) saturate(116%);
   -webkit-backdrop-filter: blur(10px) saturate(116%);
 }
@@ -2844,16 +2852,22 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsWorkspaceHero .opsQueueStatusBadge {
-  font-size: 10px;
-  letter-spacing: 0.11em;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  line-height: 1;
 }
 
 .opsTodayFocus .opsWorkspaceName {
   margin: 2px 0 0;
-  font-size: clamp(3rem, 3.6vw + 1.35rem, 4.4rem);
-  font-weight: 790;
-  line-height: 0.94;
-  letter-spacing: -0.04em;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: #f5f7fb;
 }
 
 .opsTodayFocus .opsWorkspaceMeta {
@@ -2876,43 +2890,54 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsWorkspaceLabel {
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   font-weight: 600;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: #8b93a7;
 }
 
 .opsTodayFocus .opsWorkspacePrimary {
   margin: 0;
-  font-size: 20px;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.96);
+  font-size: 15px;
+  line-height: 1.6;
+  color: #c9ceda;
+  font-weight: 500;
 }
 
 .opsTodayFocus .opsWorkspaceValue {
   font-size: 15px;
-  line-height: 1.42;
-  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.6;
+  color: #c9ceda;
+  font-weight: 500;
 }
 
 .opsTodayFocus .opsWorkspaceSubtle {
-  font-size: 11px;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.58);
+  font-size: 15px;
+  line-height: 1.6;
+  color: #c9ceda;
+  opacity: 0.9;
 }
 
 .opsTodayFocus .opsWorkspacePrimaryCta {
   width: fit-content;
-  min-width: 210px;
-  height: 42px;
-  border-radius: 12px;
+  min-width: 0;
+  height: 44px;
+  padding: 0 24px;
+  border-radius: 10px;
   margin-top: auto;
+  border-color: transparent;
+  background: #e8edf7;
+  color: #0e1117;
+  font-weight: 600;
 }
 
 .opsTodayFocus .opsQueueSection {
   gap: 12px;
   margin-top: 18px;
+  width: 100%;
+  max-width: 840px;
+  justify-self: center;
 }
 
 .opsTodayFocus .opsQueueList {
@@ -2982,6 +3007,25 @@ html[data-density="compact"] .field {
 .opsTodayFocus .opsQueueActionBtn {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.62);
+}
+
+.opsTodayFocus .opsWorkspaceHero .opsQueueStatusBadge::before {
+  content: none;
+}
+
+.opsTodayFocus .opsWorkspaceHero .opsQueueStatusBadge.risk {
+  background: rgba(255, 82, 82, 0.15);
+  color: #ff5252;
+}
+
+.opsTodayFocus .opsWorkspaceHero .opsQueueStatusBadge.due {
+  background: rgba(255, 180, 0, 0.15);
+  color: #ffb400;
+}
+
+.opsTodayFocus .opsWorkspaceHero .opsQueueStatusBadge.ok {
+  background: rgba(90, 200, 140, 0.15);
+  color: #5ac88c;
 }
 
 .opsTodayFocus .opsRightIntel {
@@ -3218,6 +3262,8 @@ html[data-density="compact"] .field {
   }
 
   .opsTodayFocus .opsWorkspacePanel {
+    min-width: 0;
+    max-width: 100%;
     min-height: 0;
     padding: 20px;
   }
@@ -3237,6 +3283,17 @@ html[data-density="compact"] .field {
   }
 }
 
+@media (max-width: 1360px) {
+  .opsTodayFocus .opsWorkspacePanel {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .opsTodayFocus .opsQueueSection {
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 720px) {
   .opsTodayFocus .opsWorkspacePanel {
     padding: 16px;
@@ -3245,11 +3302,11 @@ html[data-density="compact"] .field {
 
   .opsTodayFocus .opsWorkspaceName {
     margin-top: 4px;
-    font-size: 2.45rem;
+    font-size: 2.25rem;
   }
 
   .opsTodayFocus .opsWorkspacePrimary {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .opsTodayFocus .opsWorkspacePrimaryCta {
