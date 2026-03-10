@@ -6,6 +6,7 @@ import { useToday, type EnrichedAccount } from "../../hooks/useToday";
 import QuickLogModal from "../../components/QuickLogModal";
 import BrandWordmark from "../../components/BrandWordmark";
 import WorkspaceRail from "../../components/WorkspaceRail";
+import { cadenceDays } from "../../lib/intimacy";
 
 export const dynamic = "force-dynamic";
 
@@ -24,39 +25,34 @@ function QueueItem({
   onOpen: () => void;
   onLog: () => void;
 }) {
+  const cadence = cadenceDays(account.tier);
+  const statusTone = account.score.total < 55 ? "risk" : account.isDue ? "due" : "ok";
+  const statusText =
+    account.lastTouch === "never" ? `Never • ${cadence}d cadence` : `${account.lastTouch} • ${cadence}d cadence`;
+
   return (
     <article className={`opsQueueItem ${active ? "active" : ""}`} onClick={onSelect}>
-      <div className="opsQueueScore">{account.score.total}</div>
+      <div className="opsQueueState">
+        <span className={`opsQueueDot ${statusTone}`} />
+        <span className="opsQueueStateText">{statusText}</span>
+      </div>
 
       <div className="opsQueueBody">
-        <div className="opsQueueTitleRow">
-          <div className="opsQueueTitle">
-            {account.name}
-            <span className="opsQueueMeta">
-              {account.tier} • {account.country ?? "—"}
-            </span>
-          </div>
-
-          <div className="opsQueueBadges">
-            <span className={`opsQueueBadge ${account.isDue ? "due" : "ok"}`}>
-              {account.isDue ? "Due" : "On track"}
-            </span>
-            <span className="opsQueueBadge">Coverage {account.score.coveredAreas}/5</span>
-          </div>
+        <div className="opsQueueTitle">{account.name}</div>
+        <div className="opsQueueMeta">
+          {account.country ?? "—"} • Tier {account.tier} • Coverage {account.score.coveredAreas}/5
         </div>
-
-        <div className="opsQueueSub">{account.urgencyReason}</div>
         <div className="opsQueueSub">
           Missing: {account.missingAreas.length > 0 ? account.missingAreas.join(", ") : "None"}
         </div>
       </div>
 
       <div className="opsQueueActions" onClick={(e) => e.stopPropagation()}>
-        <button className="btn btnGhost" onClick={onOpen}>
+        <button className="opsQueueActionBtn" onClick={onOpen}>
           Open
         </button>
-        <button className="btn btnPrimary btnTight" onClick={onLog}>
-          Log now
+        <button className="opsQueueActionBtn strong" onClick={onLog}>
+          Log
         </button>
       </div>
     </article>
