@@ -2846,11 +2846,18 @@ html[data-density="compact"] .field {
   content: "";
   position: absolute;
   left: 50%;
-  top: -220px;
-  width: 960px;
-  height: 640px;
+  top: -320px;
+  width: 1240px;
+  height: 920px;
   transform: translateX(-50%);
-  background: radial-gradient(800px 500px at 50% 120px, rgba(90, 120, 180, 0.12), transparent 70%);
+  background: radial-gradient(
+    760px 500px at 50% 190px,
+    rgba(90, 120, 180, 0.16) 0%,
+    rgba(90, 120, 180, 0.08) 38%,
+    rgba(90, 120, 180, 0.03) 52%,
+    rgba(90, 120, 180, 0) 62%
+  );
+  opacity: 0.9;
   pointer-events: none;
   z-index: 0;
 }
