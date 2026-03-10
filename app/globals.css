@@ -3070,11 +3070,11 @@ html[data-density="compact"] .field {
   border-radius: 18px;
   background: linear-gradient(180deg, rgba(30, 34, 46, 0.95), rgba(18, 20, 28, 0.95));
   box-shadow: var(--shadow-diffuse-soft);
-  gap: 28px;
+  gap: 32px;
 }
 
 .opsTodayFocus .opsContextIntel {
-  gap: 28px;
+  gap: 32px;
   padding-left: 0;
 }
 
@@ -3112,20 +3112,20 @@ html[data-density="compact"] .field {
 
 .opsCopilotPanel {
   display: grid;
-  gap: 28px;
+  gap: 32px;
   align-content: start;
 }
 
 .opsCopilotCard {
   border: none;
   border-radius: 14px;
-  background: var(--surface-secondary);
+  background: rgba(40, 45, 65, 0.55);
   box-shadow: var(--shadow-diffuse-soft);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  padding: 14px;
+  padding: 18px 20px;
   display: grid;
-  gap: 12px;
+  gap: 14px;
 }
 
 .opsCopilotContactCard {
@@ -3175,7 +3175,7 @@ html[data-density="compact"] .field {
   letter-spacing: 0.14em;
   font-weight: 600;
   text-transform: uppercase;
-  color: #8b93a7;
+  color: #8f97ab;
 }
 
 .opsCopilotText {
