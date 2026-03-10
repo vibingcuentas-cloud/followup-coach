@@ -186,6 +186,16 @@ export default function TodayPage() {
             <button className="btn btnGhost" onClick={() => setSearch("")}>Reset</button>
           </div>
 
+          <div className="opsCommandBar">
+            <span className="opsCommandIcon">&gt;</span>
+            <input
+              className="opsCommandInput"
+              placeholder="Log probrands whatsapp outcome"
+              aria-label="Command"
+            />
+            <span className="opsCommandHint">Cmd K</span>
+          </div>
+
           <div className="opsSectionHeaderRow">
             <div>
               <h2 className="opsSectionTitle">Fire queue</h2>
@@ -321,16 +331,6 @@ export default function TodayPage() {
             </div>
           ))}
       </section>
-
-      <div className="opsCommandBar">
-        <span className="opsCommandIcon">&gt;</span>
-        <input
-          className="opsCommandInput"
-          placeholder="Log probrands whatsapp outcome"
-          aria-label="Command"
-        />
-        <span className="opsCommandHint">Cmd K</span>
-      </div>
 
       {qlAccount && (
         <QuickLogModal
