@@ -232,41 +232,59 @@ export default function TodayPage() {
           </section>
         </section>
 
-        <aside className="opsContext desktopOnly">
-          <div className="opsPanelTitle">Context</div>
+        <aside className="opsContext opsContextIntel desktopOnly">
+          <div className="opsIntelEyebrow">Context</div>
           {selectedAccount ? (
             <>
-              <div className="opsContextAccount">{selectedAccount.name}</div>
-              <div className="opsContextSub">{selectedAccount.urgencyReason}</div>
+              <div className="opsIntelAccountName">{selectedAccount.name}</div>
 
-              <div className="opsPanelBlock">
-                <div className="opsPanelLabel">Next best contact</div>
-                <div className="opsPanelValue">
+              <div className="opsIntelSection">
+                <div className="opsIntelLabel">Next best contact</div>
+                <div className="opsIntelValue">
                   {selectedAccount.recommendedContact
-                    ? `${selectedAccount.recommendedContact.name} (${selectedAccount.recommendedContact.area})`
+                    ? `${selectedAccount.recommendedContact.name} • ${selectedAccount.recommendedContact.area}`
                     : "No contact yet"}
                 </div>
               </div>
 
-              <div className="opsPanelBlock">
-                <div className="opsPanelLabel">Recommended action</div>
-                <div className="opsPanelValue">
+              <div className="opsIntelDivider" />
+
+              <div className="opsIntelSection">
+                <div className="opsIntelLabel">Recommended next step</div>
+                <p className="opsIntelRecommendation">
                   {selectedAccount.recommendedContact
                     ? `Reach out via ${selectedAccount.recommendedContact.preferred_channel ?? "preferred channel"}`
                     : "Add a contact in missing functions first."}
-                </div>
+                </p>
               </div>
 
-              <div className="opsPanelBlock">
-                <div className="opsPanelLabel">Coverage gaps</div>
-                <div className="opsPanelValue">
-                  {selectedAccount.missingAreas.length > 0
-                    ? selectedAccount.missingAreas.join(", ")
-                    : "No gaps"}
-                </div>
+              <div className="opsIntelDivider" />
+
+              <div className="opsIntelSection">
+                <div className="opsIntelLabel">Coverage gaps</div>
+                {selectedAccount.missingAreas.length > 0 ? (
+                  <ul className="opsIntelList">
+                    {selectedAccount.missingAreas.map((area) => (
+                      <li key={area}>{area}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="opsIntelValue">No gaps. Coverage is complete.</div>
+                )}
               </div>
 
-              <button className="btn btnPrimary" onClick={() => openQuickLog(selectedAccount)}>
+              <div className="opsIntelDivider" />
+
+              <button
+                className="opsIntelPrimaryAction"
+                onClick={() => openQuickLog(selectedAccount)}
+                disabled={selectedAccount.contacts.length === 0}
+                title={
+                  selectedAccount.contacts.length === 0
+                    ? "Add at least one contact in the account before logging."
+                    : "Log interaction"
+                }
+              >
                 Log interaction
               </button>
             </>
