@@ -2612,3 +2612,245 @@ html[data-density="compact"] .field {
     font-size: 11px;
   }
 }
+
+/* -------------------- Today Focus Workspace -------------------- */
+.opsTodayFocus .opsShell {
+  grid-template-columns: 220px minmax(0, 1fr) 360px;
+  gap: 28px;
+  align-items: start;
+}
+
+.opsTodayFocus .opsMain {
+  gap: 18px;
+}
+
+.opsTodayFocus .opsFilters {
+  gap: 10px;
+}
+
+.opsTodayFocus .opsCommandBar {
+  margin-top: 2px;
+}
+
+.opsTodayFocus .opsWorkspacePanel {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 20px;
+  display: grid;
+  gap: 18px;
+}
+
+.opsTodayFocus .opsWorkspaceHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.opsTodayFocus .opsWorkspaceName {
+  margin: 12px 0 0;
+  font-size: 42px;
+  font-weight: 720;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.opsTodayFocus .opsWorkspaceMeta {
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.opsTodayFocus .opsWorkspaceActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.opsTodayFocus .opsWorkspaceActions .btn {
+  min-width: 120px;
+}
+
+.opsTodayFocus .opsWorkspaceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+.opsTodayFocus .opsWorkspaceBlock {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+  display: grid;
+  gap: 6px;
+}
+
+.opsTodayFocus .opsWorkspaceLabel {
+  font-size: 10px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.opsTodayFocus .opsWorkspacePrimary {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.opsTodayFocus .opsWorkspaceValue {
+  font-size: 14px;
+  line-height: 1.42;
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.opsTodayFocus .opsWorkspaceSubtle {
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.opsTodayFocus .opsQueueSection {
+  gap: 8px;
+}
+
+.opsTodayFocus .opsQueueList {
+  border-top-color: rgba(255, 255, 255, 0.07);
+}
+
+.opsTodayFocus .opsQueueItem {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 12px 0;
+}
+
+.opsTodayFocus .opsQueueItemMain {
+  display: grid;
+  grid-template-columns: 168px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.opsTodayFocus .opsQueueState {
+  gap: 4px;
+}
+
+.opsTodayFocus .opsQueueStateText {
+  font-size: 10px;
+}
+
+.opsTodayFocus .opsQueueTitle {
+  font-size: 20px;
+  line-height: 1.03;
+  font-weight: 680;
+}
+
+.opsTodayFocus .opsQueueMeta {
+  margin-top: 3px;
+  font-size: 11px;
+}
+
+.opsTodayFocus .opsQueueSub {
+  display: none;
+}
+
+.opsTodayFocus .opsQueueActions {
+  gap: 10px;
+}
+
+.opsTodayFocus .opsQueueActionBtn {
+  font-size: 12px;
+}
+
+.opsTodayFocus .opsRightIntel {
+  padding-left: 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 14px;
+}
+
+.opsTodayFocus .opsRightIntel .opsIntelAccountName {
+  font-size: 24px;
+  font-weight: 660;
+}
+
+.opsTodayFocus .opsIntelSignalStrip {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.opsTodayFocus .opsIntelSignalStrip span {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255, 255, 255, 0.66);
+  padding: 3px 0 3px 10px;
+  position: relative;
+}
+
+.opsTodayFocus .opsIntelSignalStrip span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 1180px) {
+  .opsTodayFocus .opsShell {
+    grid-template-columns: 1fr;
+  }
+
+  .opsTodayFocus .opsWorkspaceHead {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .opsTodayFocus .opsWorkspaceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .opsTodayFocus .opsQueueItem {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .opsTodayFocus .opsQueueItemMain {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .opsTodayFocus .opsQueueActions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .opsTodayFocus .opsWorkspacePanel {
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .opsTodayFocus .opsWorkspaceName {
+    margin-top: 10px;
+    font-size: 30px;
+  }
+
+  .opsTodayFocus .opsWorkspacePrimary {
+    font-size: 15px;
+  }
+
+  .opsTodayFocus .opsWorkspaceActions .btn {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .opsTodayFocus .opsQueueTitle {
+    font-size: 18px;
+  }
+}

@@ -12,6 +12,22 @@ export const dynamic = "force-dynamic";
 
 type MobileTab = "fire" | "next" | "gaps";
 
+function getAccountStatus(account: EnrichedAccount) {
+  const cadence = cadenceDays(account.tier);
+  const tone =
+    account.dueLabel === "overdue" ? "risk" : account.isDue ? "due" : account.score.total >= 80 ? "ok" : "due";
+  const label =
+    account.dueLabel === "overdue"
+      ? `Overdue ${Math.max(1, account.overdueDays)}d`
+      : account.isDue
+        ? "Due now"
+        : "Healthy";
+  const meta =
+    account.lastTouch === "never" ? `Cadence ${cadence}d` : `Last touch ${account.lastTouch} • cadence ${cadence}d`;
+
+  return { tone, label, meta };
+}
+
 function QueueItem({
   account,
   active,
@@ -25,32 +41,21 @@ function QueueItem({
   onOpen: () => void;
   onLog: () => void;
 }) {
-  const cadence = cadenceDays(account.tier);
-  const statusTone =
-    account.dueLabel === "overdue" ? "risk" : account.isDue ? "due" : account.score.total >= 80 ? "ok" : "due";
-  const statusLabel =
-    account.dueLabel === "overdue"
-      ? `Overdue ${Math.max(1, account.overdueDays)}d`
-      : account.isDue
-        ? "Due now"
-        : "Healthy";
-  const statusMeta =
-    account.lastTouch === "never" ? `Cadence ${cadence}d` : `Last touch ${account.lastTouch}`;
+  const status = getAccountStatus(account);
 
   return (
     <article className={`opsQueueItem ${active ? "active" : ""}`} onClick={onSelect}>
-      <div className="opsQueueState">
-        <span className={`opsQueueStatusBadge ${statusTone}`}>{statusLabel}</span>
-        <span className="opsQueueStateText">{statusMeta}</span>
-      </div>
-
-      <div className="opsQueueBody">
-        <div className="opsQueueTitle">{account.name}</div>
-        <div className="opsQueueMeta">
-          {account.country ?? "—"} • Tier {account.tier} • Coverage {account.score.coveredAreas}/5
+      <div className="opsQueueItemMain">
+        <div className="opsQueueState">
+          <span className={`opsQueueStatusBadge ${status.tone}`}>{status.label}</span>
+          <span className="opsQueueStateText">{status.meta}</span>
         </div>
-        <div className="opsQueueSub">
-          Missing: {account.missingAreas.length > 0 ? account.missingAreas.join(", ") : "None"}
+
+        <div className="opsQueueBody">
+          <div className="opsQueueTitle">{account.name}</div>
+          <div className="opsQueueMeta">
+            {account.country ?? "—"} • Tier {account.tier} • Coverage {account.score.coveredAreas}/5
+          </div>
         </div>
       </div>
 
@@ -126,8 +131,10 @@ export default function TodayPage() {
     setTimeout(() => setToast(null), 4000);
   }
 
+  const selectedStatus = selectedAccount ? getAccountStatus(selectedAccount) : null;
+
   return (
-    <main className="opsPage opsTodayPolish">
+    <main className="opsPage opsTodayPolish opsTodayFocus">
       <header className="opsTopbar">
         <div>
           <BrandWordmark />
@@ -193,17 +200,93 @@ export default function TodayPage() {
             <span className="opsCommandIcon">&gt;</span>
             <input
               className="opsCommandInput"
-              placeholder="Log probrands whatsapp outcome"
+              placeholder="Log account outcome or ask for next best action"
               aria-label="Command"
             />
             <span className="opsCommandHint">Cmd K</span>
           </div>
 
+          <section className="opsWorkspacePanel">
+            {selectedAccount && selectedStatus ? (
+              <>
+                <div className="opsWorkspaceHead">
+                  <div>
+                    <span className={`opsQueueStatusBadge ${selectedStatus.tone}`}>
+                      {selectedStatus.label}
+                    </span>
+                    <h2 className="opsWorkspaceName">{selectedAccount.name}</h2>
+                    <div className="opsWorkspaceMeta">
+                      {selectedAccount.country ?? "—"} • Tier {selectedAccount.tier} • Value{" "}
+                      {selectedAccount.valueFormatted} • Coverage {selectedAccount.score.coveredAreas}/5
+                    </div>
+                  </div>
+
+                  <div className="opsWorkspaceActions">
+                    <button className="btn btnGhost" onClick={() => router.push(`/accounts/${selectedAccount.id}`)}>
+                      Open account
+                    </button>
+                    <button
+                      className="btn btnPrimary"
+                      onClick={() => openQuickLog(selectedAccount)}
+                      disabled={selectedAccount.contacts.length === 0}
+                    >
+                      Log interaction
+                    </button>
+                  </div>
+                </div>
+
+                <div className="opsWorkspaceGrid">
+                  <article className="opsWorkspaceBlock">
+                    <div className="opsWorkspaceLabel">Recommended next action</div>
+                    <p className="opsWorkspacePrimary">
+                      {selectedAccount.recommendedContact
+                        ? `Reach out to ${selectedAccount.recommendedContact.name} via ${
+                            selectedAccount.recommendedContact.preferred_channel ?? "preferred channel"
+                          }.`
+                        : "Add a contact in one missing function, then log a first touch."}
+                    </p>
+                  </article>
+
+                  <article className="opsWorkspaceBlock">
+                    <div className="opsWorkspaceLabel">Next best contact</div>
+                    <div className="opsWorkspaceValue">
+                      {selectedAccount.recommendedContact
+                        ? `${selectedAccount.recommendedContact.name} • ${selectedAccount.recommendedContact.area}`
+                        : "No contact yet"}
+                    </div>
+                    {selectedAccount.recommendedContact?.personal_hook && (
+                      <div className="opsWorkspaceSubtle">
+                        Hook: {selectedAccount.recommendedContact.personal_hook}
+                      </div>
+                    )}
+                  </article>
+
+                  <article className="opsWorkspaceBlock">
+                    <div className="opsWorkspaceLabel">Cadence status</div>
+                    <div className="opsWorkspaceValue">{selectedStatus.meta}</div>
+                    <div className="opsWorkspaceSubtle">{selectedAccount.urgencyReason}</div>
+                  </article>
+
+                  <article className="opsWorkspaceBlock">
+                    <div className="opsWorkspaceLabel">Coverage gaps</div>
+                    <div className="opsWorkspaceValue">
+                      {selectedAccount.missingAreas.length > 0
+                        ? selectedAccount.missingAreas.join(", ")
+                        : "No gaps. Coverage complete."}
+                    </div>
+                  </article>
+                </div>
+              </>
+            ) : (
+              <div className="opsInlineHint">Select an account to start workspace mode.</div>
+            )}
+          </section>
+
           <section className="opsQueueSection">
             <div className="opsSectionHeaderRow">
               <div>
-                <h2 className="opsSectionTitle">Fire queue</h2>
-                <div className="opsSectionSubtitle">Who to contact now, ranked by urgency.</div>
+                <h2 className="opsSectionTitle">Queue selector</h2>
+                <div className="opsSectionSubtitle">Choose the next account to focus.</div>
               </div>
               <div className="opsSectionMeta">{mustContact.length} due</div>
             </div>
@@ -228,11 +311,17 @@ export default function TodayPage() {
           </section>
         </section>
 
-        <aside className="opsContext opsContextIntel desktopOnly">
-          <div className="opsIntelEyebrow">Context</div>
+        <aside className="opsContext opsContextIntel opsRightIntel desktopOnly">
+          <div className="opsIntelEyebrow">Intelligence</div>
           {selectedAccount ? (
             <>
               <div className="opsIntelAccountName">{selectedAccount.name}</div>
+
+              <div className="opsIntelSignalStrip">
+                <span>Score {selectedAccount.score.total}</span>
+                <span>{selectedAccount.score.label}</span>
+                <span>{selectedAccount.score.coveredAreas}/5 covered</span>
+              </div>
 
               <div className="opsIntelSection">
                 <div className="opsIntelLabel">Next best contact</div>
@@ -252,6 +341,13 @@ export default function TodayPage() {
                     ? `Reach out via ${selectedAccount.recommendedContact.preferred_channel ?? "preferred channel"}`
                     : "Add a contact in missing functions first."}
                 </p>
+              </div>
+
+              <div className="opsIntelDivider" />
+
+              <div className="opsIntelSection">
+                <div className="opsIntelLabel">Interaction context</div>
+                <div className="opsIntelValue">{selectedAccount.urgencyReason}</div>
               </div>
 
               <div className="opsIntelDivider" />
