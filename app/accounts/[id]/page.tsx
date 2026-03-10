@@ -6,6 +6,7 @@ import { useAccountDetail } from "../../../hooks/useAccountDetail";
 import QuickLogModal from "../../../components/QuickLogModal";
 import AddContactSheet from "../../../components/AddContactSheet";
 import BrandWordmark from "../../../components/BrandWordmark";
+import WorkspaceRail from "../../../components/WorkspaceRail";
 import { ScorePill, CoverageChips } from "../../../components/IntimacyWidgets";
 import {
   fmtMoney,
@@ -42,52 +43,37 @@ export default function AccountDetailPage() {
 
   if (!accountId) {
     return (
-      <main>
-        <div className="topbar">
-          <div className="topbarTitle">
-            <h1 className="h1">Account</h1>
+      <main className="opsPage">
+        <header className="opsTopbar">
+          <div>
+            <BrandWordmark />
+            <h1 className="opsTitle">Account</h1>
           </div>
-        </div>
-        <div className="card">
-          <div style={{ fontSize: 13, opacity: 0.9 }}>
-            No account id. Go back to Accounts.
-          </div>
-          <div style={{ height: 12 }} />
-          <button className="btn" onClick={() => router.push("/accounts")}>
-            Back to Accounts
-          </button>
-        </div>
+        </header>
+        <div className="opsInlineHint">No account id. Go back to Accounts.</div>
+        <button className="btn btnGhost" onClick={() => router.push("/accounts")}>Back to Accounts</button>
       </main>
     );
   }
 
   return (
-    <main>
-      <div className="topbar">
-        <div className="topbarTitle" style={{ minWidth: 0 }}>
+    <main className="opsPage">
+      <header className="opsTopbar">
+        <div style={{ minWidth: 0 }}>
           <BrandWordmark />
-          <h1
-            className="h1"
-            style={{
-              display: "flex",
-              gap: 10,
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
+          <h1 className="opsTitle" style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
             <span style={{ minWidth: 0, overflowWrap: "anywhere", whiteSpace: "normal" }}>
               {account?.name ?? "Account"}
             </span>
             {score && <ScorePill total={score.total} label={score.label} tone={score.tone} />}
           </h1>
-          <div className="subtle">
+          <div className="opsSubtitle">
             {account ? (
               <>
                 {account.tier} • {account.country ?? "—"} • {fmtMoney(account.value_usd)}
                 {score && (
                   <>
-                    {" "}
-                    • last touch: {fmtLastTouch(score.d)} • cadence: {score.cadence}d • coverage: {score.coveredAreas}/
+                    {" "}• last touch: {fmtLastTouch(score.d)} • cadence: {score.cadence}d • coverage: {score.coveredAreas}/
                     {AREAS.length}
                   </>
                 )}
@@ -98,175 +84,166 @@ export default function AccountDetailPage() {
           </div>
         </div>
 
-        <div className="topbarActions">
-          <button className="btn" onClick={() => router.push("/today")}>
-            Today
-          </button>
-          <button className="btn" onClick={() => router.push("/accounts")}>
-            Accounts
-          </button>
-          <button className="btn" onClick={() => router.push("/weekly")}>
-            Weekly Pack
-          </button>
-          <button className="btn" onClick={loadAll} disabled={loading}>
-            Refresh
-          </button>
-          <button className="btn btnPrimary" onClick={signOut}>
-            Sign out
-          </button>
+        <div className="opsTopActions">
+          <button className="btn btnGhost" onClick={() => router.push("/today")}>Today</button>
+          <button className="btn btnGhost" onClick={() => router.push("/accounts")}>Accounts</button>
+          <button className="btn btnGhost" onClick={() => router.push("/weekly")}>Weekly Pack</button>
+          <button className="btn btnGhost" onClick={loadAll} disabled={loading}>Refresh</button>
+          <button className="btn btnPrimary" onClick={signOut}>Sign out</button>
         </div>
-      </div>
+      </header>
 
-      {error && (
-        <div className="card" style={{ marginBottom: 12 }}>
-          <div style={{ fontSize: 13, opacity: 0.95 }}>{error}</div>
-        </div>
-      )}
+      {error && <div className="opsInlineError">{error}</div>}
 
-      {score ? (
-        <div className="card" style={{ padding: 16 }}>
-          <div
-            className="row"
-            style={{ justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}
-          >
-            <div>
-              <div style={{ fontWeight: 950, fontSize: 16, letterSpacing: -0.2 }}>
-                Intimacy score
+      <div className="opsShell">
+        <WorkspaceRail active="accounts" />
+
+        <section className="opsMain">
+          {score ? (
+            <section className="opsBlock">
+              <div className="opsSectionHeaderRow">
+                <div>
+                  <h2 className="opsSectionTitle">Intimacy score</h2>
+                  <div className="opsSectionSubtitle">
+                    Recency: {score.recency}/60 • Coverage: {score.coverage}/40
+                    {score.missing.length > 0
+                      ? ` • Missing: ${score.missing.join(", ")}`
+                      : " • Coverage: full"}
+                  </div>
+                </div>
+                <button className="btn btnPrimary" onClick={() => setLogOpen(true)} disabled={!account}>
+                  Quick log
+                </button>
               </div>
-              <div className="subtle" style={{ marginTop: 4 }}>
-                Recency: {score.recency}/60 • Coverage: {score.coverage}/40
-                {score.missing.length > 0
-                  ? ` • Missing: ${score.missing.join(", ")}`
-                  : " • Coverage: full"}
+              <CoverageChips counts={score.counts} />
+            </section>
+          ) : (
+            <div className="opsInlineHint">Loading score…</div>
+          )}
+
+          <section className="opsBlock">
+            <div className="opsSectionHeaderRow">
+              <div>
+                <h2 className="opsSectionTitle">Contacts ({contacts.length})</h2>
+                <div className="opsSectionSubtitle">Cover key areas with actionable hooks.</div>
               </div>
+              <button
+                className="btn btnPrimary"
+                onClick={() => {
+                  setEditingContact(null);
+                  setSheetOpen(true);
+                }}
+              >
+                Add contact
+              </button>
             </div>
-            <button
-              className="btn btnPrimary"
-              onClick={() => setLogOpen(true)}
-              disabled={!account}
-            >
-              Quick log
-            </button>
-          </div>
-          <div style={{ height: 12 }} />
-          <CoverageChips counts={score.counts} />
-        </div>
-      ) : (
-        <div className="card" style={{ padding: 16 }}>
-          <div className="subtle">Loading score…</div>
-        </div>
-      )}
 
-      <div style={{ height: 12 }} />
-
-      <div className="card">
-        <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
-          <div>
-            <div style={{ fontWeight: 900, fontSize: 16 }}>Contacts ({contacts.length})</div>
-            <div className="subtle" style={{ marginTop: 4 }}>
-              Cover all key areas. Keep hooks short and useful.
-            </div>
-          </div>
-          <button
-            className="btn btnPrimary"
-            onClick={() => {
-              setEditingContact(null);
-              setSheetOpen(true);
-            }}
-          >
-            Add contact
-          </button>
-        </div>
-
-        <div style={{ height: 12 }} />
-
-        {contacts.length === 0 ? (
-          <div className="subtle" style={{ fontSize: 13 }}>
-            No contacts yet. Add at least one per area.
-          </div>
-        ) : (
-          <div style={{ display: "grid", gap: 10 }}>
-            {contacts.map((c) => (
-              <div key={c.id} className="card" style={{ padding: 14 }}>
-                <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontWeight: 900, fontSize: 16 }}>
-                      {c.name}{" "}
-                      <span style={{ opacity: 0.7, fontWeight: 700, fontSize: 13 }}>
-                        {c.area} • {channelLabel(c.preferred_channel)} • {fmtLastTouch(daysSince(c.last_touch_at))}
-                      </span>
+            {contacts.length === 0 ? (
+              <div className="opsInlineHint">No contacts yet. Add at least one per area.</div>
+            ) : (
+              <div className="opsStack">
+                {contacts.map((c) => (
+                  <article key={c.id} className="opsListRow">
+                    <div>
+                      <div className="opsMiniTitle">
+                        {c.name}
+                        <span className="opsQueueMeta">
+                          {c.area} • {channelLabel(c.preferred_channel)} • {fmtLastTouch(daysSince(c.last_touch_at))}
+                        </span>
+                      </div>
+                      <div className="opsMiniSub">Hook: {c.personal_hook ?? "—"}</div>
+                      {c.email && <div className="opsMiniSub">{c.email}</div>}
                     </div>
-                    {c.personal_hook ? (
-                      <div style={{ marginTop: 6, fontSize: 13, opacity: 0.9 }}>
-                        Hook: {c.personal_hook}
-                      </div>
-                    ) : (
-                      <div style={{ marginTop: 6, fontSize: 13, opacity: 0.5 }}>
-                        Hook: —
-                      </div>
-                    )}
-                    {c.email && (
-                      <div style={{ marginTop: 4, fontSize: 12, opacity: 0.6 }}>{c.email}</div>
-                    )}
-                  </div>
 
-                  <div className="row" style={{ gap: 10 }}>
-                    <button
-                      className="btn"
-                      onClick={() => {
-                        setEditingContact(c);
-                        setSheetOpen(true);
-                      }}
-                      style={{ height: 40 }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btnDanger"
-                      onClick={() => deleteContact(c.id)}
-                      style={{ height: 40 }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
+                    <div className="opsListActions">
+                      <button
+                        className="btn btnGhost"
+                        onClick={() => {
+                          setEditingContact(c);
+                          setSheetOpen(true);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button className="btn btnDanger" onClick={() => deleteContact(c.id)}>
+                        Delete
+                      </button>
+                    </div>
+                  </article>
+                ))}
               </div>
-            ))}
+            )}
+          </section>
+
+          <section className="opsBlock">
+            <div className="opsSectionHeaderRow">
+              <div>
+                <h2 className="opsSectionTitle">Recent interactions</h2>
+                <div className="opsSectionSubtitle">Last 30 interactions for this account.</div>
+              </div>
+              <div className="opsCount">{interactions.length}</div>
+            </div>
+
+            {interactions.length === 0 ? (
+              <div className="opsInlineHint">No interactions yet.</div>
+            ) : (
+              <div className="opsStack">
+                {interactions.map((it) => {
+                  const contactName = contacts.find((c) => c.id === it.contact_id)?.name ?? null;
+                  return (
+                    <article key={it.id} className="opsListRow">
+                      <div>
+                        <div className="opsMiniTitle">
+                          {it.channel.toUpperCase()} • {new Date(it.created_at).toLocaleDateString("en-US")}
+                        </div>
+                        <div className="opsMiniSub">{contactName ?? "No contact"}</div>
+                        <div className="opsMiniSub">{it.summary}</div>
+                        <div className="opsMiniSub">Next: {it.next_step} ({it.next_step_date})</div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        </section>
+
+        <aside className="opsContext desktopOnly">
+          <div className="opsPanelTitle">Context</div>
+
+          <div className="opsPanelBlock">
+            <div className="opsPanelLabel">Account</div>
+            <div className="opsPanelValue">{account?.name ?? "—"}</div>
           </div>
-        )}
+
+          <div className="opsPanelBlock">
+            <div className="opsPanelLabel">Coverage</div>
+            <div className="opsPanelValue">
+              {score ? `${score.coveredAreas}/${AREAS.length} areas` : "—"}
+            </div>
+          </div>
+
+          <div className="opsPanelBlock">
+            <div className="opsPanelLabel">Missing areas</div>
+            <div className="opsPanelValue">
+              {score && score.missing.length > 0 ? score.missing.join(", ") : "None"}
+            </div>
+          </div>
+
+          <button className="btn btnPrimary" onClick={() => setLogOpen(true)} disabled={!account}>
+            Log interaction
+          </button>
+        </aside>
       </div>
 
-      <div style={{ height: 12 }} />
-
-      <div className="card">
-        <div style={{ fontWeight: 900, fontSize: 16 }}>Recent interactions</div>
-        <div className="subtle" style={{ marginTop: 4 }}>
-          Last 30 (per account)
-        </div>
-        <div style={{ height: 12 }} />
-
-        {interactions.length === 0 ? (
-          <div className="subtle" style={{ fontSize: 13 }}>
-            No interactions yet.
-          </div>
-        ) : (
-          <div style={{ display: "grid", gap: 10 }}>
-            {interactions.map((it) => {
-              const contactName = contacts.find((c) => c.id === it.contact_id)?.name ?? null;
-              return (
-                <div key={it.id} className="card" style={{ padding: 14 }}>
-                  <div style={{ fontWeight: 900, fontSize: 13, letterSpacing: 0.2 }}>
-                    {it.channel.toUpperCase()} • {new Date(it.created_at).toLocaleDateString("en-US")} • {contactName ?? "no contact"}
-                  </div>
-                  <div style={{ marginTop: 8, fontSize: 13, opacity: 0.9 }}>{it.summary}</div>
-                  <div style={{ marginTop: 8, fontSize: 12, opacity: 0.75 }}>
-                    Next: {it.next_step} ({it.next_step_date})
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+      <div className="opsCommandBar">
+        <span className="opsCommandIcon">&gt;</span>
+        <input
+          className="opsCommandInput"
+          placeholder={`Log ${account?.name ?? "account"} whatsapp outcome`}
+          aria-label="Command"
+        />
+        <span className="opsCommandHint">Cmd K</span>
       </div>
 
       {account && (

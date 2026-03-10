@@ -1427,6 +1427,9 @@ html[data-density="compact"] .field {
   text-align: left;
   padding: 0 10px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .opsRailItem.active {
@@ -1435,10 +1438,69 @@ html[data-density="compact"] .field {
   color: rgba(255, 255, 255, 0.94);
 }
 
+.opsRailIcon {
+  width: 16px;
+  font-size: 12px;
+  opacity: 0.8;
+  text-align: center;
+}
+
+.opsRailLabel {
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .opsMain {
   padding: 12px;
   display: grid;
   gap: 12px;
+}
+
+.opsBlock {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.015);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.opsFormGrid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: end;
+}
+
+.opsFormGrid label {
+  display: grid;
+  gap: 6px;
+}
+
+.opsFormGrid button {
+  height: 42px;
+}
+
+.opsStack {
+  display: grid;
+  gap: 8px;
+}
+
+.opsListRow {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.015);
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.opsListActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .opsFilters {
@@ -1776,6 +1838,14 @@ html[data-density="compact"] .field {
     grid-template-columns: 1fr;
   }
 
+  .opsFormGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .opsFormGrid button {
+    grid-column: 1 / -1;
+  }
+
   .opsQueueItem {
     grid-template-columns: 48px minmax(0, 1fr);
   }
@@ -1814,6 +1884,16 @@ html[data-density="compact"] .field {
   .opsTopActions .btn {
     min-width: 0;
     flex: 1;
+  }
+
+  .opsListRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .opsListActions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
   .opsSummaryCell {

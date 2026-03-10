@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAccountList } from "../../hooks/useAccountList";
 import BrandWordmark from "../../components/BrandWordmark";
+import WorkspaceRail from "../../components/WorkspaceRail";
 import { type Tier } from "../../lib/intimacy";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +19,15 @@ export default function AccountsPage() {
   const [country, setCountry] = useState("");
   const [valueUsd, setValueUsd] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
+
+  const dueCount = useMemo(
+    () => accounts.filter((a) => a.badge === "due").length,
+    [accounts]
+  );
+  const neverCount = useMemo(
+    () => accounts.filter((a) => a.badge === "never").length,
+    [accounts]
+  );
 
   async function handleAdd() {
     setFormError(null);
@@ -35,152 +45,154 @@ export default function AccountsPage() {
   const msg = formError ?? error;
 
   return (
-    <main>
-      <div className="topbar">
-        <div className="topbarTitle">
+    <main className="opsPage">
+      <header className="opsTopbar">
+        <div>
           <BrandWordmark />
-          <h1 className="h1">Accounts</h1>
-          <div className="subtle">Sorted by value. Account status at a glance.</div>
+          <h1 className="opsTitle">Accounts</h1>
+          <div className="opsSubtitle">Create, prioritize, and inspect strategic accounts.</div>
         </div>
 
-        <div className="topbarActions">
-          <button className="btn" onClick={() => router.push("/today")}>
-            Today
-          </button>
-          <button className="btn" onClick={() => router.push("/weekly")}>
-            Weekly Pack
-          </button>
-          <button className="btn" onClick={load} disabled={loading}>
-            Refresh
-          </button>
-          <button className="btn btnPrimary" onClick={signOut}>
-            Sign out
-          </button>
+        <div className="opsTopActions">
+          <button className="btn btnGhost" onClick={() => router.push("/today")}>Today</button>
+          <button className="btn btnGhost" onClick={() => router.push("/weekly")}>Weekly Pack</button>
+          <button className="btn btnGhost" onClick={load} disabled={loading}>Refresh</button>
+          <button className="btn btnPrimary" onClick={signOut}>Sign out</button>
         </div>
-      </div>
+      </header>
 
-      {msg && (
-        <div className="card" style={{ marginBottom: 12 }}>
-          <div style={{ fontSize: 13, opacity: 0.95 }}>{msg}</div>
-        </div>
-      )}
+      <div className="opsShell">
+        <WorkspaceRail active="accounts" />
 
-      {/* Add account form */}
-      <div className="card">
-        <div className="accountsAddGrid">
-          <label style={{ display: "grid", gap: 6 }}>
-            <div className="label">Account name</div>
-            <input
-              className="field"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-              placeholder="e.g. AJE Peru"
-            />
-          </label>
+        <section className="opsMain">
+          {msg && <div className="opsInlineError">{msg}</div>}
 
-          <label style={{ display: "grid", gap: 6 }}>
-            <div className="label">Tier</div>
-            <select
-              className="field"
-              value={tier}
-              onChange={(e) => setTier(e.target.value as Tier)}
-            >
-              <option value="A">A</option>
-              <option value="B">B</option>
-              <option value="C">C</option>
-            </select>
-          </label>
+          <section className="opsBlock">
+            <div className="opsPanelTitle">Create account</div>
+            <div className="opsFormGrid">
+              <label>
+                <div className="label">Account name</div>
+                <input
+                  className="field"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+                  placeholder="e.g. AJE Peru"
+                />
+              </label>
 
-          <label style={{ display: "grid", gap: 6 }}>
-            <div className="label">Country</div>
-            <input
-              className="field"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              placeholder="e.g. Peru"
-            />
-          </label>
-
-          <label style={{ display: "grid", gap: 6 }}>
-            <div className="label">Value (USD)</div>
-            <input
-              className="field"
-              value={valueUsd}
-              onChange={(e) => setValueUsd(e.target.value)}
-              placeholder="e.g. 250000"
-              inputMode="numeric"
-            />
-          </label>
-
-          <button
-            className="btn btnPrimary accountsAddBtn"
-            onClick={handleAdd}
-            disabled={loading}
-          >
-            Add account
-          </button>
-        </div>
-
-        <div style={{ marginTop: 12, fontSize: 12, color: "var(--muted)" }}>
-          Intimacy cadence: A=7d • B=14d • C=30d
-        </div>
-      </div>
-
-      <div style={{ height: 12 }} />
-
-      {loading && (
-        <div style={{ display: "grid", gap: 12 }}>
-          {Array.from({ length: 2 }).map((_, i) => (
-            <div key={i} className="card skeletonCard" />
-          ))}
-        </div>
-      )}
-
-      {!loading && accounts.length === 0 && (
-        <div className="card">
-          <div style={{ fontSize: 13, opacity: 0.85 }}>No accounts yet.</div>
-        </div>
-      )}
-
-      <div style={{ display: "grid", gap: 12 }}>
-        {accounts.map((a) => (
-          <div className="card" key={a.id}>
-            <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
-              <div>
-                <div style={{ fontWeight: 900, fontSize: 18 }}>
-                  {a.name}{" "}
-                  <span style={{ fontWeight: 700, opacity: 0.7, fontSize: 14 }}>
-                    {a.tier} • {a.country ?? "—"}
-                  </span>{" "}
-                  <span className="pill" style={{ marginLeft: 8, opacity: 0.9 }}>
-                    {a.badge}
-                  </span>
-                </div>
-                <div style={{ marginTop: 8, opacity: 0.8, fontSize: 13 }}>
-                  Value: {a.valueFormatted} • Last touch: {a.lastTouch}
-                </div>
-              </div>
-
-              <div className="row" style={{ gap: 10, alignItems: "center" }}>
-                <button
-                  className="btn"
-                  onClick={() => router.push(`/accounts/${a.id}`)}
-                  style={{ height: 40, borderRadius: 14 }}
+              <label>
+                <div className="label">Tier</div>
+                <select
+                  className="field"
+                  value={tier}
+                  onChange={(e) => setTier(e.target.value as Tier)}
                 >
-                  Open
-                </button>
-                <button
-                  className="btn btnDanger"
-                  onClick={() => deleteAccount(a.id)}
-                  style={{ height: 40, borderRadius: 14 }}
-                >
-                  Delete
-                </button>
-              </div>
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                  <option value="C">C</option>
+                </select>
+              </label>
+
+              <label>
+                <div className="label">Country</div>
+                <input
+                  className="field"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  placeholder="e.g. Peru"
+                />
+              </label>
+
+              <label>
+                <div className="label">Value (USD)</div>
+                <input
+                  className="field"
+                  value={valueUsd}
+                  onChange={(e) => setValueUsd(e.target.value)}
+                  placeholder="e.g. 250000"
+                  inputMode="numeric"
+                />
+              </label>
+
+              <button className="btn btnPrimary" onClick={handleAdd} disabled={loading}>
+                Add account
+              </button>
             </div>
+          </section>
+
+          <div className="opsSectionHeaderRow">
+            <div>
+              <h2 className="opsSectionTitle">Account list</h2>
+              <div className="opsSectionSubtitle">Sorted by value. Operational view first.</div>
+            </div>
+            <div className="opsCount">{accounts.length}</div>
           </div>
-        ))}
+
+          {loading && <div className="opsInlineHint">Loading accounts…</div>}
+          {!loading && accounts.length === 0 && (
+            <div className="opsInlineHint">No accounts yet.</div>
+          )}
+
+          <div className="opsStack">
+            {!loading &&
+              accounts.map((a) => (
+                <article key={a.id} className="opsListRow">
+                  <div>
+                    <div className="opsMiniTitle">
+                      {a.name}
+                      <span className="opsQueueMeta">
+                        {a.tier} • {a.country ?? "—"}
+                      </span>
+                    </div>
+                    <div className="opsMiniSub">
+                      Value: {a.valueFormatted} • Last touch: {a.lastTouch} • Status: {a.badge}
+                    </div>
+                  </div>
+
+                  <div className="opsListActions">
+                    <button className="btn btnGhost" onClick={() => router.push(`/accounts/${a.id}`)}>
+                      Open
+                    </button>
+                    <button className="btn btnDanger" onClick={() => deleteAccount(a.id)}>
+                      Delete
+                    </button>
+                  </div>
+                </article>
+              ))}
+          </div>
+        </section>
+
+        <aside className="opsContext desktopOnly">
+          <div className="opsPanelTitle">Overview</div>
+
+          <div className="opsPanelBlock">
+            <div className="opsPanelLabel">Total</div>
+            <div className="opsPanelValue">{accounts.length} strategic accounts</div>
+          </div>
+
+          <div className="opsPanelBlock">
+            <div className="opsPanelLabel">Due</div>
+            <div className="opsPanelValue">{dueCount} need follow-up</div>
+          </div>
+
+          <div className="opsPanelBlock">
+            <div className="opsPanelLabel">Never touched</div>
+            <div className="opsPanelValue">{neverCount} need first contact</div>
+          </div>
+
+          <div className="opsInlineHint">Cadence: Tier A 7d • Tier B 14d • Tier C 30d.</div>
+        </aside>
+      </div>
+
+      <div className="opsCommandBar">
+        <span className="opsCommandIcon">&gt;</span>
+        <input
+          className="opsCommandInput"
+          placeholder="Add account ajeper tier A peru value 10000"
+          aria-label="Command"
+        />
+        <span className="opsCommandHint">Cmd K</span>
       </div>
     </main>
   );

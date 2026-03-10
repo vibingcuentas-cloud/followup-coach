@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useToday, type EnrichedAccount } from "../../hooks/useToday";
 import QuickLogModal from "../../components/QuickLogModal";
 import BrandWordmark from "../../components/BrandWordmark";
+import WorkspaceRail from "../../components/WorkspaceRail";
 
 export const dynamic = "force-dynamic";
 
@@ -161,13 +162,7 @@ export default function TodayPage() {
       </section>
 
       <div className="opsShell">
-        <aside className="opsRail desktopOnly">
-          <button className="opsRailItem active">Fire Queue</button>
-          <button className="opsRailItem">Accounts</button>
-          <button className="opsRailItem">Next</button>
-          <button className="opsRailItem">Insights</button>
-          <button className="opsRailItem">Week</button>
-        </aside>
+        <WorkspaceRail active="fire" />
 
         <section className="opsMain">
           <div className="opsFilters">
