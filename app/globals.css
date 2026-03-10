@@ -661,6 +661,50 @@ html[data-density="compact"] .field {
   margin: 0;
 }
 
+.todayKpiStrip {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface-elevated);
+  border-radius: 18px;
+  overflow: hidden;
+  min-height: 84px;
+}
+
+.todayKpiCell {
+  flex: 1;
+  min-width: 170px;
+  padding: 10px 14px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  background: rgba(18, 24, 40, 0.55);
+}
+
+.todayKpiCell + .todayKpiCell {
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.todayKpiCellRisk {
+  background: linear-gradient(180deg, rgba(88, 30, 40, 0.92), rgba(68, 26, 34, 0.9));
+}
+
+.todayKpiCellLabel {
+  font-size: 11px;
+  color: var(--faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1;
+}
+
+.todayKpiCellValue {
+  font-size: 44px;
+  font-weight: 950;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
 .todayList {
   display: grid;
   gap: 14px;
@@ -1116,8 +1160,21 @@ html[data-density="compact"] .field {
     width: 100%;
   }
 
-  .todayKpiGrid {
-    grid-template-columns: 1fr 1fr;
+  .todayKpiStrip {
+    min-height: 74px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+  }
+
+  .todayKpiCell {
+    min-width: 148px;
+    padding: 8px 12px;
+    gap: 6px;
+  }
+
+  .todayKpiCellValue {
+    font-size: 34px;
   }
 
   .todayStickyActions {
@@ -1131,30 +1188,8 @@ html[data-density="compact"] .field {
     -webkit-backdrop-filter: none;
   }
 
-  .todayKpiCard {
-    padding: 10px 12px;
-    height: 82px;
-    min-height: 82px;
-    grid-template-rows: 13px 1fr;
-    gap: 7px;
-  }
-
-  .todayKpiCard::before {
-    top: 10px;
-    bottom: 10px;
-  }
-
   .todayPage {
     gap: 12px;
-  }
-
-  .todayKpiLabel {
-    font-size: 11px;
-    letter-spacing: 0.05em;
-  }
-
-  .todayKpiValue {
-    font-size: 24px;
   }
 
   .accountsAddGrid {
@@ -1199,9 +1234,21 @@ html[data-density="compact"] .field {
     min-width: 0;
   }
 
-  .todayKpiGrid {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+  .todayKpiStrip {
+    min-height: 70px;
+  }
+
+  .todayKpiCell {
+    min-width: 132px;
+    padding: 8px 10px;
+  }
+
+  .todayKpiCellLabel {
+    font-size: 10px;
+  }
+
+  .todayKpiCellValue {
+    font-size: 30px;
   }
 
   .todayStickyActions {
@@ -1237,34 +1284,6 @@ html[data-density="compact"] .field {
 }
 
 @media (max-width: 720px) {
-  .todayKpiGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
-  .todayKpiCard {
-    height: 78px;
-    min-height: 78px;
-    padding: 8px 10px;
-    grid-template-rows: 12px 1fr;
-    gap: 6px;
-  }
-
-  .todayKpiCard::before {
-    top: 9px;
-    bottom: 9px;
-  }
-
-  .todayKpiLabel {
-    font-size: 10px;
-    letter-spacing: 0.08em;
-  }
-
-  .todayKpiValue {
-    font-size: 22px;
-  }
-
   .todayFiltersGrid {
     grid-template-columns: 1fr;
   }

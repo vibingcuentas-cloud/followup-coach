@@ -128,22 +128,22 @@ export default function TodayPage() {
         </div>
       )}
 
-      <div className="todayKpiGrid todayCommandBar todayTopKpis">
-        <div className="card todayKpiCard cardElevated">
-          <div className="todayKpiLabel">Must contact</div>
-          <div className="todayKpiValue">{mustContact.length}</div>
+      <div className="todayKpiStrip todayCommandBar todayTopKpis">
+        <div className="todayKpiCell">
+          <div className="todayKpiCellLabel">Must contact</div>
+          <div className="todayKpiCellValue">{mustContact.length}</div>
         </div>
-        <div className="card todayKpiCard cardUrgent">
-          <div className="todayKpiLabel">At risk</div>
-          <div className="todayKpiValue">{riskCount}</div>
+        <div className="todayKpiCell todayKpiCellRisk">
+          <div className="todayKpiCellLabel">At risk</div>
+          <div className="todayKpiCellValue">{riskCount}</div>
         </div>
-        <div className="card todayKpiCard cardElevated">
-          <div className="todayKpiLabel">Healthy</div>
-          <div className="todayKpiValue">{healthyCount}</div>
+        <div className="todayKpiCell">
+          <div className="todayKpiCellLabel">Healthy</div>
+          <div className="todayKpiCellValue">{healthyCount}</div>
         </div>
-        <div className="card todayKpiCard cardElevated">
-          <div className="todayKpiLabel">Total</div>
-          <div className="todayKpiValue">{totalShowing}</div>
+        <div className="todayKpiCell">
+          <div className="todayKpiCellLabel">Total</div>
+          <div className="todayKpiCellValue">{totalShowing}</div>
         </div>
       </div>
 
