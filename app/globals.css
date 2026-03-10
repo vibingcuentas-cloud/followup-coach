@@ -2995,12 +2995,20 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsRightIntel {
-  padding: 18px;
+  width: 360px;
+  min-width: 360px;
+  max-width: 360px;
+  padding: 32px;
   border: none;
   border-radius: 18px;
-  background: var(--surface-panel);
+  background: linear-gradient(180deg, rgba(30, 34, 46, 0.95), rgba(18, 20, 28, 0.95));
   box-shadow: var(--shadow-diffuse-soft);
-  gap: var(--space-5);
+  gap: 28px;
+}
+
+.opsTodayFocus .opsContextIntel {
+  gap: 28px;
+  padding-left: 0;
 }
 
 .opsTodayFocus .opsRightIntel .opsIntelAccountName {
@@ -3036,40 +3044,43 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotPanel {
+  display: grid;
+  gap: 28px;
   align-content: start;
 }
 
 .opsCopilotCard {
   border: none;
-  border-radius: 14px;
-  background: var(--surface-secondary);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  padding: 14px;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 0;
   display: grid;
-  gap: var(--space-3);
+  gap: 10px;
 }
 
 .opsCopilotContactCard {
-  grid-template-columns: 48px minmax(0, 1fr);
+  display: flex;
   gap: 12px;
   align-items: center;
 }
 
 .opsCopilotAvatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background:
     linear-gradient(155deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.03)),
     rgba(32, 39, 54, 0.6);
   color: rgba(255, 255, 255, 0.92);
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 670;
   display: grid;
   place-items: center;
+  flex: 0 0 auto;
 }
 
 .opsCopilotContactMeta {
@@ -3077,26 +3088,27 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotContactName {
-  font-size: 21px;
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  color: rgba(255, 255, 255, 0.95);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #f1f4fa;
 }
 
 .opsCopilotContactRole {
-  margin-top: 4px;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.52);
-  line-height: 1.4;
+  margin-top: 2px;
+  font-size: 13px;
+  color: #9aa3b7;
+  line-height: 1.45;
 }
 
+.opsIntelEyebrow,
 .opsCopilotLabel {
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   font-weight: 600;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.46);
+  color: #8f97ab;
 }
 
 .opsCopilotText {
@@ -3116,24 +3128,20 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotMessageSurface {
-  border: 1px solid rgba(255, 255, 255, 0.034);
+  border: none;
   border-radius: 12px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.018), rgba(255, 255, 255, 0.007)),
-    rgba(17, 23, 34, 0.5);
-  padding: 10px;
+  background: rgba(60, 85, 130, 0.18);
+  padding: 16px;
 }
 
 .opsCopilotMessageBubble {
-  border-radius: 10px;
-  background:
-    linear-gradient(160deg, rgba(120, 170, 255, 0.18), rgba(255, 255, 255, 0.04)),
-    rgba(44, 60, 92, 0.45);
-  border: 1px solid rgba(163, 198, 255, 0.14);
-  padding: 10px 11px;
-  font-size: 12px;
-  line-height: 1.45;
-  color: rgba(236, 245, 255, 0.96);
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #d8deeb;
 }
 
 .opsCopilotSendActions {
@@ -3143,17 +3151,16 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotSendBtn {
-  height: 34px;
-  border-radius: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.046);
-  background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
-    rgba(22, 28, 39, 0.52);
-  color: rgba(255, 255, 255, 0.84);
-  font-size: 11px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #d5dae6;
+  font-size: 13px;
   font-weight: 560;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -3161,11 +3168,18 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotSendBtn.primary {
-  border-color: rgba(175, 205, 255, 0.13);
-  background:
-    linear-gradient(160deg, rgba(116, 165, 255, 0.15), rgba(255, 255, 255, 0.04)),
-    rgba(38, 56, 92, 0.5);
-  color: rgba(242, 248, 255, 0.98);
+  background: #2d6cdf;
+  color: #ffffff;
+}
+
+.opsIntelPrimaryAction {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: none;
+  background: #2d6cdf;
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .opsCopilotSendBtn:disabled {
