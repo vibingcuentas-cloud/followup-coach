@@ -156,10 +156,27 @@ export default function AccountCard({
                 {variant === "must" ? "Log now" : "Log"}
               </button>
               <button
-                className="btn accActionBtn"
+                className="btn accToggleBtn"
                 onClick={() => setExpanded((v) => !v)}
+                aria-label={expanded ? "Collapse details" : "Expand details"}
+                title={expanded ? "Collapse details" : "Expand details"}
               >
-                {expanded ? "Hide details" : "Details"}
+                <svg
+                  className={`accChevron ${expanded ? "expanded" : ""}`}
+                  viewBox="0 0 20 20"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M5.5 7.5L10 12.5L14.5 7.5"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </button>
             </div>
           </div>

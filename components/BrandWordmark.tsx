@@ -5,8 +5,8 @@ export default function BrandWordmark() {
     <Image
       src="/forge-logo.svg"
       alt="Forge"
-      width={140}
-      height={40}
+      width={132}
+      height={24}
       priority
       className="brandWordmark"
     />

@@ -125,7 +125,9 @@ textarea {
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .topbarTitle {
@@ -143,8 +145,8 @@ textarea {
 
 .brandWordmark {
   width: auto;
-  height: 24px;
-  margin-bottom: 6px;
+  height: 20px;
+  margin-bottom: 8px;
   display: block;
 }
 
@@ -587,6 +589,24 @@ html[data-density="compact"] .field {
   border-radius: 14px;
 }
 
+.accToggleBtn {
+  height: 40px;
+  width: 44px;
+  min-width: 44px;
+  border-radius: 14px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+.accChevron {
+  transition: transform 160ms ease;
+}
+
+.accChevron.expanded {
+  transform: rotate(180deg);
+}
+
 .accSubRow {
   display: grid;
   gap: 6px;
@@ -682,6 +702,10 @@ html[data-density="compact"] .field {
 
 .todayKpiCard {
   padding: 12px 14px;
+  min-height: 84px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .todayKpiLabel {
@@ -903,7 +927,8 @@ html[data-density="compact"] .field {
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
   }
 
   .h1 {
@@ -911,8 +936,8 @@ html[data-density="compact"] .field {
   }
 
   .brandWordmark {
-    height: 20px;
-    margin-bottom: 4px;
+    height: 18px;
+    margin-bottom: 6px;
   }
 
   .h2 {
@@ -1186,7 +1211,7 @@ html[data-density="compact"] .field {
   }
 
   .todayKpiCard {
-    min-height: auto;
+    min-height: 74px;
     padding: 8px 10px;
   }
 
