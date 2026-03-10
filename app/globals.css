@@ -138,7 +138,7 @@ textarea {
 /* App container */
 .app-shell {
   min-height: 100vh;
-  padding: 28px 20px calc(96px + env(safe-area-inset-bottom));
+  padding: 28px 20px calc(56px + env(safe-area-inset-bottom));
   display: flex;
   justify-content: center;
 }
@@ -1260,7 +1260,7 @@ html[data-density="compact"] .field {
 /* -------------------- MOBILE FIXES (Account page + global) -------------------- */
 @media (max-width: 720px) {
   .app-shell {
-    padding: 18px 14px calc(118px + env(safe-area-inset-bottom));
+    padding: 18px 14px calc(74px + env(safe-area-inset-bottom));
   }
 
   .topbar {
@@ -1373,7 +1373,7 @@ html[data-density="compact"] .field {
 /* Extra small phones */
 @media (max-width: 380px) {
   .app-shell {
-    padding: 16px 12px calc(118px + env(safe-area-inset-bottom));
+    padding: 16px 12px calc(74px + env(safe-area-inset-bottom));
   }
 
   .seg {
@@ -1582,7 +1582,7 @@ html[data-density="compact"] .field {
 .opsPage {
   display: grid;
   gap: var(--space-5);
-  padding-bottom: 28px;
+  padding-bottom: var(--space-4);
 }
 
 .opsTopbar {
@@ -2413,6 +2413,7 @@ html[data-density="compact"] .field {
 
 .opsQueueModeSeg {
   display: none;
+  margin-top: 2px;
 }
 
 .opsTodayPolish .opsQueueList {
@@ -2910,8 +2911,8 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsQueueSection {
-  gap: 6px;
-  margin-top: 6px;
+  gap: 12px;
+  margin-top: 18px;
 }
 
 .opsTodayFocus .opsQueueList {
