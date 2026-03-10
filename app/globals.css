@@ -706,8 +706,8 @@ html[data-density="compact"] .field {
   min-height: 84px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  gap: 10px;
+  justify-content: center;
+  gap: 6px;
 }
 
 .todayKpiLabel {
@@ -1111,7 +1111,8 @@ html[data-density="compact"] .field {
     padding: 10px 12px;
     height: 80px;
     min-height: 80px;
-    gap: 8px;
+    justify-content: center;
+    gap: 6px;
   }
 
   .todayPage {
@@ -1218,7 +1219,8 @@ html[data-density="compact"] .field {
     height: 76px;
     min-height: 76px;
     padding: 8px 10px;
-    gap: 6px;
+    justify-content: center;
+    gap: 5px;
   }
 
   .todayKpiLabel {
