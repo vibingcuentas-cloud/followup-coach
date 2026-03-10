@@ -1,9 +1,29 @@
 :root {
-  --bg: #0b0b0c;
+  --bg: #0e1117;
+  --bg-alt: #131925;
   --surface: rgba(19, 22, 30, 0.9);
   --surface-elevated: rgba(26, 30, 40, 0.94);
   --surface-urgent: rgba(54, 24, 29, 0.92);
   --surface-soft: rgba(255, 255, 255, 0.03);
+
+  --surface-diffuse-1:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02) 46%, rgba(255, 255, 255, 0.008) 100%),
+    rgba(22, 27, 38, 0.68);
+  --surface-diffuse-2:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03) 44%, rgba(255, 255, 255, 0.012) 100%),
+    rgba(24, 30, 42, 0.78);
+  --surface-diffuse-urgent:
+    linear-gradient(155deg, rgba(255, 172, 172, 0.08), rgba(255, 116, 124, 0.04) 40%, rgba(255, 255, 255, 0.01) 100%),
+    rgba(49, 30, 37, 0.75);
+
+  --diffuse-stroke: rgba(255, 255, 255, 0.075);
+  --diffuse-stroke-strong: rgba(255, 255, 255, 0.13);
+  --shadow-diffuse-soft:
+    0 10px 28px rgba(0, 0, 0, 0.23),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  --shadow-diffuse:
+    0 14px 34px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 
   --panel: rgba(255, 255, 255, 0.06);
   --panel-strong: rgba(255, 255, 255, 0.09);
@@ -71,9 +91,10 @@ body::before {
   pointer-events: none;
 
   background:
-    radial-gradient(860px 460px at 8% -8%, rgba(255, 255, 255, 0.045), transparent 64%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 40%),
-    var(--bg);
+    radial-gradient(980px 560px at 10% -16%, rgba(146, 172, 255, 0.13), transparent 64%),
+    radial-gradient(780px 480px at 96% 2%, rgba(255, 132, 172, 0.08), transparent 62%),
+    radial-gradient(920px 640px at 50% 120%, rgba(110, 220, 255, 0.06), transparent 70%),
+    linear-gradient(180deg, var(--bg-alt) 0%, var(--bg) 42%, #0d1118 100%);
 }
 
 body::after {
@@ -198,12 +219,14 @@ html[data-density="compact"] .h1 {
 
 /* Card */
 .card {
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.016);
+  border: 1px solid var(--diffuse-stroke);
+  background: var(--surface-diffuse-1);
   border-radius: 12px;
   padding: 14px;
-  box-shadow: none;
-  transition: border-color 160ms ease, background 160ms ease;
+  box-shadow: var(--shadow-diffuse-soft);
+  backdrop-filter: blur(8px) saturate(112%);
+  -webkit-backdrop-filter: blur(8px) saturate(112%);
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
 }
 
 html[data-density="compact"] .card {
@@ -211,17 +234,17 @@ html[data-density="compact"] .card {
 }
 
 .cardElevated {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--surface-diffuse-2);
 }
 
 .cardUrgent {
-  background: rgba(130, 56, 66, 0.14);
-  border-color: rgba(255, 140, 140, 0.2);
+  background: var(--surface-diffuse-urgent);
+  border-color: rgba(255, 158, 162, 0.2);
 }
 
 .card:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
+  border-color: var(--diffuse-stroke-strong);
+  box-shadow: var(--shadow-diffuse);
 }
 
 .card + .card {
@@ -233,12 +256,14 @@ html[data-density="compact"] .card {
   height: 38px;
   padding: 0 12px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: transparent;
+  border: 1px solid var(--diffuse-stroke);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)),
+    rgba(21, 26, 36, 0.45);
   color: var(--text);
   cursor: pointer;
-  box-shadow: none;
-  transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
 }
 
 html[data-density="compact"] .btn {
@@ -246,8 +271,11 @@ html[data-density="compact"] .btn {
 }
 
 .btn:hover {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.035);
+  border-color: var(--diffuse-stroke-strong);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.022)),
+    rgba(24, 30, 42, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
 }
 
 .btn:active {
@@ -255,14 +283,14 @@ html[data-density="compact"] .btn {
 }
 
 .btnPrimary {
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: linear-gradient(170deg, rgba(255, 255, 255, 0.98), rgba(236, 242, 255, 0.9));
   color: rgba(7, 10, 14, 0.92);
   font-weight: 650;
 }
 
 .btnPrimary:hover {
-  background: rgba(255, 255, 255, 0.96);
+  background: linear-gradient(170deg, rgba(255, 255, 255, 1), rgba(242, 246, 255, 0.94));
 }
 
 .btnDanger {
@@ -272,30 +300,37 @@ html[data-density="compact"] .btn {
 }
 
 .btnGhost {
-  border-color: rgba(255, 255, 255, 0.08);
-  background: transparent;
+  border-color: rgba(255, 255, 255, 0.07);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.008)),
+    rgba(18, 24, 34, 0.42);
   color: rgba(255, 255, 255, 0.8);
-  box-shadow: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
 }
 
 .btnGhost:hover {
-  border-color: rgba(255, 255, 255, 0.13);
-  background: rgba(255, 255, 255, 0.025);
-  box-shadow: none;
+  border-color: rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.012)),
+    rgba(22, 28, 40, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
 }
 
 /* Inputs */
 .field {
   width: 100%;
   border-radius: 14px;
-  border: 1px solid var(--stroke);
-  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--diffuse-stroke);
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02)),
+    rgba(19, 24, 34, 0.54);
   color: var(--text);
   padding: 12px;
   outline: none;
   transition:
     border-color 0.18s ease,
-    box-shadow 0.18s ease;
+    box-shadow 0.18s ease,
+    background 0.18s ease;
 }
 
 html[data-density="compact"] .field {
@@ -303,8 +338,11 @@ html[data-density="compact"] .field {
 }
 
 .field:focus {
-  border-color: var(--stroke-strong);
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
+  border-color: var(--diffuse-stroke-strong);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.024)),
+    rgba(22, 28, 40, 0.58);
 }
 
 .label {
@@ -408,8 +446,11 @@ html[data-density="compact"] .field {
   gap: 4px;
   padding: 2px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: transparent;
+  border: 1px solid var(--diffuse-stroke);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
+    rgba(20, 25, 35, 0.42);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
   align-items: center;
   flex-wrap: wrap;
 }
@@ -425,18 +466,22 @@ html[data-density="compact"] .field {
   height: 32px;
   border-radius: 8px;
   padding: 0 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.006)),
+    rgba(22, 27, 39, 0.36);
   color: rgba(255, 255, 255, 0.84);
   font-weight: 620;
   cursor: pointer;
   white-space: nowrap;
-  transition: border-color 0.16s ease, background 0.16s ease;
+  transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease;
 }
 
 .seg:hover {
-  border-color: rgba(255, 255, 255, 0.13);
-  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.11);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012)),
+    rgba(24, 30, 42, 0.4);
 }
 
 .seg:active {
@@ -444,8 +489,10 @@ html[data-density="compact"] .field {
 }
 
 .seg.active {
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.018)),
+    rgba(27, 34, 47, 0.52);
   color: rgba(255, 255, 255, 0.96);
 }
 
@@ -454,8 +501,10 @@ html[data-density="compact"] .field {
   height: 32px;
   border-radius: 8px;
   padding: 0 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.006)),
+    rgba(22, 27, 39, 0.36);
   color: rgba(255, 255, 255, 0.84);
   font-weight: 620;
   cursor: pointer;
@@ -463,8 +512,10 @@ html[data-density="compact"] .field {
 }
 
 .segBtnActive {
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.018)),
+    rgba(27, 34, 47, 0.52);
   color: rgba(255, 255, 255, 0.96);
 }
 
@@ -913,19 +964,22 @@ html[data-density="compact"] .field {
   position: fixed;
   inset: 0;
   z-index: 80;
-  background: rgba(4, 6, 10, 0.72);
+  background:
+    radial-gradient(720px 420px at 50% 20%, rgba(92, 116, 170, 0.14), transparent 68%),
+    rgba(5, 8, 12, 0.7);
 }
 
 .quickLogModal {
   max-height: calc(100dvh - 24px);
   overflow: auto;
-  background: rgba(20, 24, 34, 0.97);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  background: var(--surface-diffuse-2);
+  backdrop-filter: blur(10px) saturate(118%);
+  -webkit-backdrop-filter: blur(10px) saturate(118%);
   transform: translateZ(0);
   will-change: transform;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow-diffuse);
 }
 
 .quickLogModalFrame {
@@ -1001,10 +1055,10 @@ html[data-density="compact"] .field {
   position: sticky;
   top: -16px;
   z-index: 10;
-  background: linear-gradient(180deg, rgba(24, 28, 38, 0.99), rgba(24, 28, 38, 0.95));
+  background: linear-gradient(180deg, rgba(28, 34, 46, 0.94), rgba(28, 34, 46, 0.72));
   padding: 8px 0 10px;
   margin-bottom: 2px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
 }
 
 .quickLogActions {
@@ -1516,20 +1570,27 @@ html[data-density="compact"] .field {
 }
 
 .opsInlineError {
-  border: 1px solid rgba(255, 120, 120, 0.22);
-  background: rgba(65, 31, 36, 0.34);
+  border: 1px solid rgba(255, 148, 148, 0.22);
+  background:
+    linear-gradient(155deg, rgba(255, 176, 176, 0.09), rgba(255, 88, 110, 0.05)),
+    rgba(66, 34, 43, 0.44);
   color: rgba(255, 205, 205, 0.92);
   border-radius: 12px;
   padding: 10px 12px;
   font-size: 13px;
+  box-shadow: var(--shadow-diffuse-soft);
 }
 
 .opsSummaryRow {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  padding: 8px 0;
+  border: 1px solid var(--diffuse-stroke);
+  border-radius: 14px;
+  background: var(--surface-diffuse-1);
+  box-shadow: var(--shadow-diffuse-soft);
+  backdrop-filter: blur(8px) saturate(112%);
+  -webkit-backdrop-filter: blur(8px) saturate(112%);
+  padding: 10px 0;
 }
 
 .opsSummaryCell {
@@ -1541,7 +1602,7 @@ html[data-density="compact"] .field {
 }
 
 .opsSummaryCell + .opsSummaryCell {
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .opsSummaryCell.risk {
@@ -1599,7 +1660,9 @@ html[data-density="compact"] .field {
 
 .opsRailItem.active {
   border-color: transparent;
-  background: rgba(255, 255, 255, 0.06);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)),
+    rgba(24, 29, 41, 0.44);
   color: rgba(255, 255, 255, 0.94);
 }
 
@@ -1622,18 +1685,19 @@ html[data-density="compact"] .field {
 }
 
 .opsBlock {
-  border: none;
-  background: transparent;
-  border-radius: 0;
-  padding: 0;
+  border: 1px solid var(--diffuse-stroke);
+  background: var(--surface-diffuse-1);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: var(--shadow-diffuse-soft);
+  backdrop-filter: blur(8px) saturate(110%);
+  -webkit-backdrop-filter: blur(8px) saturate(110%);
   display: grid;
   gap: 12px;
 }
 
 .opsBlock + .opsBlock {
-  margin-top: 8px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 10px;
 }
 
 .opsFormGrid {
@@ -1680,19 +1744,27 @@ html[data-density="compact"] .field {
   grid-template-columns: minmax(0, 1fr) auto auto;
   gap: 10px;
   align-items: center;
-  padding-bottom: 2px;
+  padding: 6px 8px;
+  border: 1px solid var(--diffuse-stroke);
+  border-radius: 12px;
+  background: var(--surface-diffuse-1);
+  box-shadow: var(--shadow-diffuse-soft);
+  backdrop-filter: blur(8px) saturate(110%);
+  -webkit-backdrop-filter: blur(8px) saturate(110%);
   border-bottom: none;
 }
 
 .opsSearch {
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.015);
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.018)),
+    rgba(23, 28, 40, 0.46);
 }
 
 .opsTierSeg {
   border-radius: 10px;
   padding: 2px;
-  background: transparent;
+  background: rgba(21, 26, 37, 0.26);
 }
 
 .opsTierSeg .seg {
@@ -1755,7 +1827,9 @@ html[data-density="compact"] .field {
 .opsQueueList {
   display: grid;
   gap: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.045);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.016), rgba(255, 255, 255, 0));
+  border-radius: 10px;
 }
 
 .opsQueueItem {
@@ -1778,8 +1852,10 @@ html[data-density="compact"] .field {
 }
 
 .opsQueueItem.active {
-  border-bottom-color: rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.008);
+  border-bottom-color: rgba(255, 255, 255, 0.11);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.008)),
+    rgba(26, 32, 45, 0.22);
 }
 
 .opsQueueState {
@@ -1896,11 +1972,16 @@ html[data-density="compact"] .field {
 }
 
 .opsContext {
-  padding: 0 0 0 16px;
+  padding: 14px 14px 14px 16px;
   display: grid;
   gap: 14px;
   align-content: start;
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--diffuse-stroke);
+  border-radius: 14px;
+  background: var(--surface-diffuse-1);
+  box-shadow: var(--shadow-diffuse-soft);
+  backdrop-filter: blur(8px) saturate(112%);
+  -webkit-backdrop-filter: blur(8px) saturate(112%);
 }
 
 .opsPanelTitle {
@@ -2054,11 +2135,13 @@ html[data-density="compact"] .field {
   grid-template-columns: 28px 1fr auto;
   align-items: center;
   gap: 8px;
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  background: transparent;
-  border-radius: 0;
-  padding: 0 2px;
+  border: 1px solid var(--diffuse-stroke);
+  background: var(--surface-diffuse-1);
+  border-radius: 12px;
+  padding: 0 10px;
+  box-shadow: var(--shadow-diffuse-soft);
+  backdrop-filter: blur(8px) saturate(112%);
+  -webkit-backdrop-filter: blur(8px) saturate(112%);
   z-index: 1;
 }
 
@@ -2108,18 +2191,21 @@ html[data-density="compact"] .field {
   border-radius: 10px;
   font-size: 14px;
   font-weight: 560;
-  box-shadow: none;
 }
 
 .opsTodayPolish .opsTopActions .btnGhost {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.07);
   color: rgba(255, 255, 255, 0.76);
-  background: transparent;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.008)),
+    rgba(18, 24, 34, 0.4);
 }
 
 .opsTodayPolish .opsTopActions .btnGhost:hover {
-  border-color: rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
+    rgba(22, 28, 40, 0.44);
 }
 
 .opsTodayPolish .opsTopActions .btnPrimary {
@@ -2134,9 +2220,11 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsSummaryRow {
-  border-top: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 0 0 12px;
+  border: 1px solid var(--diffuse-stroke);
+  border-radius: 14px;
+  background: var(--surface-diffuse-1);
+  box-shadow: var(--shadow-diffuse-soft);
+  padding: 10px 0;
 }
 
 .opsTodayPolish .opsSummaryCell {
@@ -2179,8 +2267,11 @@ html[data-density="compact"] .field {
 
 .opsTodayPolish .opsFilters {
   gap: 10px;
-  padding-bottom: 0;
-  border-bottom: none;
+  padding: 6px 8px;
+  border: 1px solid var(--diffuse-stroke);
+  border-radius: 12px;
+  background: var(--surface-diffuse-1);
+  box-shadow: var(--shadow-diffuse-soft);
 }
 
 .opsTodayPolish .opsSearch {
@@ -2190,9 +2281,9 @@ html[data-density="compact"] .field {
 
 .opsTodayPolish .opsTierSeg {
   padding: 2px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 10px;
-  background: transparent;
+  background: rgba(21, 26, 37, 0.26);
 }
 
 .opsTodayPolish .opsTierSeg .seg {
@@ -2245,8 +2336,10 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsQueueItem.active {
-  background: rgba(255, 255, 255, 0.008);
-  border-bottom-color: rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.008)),
+    rgba(26, 32, 45, 0.22);
+  border-bottom-color: rgba(255, 255, 255, 0.11);
 }
 
 .opsTodayPolish .opsQueueStatusBadge {
@@ -2328,7 +2421,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsContext {
-  border-left-color: rgba(255, 255, 255, 0.06);
+  border-color: var(--diffuse-stroke);
 }
 
 .opsTodayPolish .opsContextIntel {
@@ -2375,11 +2468,11 @@ html[data-density="compact"] .field {
 
 .opsTodayPolish .opsCommandBar {
   height: 40px;
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 0;
-  background: transparent;
-  padding: 0 2px;
+  border: 1px solid var(--diffuse-stroke);
+  border-radius: 12px;
+  background: var(--surface-diffuse-1);
+  padding: 0 10px;
+  box-shadow: var(--shadow-diffuse-soft);
 }
 
 .opsTodayPolish .opsCommandHint {
@@ -2422,11 +2515,11 @@ html[data-density="compact"] .field {
 }
 
 .opsMiniRow {
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 0;
-  background: transparent;
-  padding: 14px 0;
+  border: 1px solid var(--diffuse-stroke);
+  border-radius: 12px;
+  background: var(--surface-diffuse-1);
+  padding: 12px 12px;
+  box-shadow: var(--shadow-diffuse-soft);
   display: flex;
   justify-content: space-between;
   gap: 10px;
@@ -2633,16 +2726,17 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsWorkspacePanel {
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--diffuse-stroke);
   border-radius: 18px;
-  background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025) 36%, rgba(255, 255, 255, 0.01) 72%),
-    rgba(255, 255, 255, 0.015);
+  background: var(--surface-diffuse-2);
   padding: 28px;
   display: flex;
   flex-direction: column;
   gap: 24px;
   min-height: 560px;
+  box-shadow: var(--shadow-diffuse);
+  backdrop-filter: blur(10px) saturate(116%);
+  -webkit-backdrop-filter: blur(10px) saturate(116%);
 }
 
 .opsTodayFocus .opsWorkspaceHero {
@@ -2722,6 +2816,8 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsQueueList {
   border-top-color: rgba(255, 255, 255, 0.045);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0));
+  border-radius: 12px;
 }
 
 .opsTodayFocus .opsQueueSection .opsSectionTitle {
@@ -2782,8 +2878,11 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsRightIntel {
-  padding-left: 20px;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 18px;
+  border: 1px solid var(--diffuse-stroke);
+  border-radius: 16px;
+  background: var(--surface-diffuse-1);
+  box-shadow: var(--shadow-diffuse-soft);
   gap: 14px;
 }
 
