@@ -2606,6 +2606,114 @@ html[data-density="compact"] .field {
   color: rgba(255, 255, 255, 0.46);
 }
 
+/* -------------------- Shared Product Surface (non-Today pages) -------------------- */
+.opsStandard .opsTopbar {
+  padding-bottom: 14px;
+}
+
+.opsStandard .opsTopActions {
+  gap: 6px;
+}
+
+.opsStandard .opsTopActions .btn {
+  min-width: 98px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 560;
+}
+
+.opsStandard .opsTopActions .btnGhost {
+  border-color: rgba(255, 255, 255, 0.048);
+  color: rgba(255, 255, 255, 0.76);
+  background:
+    radial-gradient(122% 110% at 8% -28%, rgba(131, 163, 255, 0.12), transparent 60%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.009)),
+    rgba(18, 24, 34, 0.42);
+}
+
+.opsStandard .opsTopActions .btnGhost:hover {
+  border-color: rgba(255, 255, 255, 0.078);
+  background:
+    radial-gradient(122% 110% at 8% -28%, rgba(132, 164, 255, 0.14), transparent 58%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.038), rgba(255, 255, 255, 0.011)),
+    rgba(22, 28, 40, 0.45);
+}
+
+.opsStandard .opsTopActions .btnPrimary {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: rgba(5, 8, 12, 0.92);
+  font-weight: 620;
+}
+
+.opsStandard .opsTopActions .btnPrimary:hover {
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.opsStandard .opsShell {
+  gap: 24px 20px;
+}
+
+.opsStandard .opsMain {
+  gap: 20px;
+}
+
+.opsStandard .opsBlock,
+.opsStandard .opsContext {
+  border-radius: 18px;
+  background: var(--surface-panel);
+  box-shadow: var(--shadow-diffuse-soft);
+}
+
+.opsStandard .opsCommandBar {
+  height: 42px;
+  border-radius: 18px;
+  background: var(--surface-secondary);
+}
+
+/* -------------------- Auth + Legal -------------------- */
+.authPage,
+.legalPage {
+  max-width: 920px;
+  margin: 0 auto;
+  gap: 20px;
+}
+
+.authCard,
+.legalCard {
+  max-width: 620px;
+}
+
+.authPage .opsTopbar {
+  align-items: flex-end;
+}
+
+.authModeSwitch {
+  gap: 8px;
+}
+
+.authModeSwitch .btn {
+  min-width: 110px;
+}
+
+.authModeSwitch .btn.activeMode {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.authCard {
+  display: grid;
+  gap: 12px;
+}
+
+.authActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .mobileOnly {
   display: none;
 }

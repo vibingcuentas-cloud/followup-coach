@@ -1,10 +1,19 @@
 export default function PrivacyPage() {
   return (
-    <main style={{ padding: 24 }}>
-      <h1 style={{ fontSize: 24, fontWeight: 600 }}>Privacy</h1>
-      <p style={{ marginTop: 8, opacity: 0.8 }}>
-        Forge stores account, contact, and interaction notes to help execute strategic follow-up.
-      </p>
+    <main className="opsPage legalPage">
+      <header className="opsTopbar">
+        <div>
+          <div className="brandTag">Forge</div>
+          <h1 className="opsTitle">Privacy</h1>
+          <div className="opsSubtitle">Data handling for relationship execution workflows.</div>
+        </div>
+      </header>
+
+      <section className="opsBlock legalCard">
+        <p className="opsPanelValue">
+          Forge stores account, contact, and interaction notes to help execute strategic follow-up.
+        </p>
+      </section>
     </main>
   );
 }

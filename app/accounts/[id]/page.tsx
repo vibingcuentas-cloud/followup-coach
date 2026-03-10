@@ -43,7 +43,7 @@ export default function AccountDetailPage() {
 
   if (!accountId) {
     return (
-      <main className="opsPage">
+      <main className="opsPage opsTodayPolish opsStandard">
         <header className="opsTopbar">
           <div>
             <BrandWordmark />
@@ -57,7 +57,7 @@ export default function AccountDetailPage() {
   }
 
   return (
-    <main className="opsPage">
+    <main className="opsPage opsTodayPolish opsStandard">
       <header className="opsTopbar">
         <div style={{ minWidth: 0 }}>
           <BrandWordmark />

@@ -45,7 +45,7 @@ export default function AccountsPage() {
   const msg = formError ?? error;
 
   return (
-    <main className="opsPage">
+    <main className="opsPage opsTodayPolish opsStandard">
       <header className="opsTopbar">
         <div>
           <BrandWordmark />

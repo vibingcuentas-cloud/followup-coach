@@ -29,7 +29,7 @@ export default function WeeklyPage() {
   }
 
   return (
-    <main className="opsPage">
+    <main className="opsPage opsTodayPolish opsStandard">
       <header className="opsTopbar">
         <div>
           <BrandWordmark />

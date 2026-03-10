@@ -94,156 +94,71 @@ export default function LoginPage() {
   }
 
   return (
-    <main style={{ padding: 24, maxWidth: 980, margin: "0 auto" }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-end",
-          justifyContent: "space-between",
-          gap: 12,
-        }}
-      >
+    <main className="opsPage authPage">
+      <header className="opsTopbar">
         <div>
-          <div style={{ fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.72, fontWeight: 700 }}>
-            Forge
-          </div>
-          <h1 style={{ fontSize: 34, fontWeight: 900, letterSpacing: -0.5 }}>
-            {mode === "signin" ? "Sign in" : "Sign up"}
-          </h1>
-          <div style={{ marginTop: 6, opacity: 0.7 }}>
-            Intimacy OS for strategic account execution.
-          </div>
+          <div className="brandTag">Forge</div>
+          <h1 className="opsTitle">{mode === "signin" ? "Sign in" : "Sign up"}</h1>
+          <div className="opsSubtitle">Intimacy OS for strategic account execution.</div>
         </div>
 
-        <div style={{ display: "flex", gap: 10 }}>
+        <div className="opsTopActions authModeSwitch">
           <button
+            className={`btn btnGhost ${mode === "signin" ? "activeMode" : ""}`}
             onClick={() => {
               setMsg(null);
               setMode("signin");
-            }}
-            style={{
-              padding: "10px 12px",
-              borderRadius: 14,
-              border: "1px solid rgba(255,255,255,0.14)",
-              background:
-                mode === "signin" ? "rgba(255,255,255,0.10)" : "transparent",
-              color: "white",
-              cursor: "pointer",
-              fontWeight: 800,
             }}
           >
             Sign in
           </button>
           <button
+            className={`btn btnGhost ${mode === "signup" ? "activeMode" : ""}`}
             onClick={() => {
               setMsg(null);
               setMode("signup");
-            }}
-            style={{
-              padding: "10px 12px",
-              borderRadius: 14,
-              border: "1px solid rgba(255,255,255,0.14)",
-              background:
-                mode === "signup" ? "rgba(255,255,255,0.10)" : "transparent",
-              color: "white",
-              cursor: "pointer",
-              fontWeight: 800,
             }}
           >
             Sign up
           </button>
         </div>
-      </div>
+      </header>
 
-      <section
-        style={{
-          marginTop: 18,
-          borderRadius: 18,
-          border: "1px solid rgba(255,255,255,0.14)",
-          background: "rgba(255,255,255,0.06)",
-          padding: 18,
-        }}
-      >
-        {msg && (
-          <div
-            style={{
-              marginBottom: 12,
-              padding: 12,
-              borderRadius: 14,
-              border: "1px solid rgba(255,255,255,0.12)",
-              background: "rgba(0,0,0,0.25)",
-              fontSize: 13,
-              opacity: 0.95,
-            }}
-          >
-            {msg}
-          </div>
-        )}
+      <section className="opsBlock authCard">
+        {msg && <div className="opsInlineError">{msg}</div>}
 
-        <label style={{ display: "block" }}>
-          <div style={{ fontSize: 12, opacity: 0.7 }}>Email</div>
+        <label>
+          <div className="label">Email</div>
           <input
+            className="field"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@company.com"
             inputMode="email"
             autoCapitalize="none"
             autoCorrect="off"
-            style={{
-              width: "100%",
-              marginTop: 6,
-              padding: 14,
-              borderRadius: 14,
-              border: "1px solid rgba(255,255,255,0.14)",
-              background: "rgba(255,255,255,0.06)",
-              color: "white",
-              outline: "none",
-            }}
           />
         </label>
 
-        <label style={{ display: "block", marginTop: 12 }}>
-          <div style={{ fontSize: 12, opacity: 0.7 }}>Password</div>
+        <label>
+          <div className="label">Password</div>
           <input
+            className="field"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             placeholder="••••••"
-            style={{
-              width: "100%",
-              marginTop: 6,
-              padding: 14,
-              borderRadius: 14,
-              border: "1px solid rgba(255,255,255,0.14)",
-              background: "rgba(255,255,255,0.06)",
-              color: "white",
-              outline: "none",
-            }}
           />
         </label>
 
-        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 14 }}>
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            style={{
-              padding: "12px 16px",
-              borderRadius: 14,
-              border: "none",
-              background: "white",
-              color: "black",
-              fontWeight: 900,
-              cursor: "pointer",
-              minWidth: 120,
-            }}
-          >
+        <div className="authActions">
+          <button className="btn btnPrimary" onClick={handleSubmit} disabled={loading}>
             {loading ? "Working..." : mode === "signin" ? "Sign in" : "Create account"}
           </button>
         </div>
 
-        <div style={{ marginTop: 12, fontSize: 12, opacity: 0.65 }}>
-          If Sign Up requires email confirmation, ensure Supabase “Site URL” and “Redirect
-          URLs” include your Vercel domain.
+        <div className="opsInlineHint">
+          If Sign Up requires email confirmation, ensure Supabase Site URL and Redirect URLs include your Vercel domain.
         </div>
       </section>
     </main>
