@@ -98,7 +98,7 @@ export default function TodayPage() {
   }
 
   return (
-    <main>
+    <main className="todayPage">
       <div className="topbar">
         <div className="topbarTitle">
           <BrandWordmark />
@@ -123,12 +123,12 @@ export default function TodayPage() {
       </div>
 
       {error && (
-        <div className="card" style={{ marginBottom: 12 }}>
+        <div className="card">
           <div style={{ fontSize: 13, opacity: 0.95 }}>{error}</div>
         </div>
       )}
 
-      <div className="todayKpiGrid todayCommandBar" style={{ marginBottom: 14 }}>
+      <div className="todayKpiGrid todayCommandBar todayTopKpis">
         <div className="card todayKpiCard cardElevated">
           <div className="todayKpiLabel">Must contact</div>
           <div className="todayKpiValue">{mustContact.length}</div>
@@ -147,7 +147,7 @@ export default function TodayPage() {
         </div>
       </div>
 
-      <div className="card todayFiltersCard" style={{ marginBottom: 14 }}>
+      <div className="card todayFiltersCard">
         <div className="row todayFiltersHeader">
           <div className="label" style={{ marginBottom: 0 }}>
             Filters
@@ -157,52 +157,49 @@ export default function TodayPage() {
           </button>
         </div>
         {showFilters && (
-        <div className="todayFiltersGrid">
-          <div className="todayFilterSearch">
-            <div className="label" style={{ marginBottom: 6 }}>
-              Search
+          <div className="todayFiltersGrid">
+            <div className="todayFilterSearch">
+              <div className="label" style={{ marginBottom: 6 }}>
+                Search
+              </div>
+              <input
+                className="field"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Account name or country"
+              />
             </div>
-            <input
-              className="field"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Account name or country"
-            />
-          </div>
 
-          <div className="todayFilterTier">
-            <div className="label" style={{ marginBottom: 6 }}>
-              Tier
+            <div className="todayFilterTier">
+              <div className="label" style={{ marginBottom: 6 }}>
+                Tier
+              </div>
+              <div className="segmented scroll">
+                {(["all", "A", "B", "C"] as const).map((t) => (
+                  <button
+                    key={t}
+                    className={`seg ${tierFilter === t ? "active" : ""}`}
+                    onClick={() => setTierFilter(t)}
+                  >
+                    {t === "all" ? "All" : t}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="segmented scroll">
-              {(["all", "A", "B", "C"] as const).map((t) => (
-                <button
-                  key={t}
-                  className={`seg ${tierFilter === t ? "active" : ""}`}
-                  onClick={() => setTierFilter(t)}
-                >
-                  {t === "all" ? "All" : t}
-                </button>
-              ))}
-            </div>
-          </div>
 
-          <div className="row todayFilterActions">
-            <button
-              className="btn"
-              onClick={() => setSearch("")}
-            >
-              Clear
-            </button>
-            <button className="btn" onClick={toggleDensity}>
-              {compact ? "Comfort view" : "Compact view"}
-            </button>
+            <div className="row todayFilterActions">
+              <button className="btn" onClick={() => setSearch("")}>
+                Clear
+              </button>
+              <button className="btn" onClick={toggleDensity}>
+                {compact ? "Comfort view" : "Compact view"}
+              </button>
+            </div>
           </div>
-        </div>
         )}
       </div>
 
-      <div className="row todaySectionHeader" style={{ justifyContent: "space-between", alignItems: "center" }}>
+      <div className="row todaySectionHeader">
         <div>
           <h2 className="h2">Must contact</h2>
           <div className="subtle" style={{ marginTop: 4 }}>
@@ -214,10 +211,8 @@ export default function TodayPage() {
         </span>
       </div>
 
-      <div style={{ height: 10 }} />
-
       {loading && (
-        <div style={{ display: "grid", gap: 14 }}>
+        <div className="todayList">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="card skeletonCard" />
           ))}
@@ -241,7 +236,7 @@ export default function TodayPage() {
         </div>
       )}
 
-      <div style={{ display: "grid", gap: 14 }}>
+      <div className="todayList">
         {!loading &&
           mustContact.map((a, idx) => (
             <AccountCard
@@ -259,18 +254,14 @@ export default function TodayPage() {
           ))}
       </div>
 
-      <div style={{ height: 18 }} />
-
-      <div className="row todaySectionHeader" style={{ justifyContent: "space-between", alignItems: "center" }}>
+      <div className="row todaySectionHeader">
         <h2 className="h2">All accounts</h2>
         <span className="pill todaySectionCount" style={{ opacity: 0.95 }}>
           {allSorted.length}
         </span>
       </div>
 
-      <div style={{ height: 10 }} />
-
-      <div style={{ display: "grid", gap: 12 }}>
+      <div className="todayList todayListTight">
         {!loading &&
           allSorted.map((a) => (
             <AccountCard

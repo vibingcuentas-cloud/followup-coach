@@ -89,7 +89,7 @@ export default function AccountCard({
   compact?: boolean;
   variant?: "default" | "must";
 }) {
-  const [expanded, setExpanded] = useState(!compact);
+  const [expanded, setExpanded] = useState(false);
   const due = isAccountDue(account);
   const score = computeIntimacyScore(account, contacts);
   const rec = pickRecommendedContact(contacts);

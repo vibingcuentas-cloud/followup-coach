@@ -172,6 +172,10 @@ textarea {
   justify-content: flex-end;
 }
 
+.topbarActions .btn {
+  min-width: 116px;
+}
+
 html[data-density="compact"] .topbar {
   margin-bottom: 12px;
 }
@@ -627,6 +631,24 @@ html[data-density="compact"] .field {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.todayPage {
+  display: grid;
+  gap: 14px;
+}
+
+.todayTopKpis {
+  margin: 0;
+}
+
+.todayList {
+  display: grid;
+  gap: 14px;
+}
+
+.todayListTight {
+  gap: 12px;
+}
+
 .todayFiltersCard {
   padding: 14px;
 }
@@ -687,8 +709,10 @@ html[data-density="compact"] .field {
 }
 
 .todaySectionHeader {
-  margin-top: 4px;
-  margin-bottom: 2px;
+  margin: 0;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
 
 .skeletonCard {
@@ -1059,6 +1083,10 @@ html[data-density="compact"] .field {
   .todayKpiCard {
     padding: 10px 12px;
     min-height: 78px;
+  }
+
+  .todayPage {
+    gap: 12px;
   }
 
   .todayKpiLabel {
