@@ -209,73 +209,59 @@ export default function TodayPage() {
           <section className="opsWorkspacePanel">
             {selectedAccount && selectedStatus ? (
               <>
-                <div className="opsWorkspaceHead">
-                  <div>
-                    <span className={`opsQueueStatusBadge ${selectedStatus.tone}`}>
-                      {selectedStatus.label}
-                    </span>
-                    <h2 className="opsWorkspaceName">{selectedAccount.name}</h2>
-                    <div className="opsWorkspaceMeta">
-                      {selectedAccount.country ?? "—"} • Tier {selectedAccount.tier} • Value{" "}
-                      {selectedAccount.valueFormatted} • Coverage {selectedAccount.score.coveredAreas}/5
-                    </div>
-                  </div>
-
-                  <div className="opsWorkspaceActions">
-                    <button className="btn btnGhost" onClick={() => router.push(`/accounts/${selectedAccount.id}`)}>
-                      Open account
-                    </button>
-                    <button
-                      className="btn btnPrimary"
-                      onClick={() => openQuickLog(selectedAccount)}
-                      disabled={selectedAccount.contacts.length === 0}
-                    >
-                      Log interaction
-                    </button>
+                <div className="opsWorkspaceHero">
+                  <span className={`opsQueueStatusBadge ${selectedStatus.tone}`}>
+                    {selectedStatus.label}
+                  </span>
+                  <h2 className="opsWorkspaceName">{selectedAccount.name}</h2>
+                  <div className="opsWorkspaceMeta">
+                    {selectedAccount.country ?? "—"} • Tier {selectedAccount.tier} • Value{" "}
+                    {selectedAccount.valueFormatted}
                   </div>
                 </div>
 
-                <div className="opsWorkspaceGrid">
-                  <article className="opsWorkspaceBlock">
-                    <div className="opsWorkspaceLabel">Recommended next action</div>
+                <div className="opsWorkspaceStack">
+                  <article className="opsWorkspaceSection">
+                    <div className="opsWorkspaceLabel">Relationship notes</div>
                     <p className="opsWorkspacePrimary">
-                      {selectedAccount.recommendedContact
-                        ? `Reach out to ${selectedAccount.recommendedContact.name} via ${
-                            selectedAccount.recommendedContact.preferred_channel ?? "preferred channel"
-                          }.`
-                        : "Add a contact in one missing function, then log a first touch."}
+                      {selectedAccount.recommendedContact?.personal_hook
+                        ? `${selectedAccount.recommendedContact.name}: ${selectedAccount.recommendedContact.personal_hook}`
+                        : "No personal hook saved yet. Capture one in the next interaction."}
                     </p>
-                  </article>
-
-                  <article className="opsWorkspaceBlock">
-                    <div className="opsWorkspaceLabel">Next best contact</div>
-                    <div className="opsWorkspaceValue">
-                      {selectedAccount.recommendedContact
-                        ? `${selectedAccount.recommendedContact.name} • ${selectedAccount.recommendedContact.area}`
-                        : "No contact yet"}
-                    </div>
-                    {selectedAccount.recommendedContact?.personal_hook && (
-                      <div className="opsWorkspaceSubtle">
-                        Hook: {selectedAccount.recommendedContact.personal_hook}
-                      </div>
-                    )}
-                  </article>
-
-                  <article className="opsWorkspaceBlock">
-                    <div className="opsWorkspaceLabel">Cadence status</div>
-                    <div className="opsWorkspaceValue">{selectedStatus.meta}</div>
                     <div className="opsWorkspaceSubtle">{selectedAccount.urgencyReason}</div>
                   </article>
 
-                  <article className="opsWorkspaceBlock">
-                    <div className="opsWorkspaceLabel">Coverage gaps</div>
+                  <article className="opsWorkspaceSection">
+                    <div className="opsWorkspaceLabel">Coverage information</div>
+                    <div className="opsWorkspaceValue">
+                      {selectedAccount.score.coveredAreas}/5 functions covered
+                    </div>
+                    <div className="opsWorkspaceSubtle">
+                      {Object.entries(selectedAccount.coverageCounts)
+                        .filter(([, count]) => count > 0)
+                        .map(([area]) => area)
+                        .join(", ") || "No covered roles yet"}
+                    </div>
+                  </article>
+
+                  <article className="opsWorkspaceSection">
+                    <div className="opsWorkspaceLabel">Missing roles</div>
                     <div className="opsWorkspaceValue">
                       {selectedAccount.missingAreas.length > 0
                         ? selectedAccount.missingAreas.join(", ")
-                        : "No gaps. Coverage complete."}
+                        : "None. Coverage complete."}
                     </div>
+                    <div className="opsWorkspaceSubtle">{selectedStatus.meta}</div>
                   </article>
                 </div>
+
+                <button
+                  className="btn btnPrimary opsWorkspacePrimaryCta"
+                  onClick={() => openQuickLog(selectedAccount)}
+                  disabled={selectedAccount.contacts.length === 0}
+                >
+                  Log interaction
+                </button>
               </>
             ) : (
               <div className="opsInlineHint">Select an account to start workspace mode.</div>
