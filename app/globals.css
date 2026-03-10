@@ -1046,7 +1046,7 @@ html[data-density="compact"] .field {
   }
 
   .todayStickyActions {
-    display: flex;
+    display: none;
   }
 
   .todayCommandBar {
@@ -1152,15 +1152,12 @@ html[data-density="compact"] .field {
 
 @media (max-width: 720px) {
   .todayKpiGrid {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 2px;
   }
 
   .todayKpiCard {
-    min-width: 118px;
     min-height: auto;
     padding: 8px 10px;
   }
@@ -1192,5 +1189,9 @@ html[data-density="compact"] .field {
   .todayFilterActions .btn {
     flex: 1;
     min-width: 0;
+  }
+
+  .todaySectionCount {
+    display: none;
   }
 }

@@ -209,7 +209,7 @@ export default function TodayPage() {
             Highest risk accounts first. Keep cadence and coverage disciplined.
           </div>
         </div>
-        <span className="pill" style={{ opacity: 0.95 }}>
+        <span className="pill todaySectionCount" style={{ opacity: 0.95 }}>
           {mustContact.length}
         </span>
       </div>
@@ -263,7 +263,7 @@ export default function TodayPage() {
 
       <div className="row todaySectionHeader" style={{ justifyContent: "space-between", alignItems: "center" }}>
         <h2 className="h2">All accounts</h2>
-        <span className="pill" style={{ opacity: 0.95 }}>
+        <span className="pill todaySectionCount" style={{ opacity: 0.95 }}>
           {allSorted.length}
         </span>
       </div>
@@ -318,17 +318,6 @@ export default function TodayPage() {
         </div>
       )}
 
-      <div className="todayStickyActions">
-        <button className="btn" onClick={loadAll} disabled={loading}>
-          Refresh
-        </button>
-        <button className="btn" onClick={() => router.push("/accounts")}>
-          Accounts
-        </button>
-        <button className="btn btnPrimary" onClick={() => router.push("/weekly")}>
-          Weekly
-        </button>
-      </div>
     </main>
   );
 }
