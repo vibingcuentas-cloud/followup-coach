@@ -127,7 +127,7 @@ export default function TodayPage() {
   }
 
   return (
-    <main className="opsPage">
+    <main className="opsPage opsTodayPolish">
       <header className="opsTopbar">
         <div>
           <BrandWordmark />
@@ -189,8 +189,6 @@ export default function TodayPage() {
             <button className="btn btnGhost" onClick={() => setSearch("")}>Reset</button>
           </div>
 
-          <div className="opsDivider" />
-
           <div className="opsCommandBar">
             <span className="opsCommandIcon">&gt;</span>
             <input
@@ -200,8 +198,6 @@ export default function TodayPage() {
             />
             <span className="opsCommandHint">Cmd K</span>
           </div>
-
-          <div className="opsDivider" />
 
           <section className="opsQueueSection">
             <div className="opsSectionHeaderRow">

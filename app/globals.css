@@ -1898,6 +1898,308 @@ html[data-density="compact"] .field {
   padding: 4px 8px;
 }
 
+.opsTodayPolish {
+  gap: 24px;
+}
+
+.opsTodayPolish .opsTopbar {
+  padding-bottom: 14px;
+  border-bottom-color: rgba(255, 255, 255, 0.045);
+}
+
+.opsTodayPolish .opsTopActions {
+  gap: 6px;
+}
+
+.opsTodayPolish .opsTopActions .btn {
+  min-width: 98px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 560;
+  box-shadow: none;
+}
+
+.opsTodayPolish .opsTopActions .btnGhost {
+  border-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.76);
+  background: transparent;
+}
+
+.opsTodayPolish .opsTopActions .btnGhost:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.opsTodayPolish .opsTopActions .btnPrimary {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: rgba(5, 8, 12, 0.92);
+  font-weight: 620;
+}
+
+.opsTodayPolish .opsTopActions .btnPrimary:hover {
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.opsTodayPolish .opsSummaryRow {
+  border-top: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0 0 12px;
+}
+
+.opsTodayPolish .opsSummaryCell {
+  padding: 2px 10px;
+  gap: 6px;
+}
+
+.opsTodayPolish .opsSummaryCell + .opsSummaryCell {
+  border-left-color: rgba(255, 255, 255, 0.055);
+}
+
+.opsTodayPolish .opsSummaryLabel {
+  font-size: 10px;
+  letter-spacing: 0.11em;
+  color: rgba(255, 255, 255, 0.46);
+}
+
+.opsTodayPolish .opsSummaryValue {
+  font-size: 32px;
+  font-weight: 670;
+}
+
+.opsTodayPolish .opsShell {
+  gap: 24px;
+}
+
+.opsTodayPolish .opsRailItem {
+  height: 36px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.opsTodayPolish .opsRailItem.active {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.opsTodayPolish .opsMain {
+  gap: 18px;
+}
+
+.opsTodayPolish .opsFilters {
+  gap: 10px;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.opsTodayPolish .opsSearch {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.016);
+}
+
+.opsTodayPolish .opsTierSeg {
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: transparent;
+}
+
+.opsTodayPolish .opsTierSeg .seg {
+  height: 30px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 620;
+}
+
+.opsTodayPolish .opsFilters .btn {
+  height: 34px;
+  border-radius: 9px;
+  padding: 0 11px;
+  font-size: 13px;
+  font-weight: 560;
+}
+
+.opsTodayPolish .opsSectionTitle {
+  font-size: 21px;
+  font-weight: 640;
+}
+
+.opsTodayPolish .opsSectionSubtitle {
+  margin-top: 6px;
+}
+
+.opsTodayPolish .opsSectionMeta {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.46);
+  font-weight: 520;
+}
+
+.opsTodayPolish .opsQueueSection {
+  gap: 14px;
+}
+
+.opsTodayPolish .opsQueueList {
+  border-top-color: rgba(255, 255, 255, 0.05);
+}
+
+.opsTodayPolish .opsQueueItem {
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  gap: 18px;
+  padding: 22px 0;
+  border-bottom-color: rgba(255, 255, 255, 0.055);
+}
+
+.opsTodayPolish .opsQueueItem:hover {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.opsTodayPolish .opsQueueItem.active {
+  background: rgba(255, 255, 255, 0.008);
+  border-bottom-color: rgba(255, 255, 255, 0.14);
+}
+
+.opsTodayPolish .opsQueueStatusBadge {
+  height: auto;
+  padding: 0 0 0 11px;
+  border-radius: 0;
+  background: transparent;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 580;
+  position: relative;
+}
+
+.opsTodayPolish .opsQueueStatusBadge::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translateY(-50%);
+}
+
+.opsTodayPolish .opsQueueStatusBadge.risk {
+  color: rgba(255, 198, 202, 0.88);
+  background: transparent;
+}
+
+.opsTodayPolish .opsQueueStatusBadge.due {
+  color: rgba(255, 220, 174, 0.84);
+  background: transparent;
+}
+
+.opsTodayPolish .opsQueueStatusBadge.ok {
+  color: rgba(189, 239, 203, 0.84);
+  background: transparent;
+}
+
+.opsTodayPolish .opsQueueStateText {
+  font-size: 11px;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.opsTodayPolish .opsQueueTitle {
+  font-size: 30px;
+  font-weight: 710;
+  line-height: 1.03;
+}
+
+.opsTodayPolish .opsQueueMeta {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.42);
+  font-weight: 500;
+}
+
+.opsTodayPolish .opsQueueSub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.opsTodayPolish .opsQueueActions {
+  gap: 16px;
+  opacity: 0.9;
+}
+
+.opsTodayPolish .opsQueueActionBtn {
+  font-size: 13px;
+  font-weight: 560;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.opsTodayPolish .opsQueueActionBtn.strong {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 620;
+}
+
+.opsTodayPolish .opsContext {
+  border-left-color: rgba(255, 255, 255, 0.06);
+}
+
+.opsTodayPolish .opsContextIntel {
+  gap: 20px;
+  padding-left: 20px;
+}
+
+.opsTodayPolish .opsIntelEyebrow {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.opsTodayPolish .opsIntelAccountName {
+  font-size: 28px;
+  font-weight: 670;
+}
+
+.opsTodayPolish .opsIntelLabel {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.opsTodayPolish .opsIntelValue {
+  font-weight: 460;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.opsTodayPolish .opsIntelRecommendation {
+  border-left-color: rgba(255, 255, 255, 0.16);
+  font-weight: 500;
+}
+
+.opsTodayPolish .opsIntelList li {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.opsTodayPolish .opsIntelDivider {
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.opsTodayPolish .opsIntelPrimaryAction {
+  height: 36px;
+  border-radius: 9px;
+}
+
+.opsTodayPolish .opsCommandBar {
+  height: 40px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0;
+  background: transparent;
+  padding: 0 2px;
+}
+
+.opsTodayPolish .opsCommandHint {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.46);
+}
+
 .mobileOnly {
   display: none;
 }
@@ -2055,5 +2357,67 @@ html[data-density="compact"] .field {
   .opsCommandBar {
     height: 42px;
     width: 100%;
+  }
+}
+
+@media (max-width: 1180px) {
+  .opsTodayPolish .opsQueueItem {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 18px 0;
+  }
+
+  .opsTodayPolish .opsQueueActions {
+    grid-column: 1;
+    justify-content: flex-start;
+  }
+
+  .opsTodayPolish .opsQueueTitle {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 720px) {
+  .opsTodayPolish {
+    gap: 14px;
+  }
+
+  .opsTodayPolish .opsTopActions .btn {
+    min-width: 0;
+    flex: 1;
+    height: 38px;
+  }
+
+  .opsTodayPolish .opsSummaryRow {
+    overflow: visible;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .opsTodayPolish .opsSummaryCell {
+    padding: 0;
+  }
+
+  .opsTodayPolish .opsSummaryCell + .opsSummaryCell {
+    border-left: none;
+  }
+
+  .opsTodayPolish .opsSummaryLabel {
+    font-size: 10px;
+  }
+
+  .opsTodayPolish .opsSummaryValue {
+    font-size: 30px;
+  }
+
+  .opsTodayPolish .opsQueueTitle {
+    font-size: 19px;
+  }
+
+  .opsTodayPolish .opsQueueMeta,
+  .opsTodayPolish .opsQueueSub {
+    font-size: 11px;
   }
 }
