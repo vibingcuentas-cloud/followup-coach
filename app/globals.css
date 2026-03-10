@@ -2411,6 +2411,10 @@ html[data-density="compact"] .field {
   gap: 14px;
 }
 
+.opsQueueModeSeg {
+  display: none;
+}
+
 .opsTodayPolish .opsQueueList {
   border-top-color: rgba(255, 255, 255, 0.026);
 }
@@ -2589,45 +2593,6 @@ html[data-density="compact"] .field {
   display: none;
 }
 
-.opsMobileTabs {
-  position: sticky;
-  bottom: 0;
-  display: flex;
-  gap: 6px;
-  z-index: 40;
-}
-
-.opsMobileTab {
-  flex: 1;
-  height: 36px;
-  border-radius: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(255, 255, 255, 0.03);
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.opsMobileTab.active {
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-}
-
-.opsMobilePane {
-  display: grid;
-  gap: 8px;
-}
-
-.opsMiniRow {
-  border: 1px solid rgba(255, 255, 255, 0.036);
-  border-radius: 12px;
-  background: var(--surface-panel);
-  padding: 12px 12px;
-  box-shadow: var(--shadow-diffuse-soft);
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  align-items: center;
-}
-
 .opsMiniTitle {
   font-size: 17px;
   font-weight: 660;
@@ -2667,6 +2632,12 @@ html[data-density="compact"] .field {
 
   .mobileOnly {
     display: grid;
+  }
+
+  .opsQueueModeSeg {
+    display: inline-flex;
+    width: fit-content;
+    max-width: 100%;
   }
 
   .opsSummaryRow {
@@ -2760,6 +2731,14 @@ html[data-density="compact"] .field {
   .opsCommandBar {
     height: 42px;
     width: 100%;
+  }
+
+  .opsQueueModeSeg {
+    width: 100%;
+  }
+
+  .opsQueueModeSeg .seg {
+    flex: 1;
   }
 }
 

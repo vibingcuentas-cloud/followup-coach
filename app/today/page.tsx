@@ -131,7 +131,7 @@ export default function TodayPage() {
   );
 
   const selectedAccount =
-    mustContact.find((a) => a.id === selectedId) ?? mustContact[0] ?? allSorted[0] ?? null;
+    allSorted.find((a) => a.id === selectedId) ?? mustContact[0] ?? allSorted[0] ?? null;
 
   const nextList = useMemo(
     () => allSorted.filter((a) => a.recommendedContact).slice(0, 8),
@@ -146,6 +146,18 @@ export default function TodayPage() {
         .slice(0, 8),
     [allSorted]
   );
+  const queueItems = useMemo(
+    () => (mobileTab === "fire" ? mustContact : mobileTab === "next" ? nextList : gapsList),
+    [gapsList, mobileTab, mustContact, nextList]
+  );
+  const queueMetaText =
+    mobileTab === "fire" ? `${mustContact.length} due` : `${queueItems.length} queued`;
+  const queueEmptyText =
+    mobileTab === "fire"
+      ? "No due accounts right now."
+      : mobileTab === "next"
+        ? "No recommended contacts yet."
+        : "No coverage gaps right now.";
 
   function openQuickLog(acc: EnrichedAccount) {
     setQlAccount(acc);
@@ -324,16 +336,43 @@ export default function TodayPage() {
                 <h2 className="opsSectionTitle">Queue selector</h2>
                 <div className="opsSectionSubtitle">Choose the next account to focus.</div>
               </div>
-              <div className="opsSectionMeta">{mustContact.length} due</div>
+              <div className="opsSectionMeta">{queueMetaText}</div>
+            </div>
+
+            <div className="segmented opsTierSeg opsQueueModeSeg" role="tablist" aria-label="Queue mode">
+              <button
+                className={`seg ${mobileTab === "fire" ? "active" : ""}`}
+                onClick={() => setMobileTab("fire")}
+                role="tab"
+                aria-selected={mobileTab === "fire"}
+              >
+                Fire
+              </button>
+              <button
+                className={`seg ${mobileTab === "next" ? "active" : ""}`}
+                onClick={() => setMobileTab("next")}
+                role="tab"
+                aria-selected={mobileTab === "next"}
+              >
+                Next
+              </button>
+              <button
+                className={`seg ${mobileTab === "gaps" ? "active" : ""}`}
+                onClick={() => setMobileTab("gaps")}
+                role="tab"
+                aria-selected={mobileTab === "gaps"}
+              >
+                Gaps
+              </button>
             </div>
 
             <div className="opsQueueList">
               {loading && <div className="opsInlineHint">Loading queue…</div>}
-              {!loading && mustContact.length === 0 && (
-                <div className="opsInlineHint">No due accounts right now.</div>
+              {!loading && queueItems.length === 0 && (
+                <div className="opsInlineHint">{queueEmptyText}</div>
               )}
               {!loading &&
-                mustContact.map((a) => (
+                queueItems.map((a) => (
                   <QueueItem
                     key={a.id}
                     account={a}
@@ -465,71 +504,6 @@ export default function TodayPage() {
           )}
         </aside>
       </div>
-
-      <section className="opsMobileTabs mobileOnly">
-        <button
-          className={`opsMobileTab ${mobileTab === "fire" ? "active" : ""}`}
-          onClick={() => setMobileTab("fire")}
-        >
-          Fire
-        </button>
-        <button
-          className={`opsMobileTab ${mobileTab === "next" ? "active" : ""}`}
-          onClick={() => setMobileTab("next")}
-        >
-          Next
-        </button>
-        <button
-          className={`opsMobileTab ${mobileTab === "gaps" ? "active" : ""}`}
-          onClick={() => setMobileTab("gaps")}
-        >
-          Gaps
-        </button>
-      </section>
-
-      <section className="opsMobilePane mobileOnly">
-        {mobileTab === "fire" &&
-          mustContact.slice(0, 8).map((a) => (
-            <QueueItem
-              key={`m-fire-${a.id}`}
-              account={a}
-              active={false}
-              onSelect={() => setSelectedId(a.id)}
-              onOpen={() => router.push(`/accounts/${a.id}`)}
-              onLog={() => openQuickLog(a)}
-            />
-          ))}
-
-        {mobileTab === "next" &&
-          nextList.map((a) => (
-            <div key={`m-next-${a.id}`} className="opsMiniRow">
-              <div>
-                <div className="opsMiniTitle">{a.name}</div>
-                <div className="opsMiniSub">
-                  {a.recommendedContact
-                    ? `${a.recommendedContact.name} • ${a.recommendedContact.area}`
-                    : "No contact"}
-                </div>
-              </div>
-              <button className="btn btnGhost" onClick={() => openQuickLog(a)}>
-                Log
-              </button>
-            </div>
-          ))}
-
-        {mobileTab === "gaps" &&
-          gapsList.map((a) => (
-            <div key={`m-gaps-${a.id}`} className="opsMiniRow">
-              <div>
-                <div className="opsMiniTitle">{a.name}</div>
-                <div className="opsMiniSub">Missing: {a.missingAreas.join(", ")}</div>
-              </div>
-              <button className="btn btnGhost" onClick={() => router.push(`/accounts/${a.id}`)}>
-                Open
-              </button>
-            </div>
-          ))}
-      </section>
 
       {qlAccount && (
         <QuickLogModal
