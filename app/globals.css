@@ -1585,8 +1585,8 @@ html[data-density="compact"] .field {
 
 .opsQueueItem {
   display: grid;
-  grid-template-columns: 168px minmax(0, 1fr) auto;
-  gap: 10px;
+  grid-template-columns: 132px minmax(0, 1fr) auto;
+  gap: 14px;
   align-items: center;
   border: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
@@ -1609,32 +1609,44 @@ html[data-density="compact"] .field {
 
 .opsQueueState {
   display: grid;
-  gap: 6px;
+  gap: 7px;
   align-content: start;
 }
 
-.opsQueueDot {
-  width: 8px;
-  height: 8px;
+.opsQueueStatusBadge {
+  width: fit-content;
+  max-width: 100%;
+  height: 23px;
+  padding: 0 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.82);
+  white-space: nowrap;
 }
 
-.opsQueueDot.risk {
-  background: rgba(255, 141, 141, 0.9);
+.opsQueueStatusBadge.risk {
+  background: rgba(194, 84, 90, 0.22);
+  color: rgba(255, 205, 208, 0.97);
 }
 
-.opsQueueDot.due {
-  background: rgba(255, 188, 128, 0.85);
+.opsQueueStatusBadge.due {
+  background: rgba(178, 125, 64, 0.2);
+  color: rgba(255, 218, 179, 0.95);
 }
 
-.opsQueueDot.ok {
-  background: rgba(127, 225, 174, 0.8);
+.opsQueueStatusBadge.ok {
+  background: rgba(88, 140, 104, 0.2);
+  color: rgba(189, 237, 203, 0.92);
 }
 
 .opsQueueStateText {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.47);
   letter-spacing: 0.02em;
   line-height: 1.3;
 }
@@ -1934,7 +1946,7 @@ html[data-density="compact"] .field {
   }
 
   .opsQueueMeta {
-    margin-left: 6px;
+    margin-left: 0;
     font-size: 12px;
   }
 

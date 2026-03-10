@@ -26,15 +26,22 @@ function QueueItem({
   onLog: () => void;
 }) {
   const cadence = cadenceDays(account.tier);
-  const statusTone = account.score.total < 55 ? "risk" : account.isDue ? "due" : "ok";
-  const statusText =
-    account.lastTouch === "never" ? `Never • ${cadence}d cadence` : `${account.lastTouch} • ${cadence}d cadence`;
+  const statusTone =
+    account.dueLabel === "overdue" ? "risk" : account.isDue ? "due" : account.score.total >= 80 ? "ok" : "due";
+  const statusLabel =
+    account.dueLabel === "overdue"
+      ? `Overdue ${Math.max(1, account.overdueDays)}d`
+      : account.isDue
+        ? "Due now"
+        : "Healthy";
+  const statusMeta =
+    account.lastTouch === "never" ? `Cadence ${cadence}d` : `Last touch ${account.lastTouch}`;
 
   return (
     <article className={`opsQueueItem ${active ? "active" : ""}`} onClick={onSelect}>
       <div className="opsQueueState">
-        <span className={`opsQueueDot ${statusTone}`} />
-        <span className="opsQueueStateText">{statusText}</span>
+        <span className={`opsQueueStatusBadge ${statusTone}`}>{statusLabel}</span>
+        <span className="opsQueueStateText">{statusMeta}</span>
       </div>
 
       <div className="opsQueueBody">
