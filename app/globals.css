@@ -3090,16 +3090,16 @@ html[data-density="compact"] .field {
   width: 360px;
   min-width: 360px;
   max-width: 360px;
-  padding: 32px;
+  padding: 26px;
   border: none;
   border-radius: 18px;
   background: linear-gradient(180deg, rgba(30, 34, 46, 0.95), rgba(18, 20, 28, 0.95));
   box-shadow: var(--shadow-diffuse-soft);
-  gap: 32px;
+  gap: 24px;
 }
 
 .opsTodayFocus .opsContextIntel {
-  gap: 32px;
+  gap: 24px;
   padding-left: 0;
 }
 
@@ -3137,8 +3137,13 @@ html[data-density="compact"] .field {
 
 .opsCopilotPanel {
   display: grid;
-  gap: 32px;
+  gap: 24px;
   align-content: start;
+}
+
+.opsCopilotPanel > .opsIntelEyebrow {
+  padding: 0 10px;
+  margin: 0;
 }
 
 .opsCopilotCard {
@@ -3148,9 +3153,9 @@ html[data-density="compact"] .field {
   box-shadow: var(--shadow-diffuse-soft);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  padding: 18px 20px;
+  padding: 20px;
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .opsCopilotContactCard {
@@ -3216,7 +3221,7 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotMessageCard {
-  gap: 12px;
+  gap: 10px;
 }
 
 .opsCopilotMessageSurface {
@@ -3240,6 +3245,7 @@ html[data-density="compact"] .field {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
+  margin-top: 2px;
 }
 
 .opsCopilotSendBtn {
