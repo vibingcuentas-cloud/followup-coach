@@ -1,29 +1,33 @@
 :root {
-  --bg: #0e1117;
-  --bg-alt: #131925;
-  --surface: rgba(19, 22, 30, 0.9);
-  --surface-elevated: rgba(26, 30, 40, 0.94);
+  --bg: #0b0f16;
+  --bg-alt: #111826;
+  --surface: rgba(17, 22, 33, 0.9);
+  --surface-elevated: rgba(24, 30, 43, 0.92);
   --surface-urgent: rgba(54, 24, 29, 0.92);
-  --surface-soft: rgba(255, 255, 255, 0.03);
+  --surface-soft: rgba(255, 255, 255, 0.024);
 
   --surface-diffuse-1:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02) 46%, rgba(255, 255, 255, 0.008) 100%),
-    rgba(22, 27, 38, 0.68);
+    linear-gradient(165deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.02) 44%, rgba(255, 255, 255, 0.008) 100%),
+    radial-gradient(130% 120% at 8% -28%, rgba(118, 152, 255, 0.16), transparent 58%),
+    rgba(18, 23, 34, 0.68);
   --surface-diffuse-2:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03) 44%, rgba(255, 255, 255, 0.012) 100%),
-    rgba(24, 30, 42, 0.78);
+    linear-gradient(165deg, rgba(255, 255, 255, 0.066), rgba(255, 255, 255, 0.026) 42%, rgba(255, 255, 255, 0.011) 100%),
+    radial-gradient(128% 115% at 10% -26%, rgba(129, 165, 255, 0.2), transparent 57%),
+    rgba(20, 26, 38, 0.78);
   --surface-diffuse-urgent:
     linear-gradient(155deg, rgba(255, 172, 172, 0.08), rgba(255, 116, 124, 0.04) 40%, rgba(255, 255, 255, 0.01) 100%),
     rgba(49, 30, 37, 0.75);
 
-  --diffuse-stroke: rgba(255, 255, 255, 0.075);
-  --diffuse-stroke-strong: rgba(255, 255, 255, 0.13);
+  --diffuse-stroke: rgba(255, 255, 255, 0.055);
+  --diffuse-stroke-strong: rgba(255, 255, 255, 0.095);
   --shadow-diffuse-soft:
-    0 10px 28px rgba(0, 0, 0, 0.23),
-    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    0 18px 44px rgba(2, 7, 15, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 1px rgba(112, 145, 214, 0.045);
   --shadow-diffuse:
-    0 14px 34px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    0 24px 60px rgba(2, 7, 16, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 0 0 1px rgba(122, 154, 224, 0.058);
 
   --panel: rgba(255, 255, 255, 0.06);
   --panel-strong: rgba(255, 255, 255, 0.09);
@@ -92,10 +96,10 @@ body::before {
   pointer-events: none;
 
   background:
-    radial-gradient(980px 560px at 10% -16%, rgba(146, 172, 255, 0.13), transparent 64%),
-    radial-gradient(780px 480px at 96% 2%, rgba(255, 132, 172, 0.08), transparent 62%),
-    radial-gradient(920px 640px at 50% 120%, rgba(110, 220, 255, 0.06), transparent 70%),
-    linear-gradient(180deg, var(--bg-alt) 0%, var(--bg) 42%, #0d1118 100%);
+    radial-gradient(1280px 760px at 8% -22%, rgba(136, 166, 255, 0.2), transparent 64%),
+    radial-gradient(980px 620px at 92% -8%, rgba(176, 156, 255, 0.12), transparent 64%),
+    radial-gradient(1180px 660px at 46% 118%, rgba(117, 179, 255, 0.11), transparent 74%),
+    linear-gradient(180deg, var(--bg-alt) 0%, var(--bg) 48%, #090d14 100%);
 }
 
 body::after {
@@ -257,13 +261,16 @@ html[data-density="compact"] .card {
   height: 38px;
   padding: 0 12px;
   border-radius: 10px;
-  border: 1px solid var(--diffuse-stroke);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)),
-    rgba(21, 26, 36, 0.45);
+    radial-gradient(122% 108% at 8% -24%, rgba(132, 164, 255, 0.11), transparent 62%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.012)),
+    rgba(21, 26, 36, 0.46);
   color: var(--text);
   cursor: pointer;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 10px 24px rgba(3, 8, 16, 0.22);
   transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
 }
 
@@ -272,11 +279,14 @@ html[data-density="compact"] .btn {
 }
 
 .btn:hover {
-  border-color: var(--diffuse-stroke-strong);
+  border-color: rgba(255, 255, 255, 0.082);
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.022)),
+    radial-gradient(122% 108% at 8% -24%, rgba(136, 168, 255, 0.14), transparent 60%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.017)),
     rgba(24, 30, 42, 0.5);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 12px 30px rgba(3, 8, 16, 0.26);
 }
 
 .btn:active {
@@ -301,29 +311,36 @@ html[data-density="compact"] .btn {
 }
 
 .btnGhost {
-  border-color: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.05);
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.008)),
-    rgba(18, 24, 34, 0.42);
+    radial-gradient(122% 108% at 8% -24%, rgba(130, 162, 255, 0.11), transparent 62%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.008)),
+    rgba(18, 24, 34, 0.44);
   color: rgba(255, 255, 255, 0.8);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 10px 24px rgba(3, 8, 16, 0.2);
 }
 
 .btnGhost:hover {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.08);
   background:
+    radial-gradient(122% 108% at 8% -24%, rgba(132, 164, 255, 0.13), transparent 60%),
     linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.012)),
     rgba(22, 28, 40, 0.45);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 12px 28px rgba(3, 8, 16, 0.24);
 }
 
 /* Inputs */
 .field {
   width: 100%;
   border-radius: 14px;
-  border: 1px solid var(--diffuse-stroke);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02)),
+    radial-gradient(122% 108% at 8% -24%, rgba(130, 162, 255, 0.1), transparent 62%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.017)),
     rgba(19, 24, 34, 0.54);
   color: var(--text);
   padding: 12px;
@@ -339,10 +356,11 @@ html[data-density="compact"] .field {
 }
 
 .field:focus {
-  border-color: var(--diffuse-stroke-strong);
+  border-color: rgba(255, 255, 255, 0.085);
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
   background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.024)),
+    radial-gradient(122% 108% at 8% -24%, rgba(132, 164, 255, 0.13), transparent 60%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.062), rgba(255, 255, 255, 0.022)),
     rgba(22, 28, 40, 0.58);
 }
 
@@ -969,19 +987,22 @@ html[data-density="compact"] .field {
   inset: 0;
   z-index: 80;
   background:
-    radial-gradient(720px 420px at 50% 20%, rgba(92, 116, 170, 0.14), transparent 68%),
-    rgba(5, 8, 12, 0.7);
+    radial-gradient(860px 520px at 50% 18%, rgba(108, 137, 206, 0.18), transparent 68%),
+    rgba(5, 8, 12, 0.68);
 }
 
 .quickLogModal {
   max-height: calc(100dvh - 24px);
   overflow: auto;
-  background: var(--surface-diffuse-2);
+  background:
+    radial-gradient(130% 120% at 8% -28%, rgba(132, 164, 255, 0.17), transparent 58%),
+    linear-gradient(166deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.022) 42%, rgba(255, 255, 255, 0.009) 100%),
+    rgba(20, 26, 38, 0.77);
   backdrop-filter: blur(10px) saturate(118%);
   -webkit-backdrop-filter: blur(10px) saturate(118%);
   transform: translateZ(0);
   will-change: transform;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.92);
   box-shadow: var(--shadow-diffuse);
 }
@@ -1064,10 +1085,12 @@ html[data-density="compact"] .field {
   position: sticky;
   top: -16px;
   z-index: 10;
-  background: linear-gradient(180deg, rgba(28, 34, 46, 0.94), rgba(28, 34, 46, 0.72));
+  background:
+    radial-gradient(128% 120% at 8% -28%, rgba(132, 164, 255, 0.15), transparent 58%),
+    linear-gradient(180deg, rgba(24, 30, 43, 0.94), rgba(24, 30, 43, 0.72));
   padding: 8px 0 10px;
   margin-bottom: 2px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .quickLogActions {
@@ -1553,7 +1576,7 @@ html[data-density="compact"] .field {
   justify-content: space-between;
   gap: 18px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .opsTitle {
@@ -1615,9 +1638,12 @@ html[data-density="compact"] .field {
 .opsSummaryRow {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  border: 1px solid var(--diffuse-stroke);
+  border: 1px solid rgba(255, 255, 255, 0.045);
   border-radius: 14px;
-  background: var(--surface-diffuse-1);
+  background:
+    radial-gradient(120% 120% at 6% -28%, rgba(132, 163, 255, 0.16), transparent 56%),
+    linear-gradient(170deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018) 46%, rgba(255, 255, 255, 0.009) 100%),
+    rgba(17, 22, 33, 0.68);
   box-shadow: var(--shadow-diffuse-soft);
   backdrop-filter: blur(8px) saturate(112%);
   -webkit-backdrop-filter: blur(8px) saturate(112%);
@@ -1633,7 +1659,7 @@ html[data-density="compact"] .field {
 }
 
 .opsSummaryCell + .opsSummaryCell {
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .opsSummaryCell.risk {
@@ -1718,8 +1744,11 @@ html[data-density="compact"] .field {
 }
 
 .opsBlock {
-  border: 1px solid var(--diffuse-stroke);
-  background: var(--surface-diffuse-1);
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  background:
+    radial-gradient(125% 115% at 8% -26%, rgba(129, 160, 255, 0.15), transparent 56%),
+    linear-gradient(168deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.018) 44%, rgba(255, 255, 255, 0.008) 100%),
+    rgba(18, 23, 34, 0.66);
   border-radius: 14px;
   padding: 14px;
   box-shadow: var(--shadow-diffuse-soft);
@@ -1756,7 +1785,7 @@ html[data-density="compact"] .field {
 
 .opsListRow {
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
   border-radius: 0;
   background: transparent;
   padding: 14px 0;
@@ -1778,20 +1807,22 @@ html[data-density="compact"] .field {
   gap: 10px;
   align-items: center;
   padding: 6px 8px;
-  border: 1px solid var(--diffuse-stroke);
+  border: 1px solid rgba(255, 255, 255, 0.045);
   border-radius: 12px;
-  background: var(--surface-diffuse-1);
+  background:
+    radial-gradient(130% 120% at 7% -30%, rgba(132, 164, 255, 0.14), transparent 58%),
+    linear-gradient(168deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.017) 46%, rgba(255, 255, 255, 0.007) 100%),
+    rgba(17, 22, 33, 0.66);
   box-shadow: var(--shadow-diffuse-soft);
   backdrop-filter: blur(8px) saturate(110%);
   -webkit-backdrop-filter: blur(8px) saturate(110%);
-  border-bottom: none;
 }
 
 .opsSearch {
   border-radius: 10px;
   background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.018)),
-    rgba(23, 28, 40, 0.46);
+    linear-gradient(168deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.016)),
+    rgba(21, 26, 38, 0.44);
 }
 
 .opsTierSeg {
@@ -1861,8 +1892,8 @@ html[data-density="compact"] .field {
 .opsQueueList {
   display: grid;
   gap: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.045);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.016), rgba(255, 255, 255, 0));
+  border-top: 1px solid rgba(255, 255, 255, 0.032);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.013), rgba(255, 255, 255, 0));
   border-radius: 10px;
 }
 
@@ -1872,7 +1903,7 @@ html[data-density="compact"] .field {
   gap: 14px;
   align-items: center;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   background: transparent;
   border-radius: 0;
   padding: 20px 0;
@@ -1881,15 +1912,16 @@ html[data-density="compact"] .field {
 }
 
 .opsQueueItem:hover {
-  border-bottom-color: rgba(255, 255, 255, 0.11);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
   background: transparent;
 }
 
 .opsQueueItem.active {
-  border-bottom-color: rgba(255, 255, 255, 0.11);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
   background:
-    linear-gradient(150deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.008)),
-    rgba(26, 32, 45, 0.22);
+    radial-gradient(120% 120% at 0% -24%, rgba(136, 166, 255, 0.12), transparent 58%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)),
+    rgba(24, 30, 42, 0.22);
 }
 
 .opsQueueState {
@@ -2012,9 +2044,12 @@ html[data-density="compact"] .field {
   display: grid;
   gap: 14px;
   align-content: start;
-  border: 1px solid var(--diffuse-stroke);
+  border: 1px solid rgba(255, 255, 255, 0.045);
   border-radius: 14px;
-  background: var(--surface-diffuse-1);
+  background:
+    radial-gradient(125% 118% at 8% -30%, rgba(130, 163, 255, 0.14), transparent 56%),
+    linear-gradient(168deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.017) 45%, rgba(255, 255, 255, 0.007) 100%),
+    rgba(18, 23, 34, 0.66);
   box-shadow: var(--shadow-diffuse-soft);
   backdrop-filter: blur(8px) saturate(112%);
   -webkit-backdrop-filter: blur(8px) saturate(112%);
@@ -2110,7 +2145,7 @@ html[data-density="compact"] .field {
 
 .opsIntelDivider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.045);
 }
 
 .opsIntelPrimaryAction {
@@ -2141,7 +2176,7 @@ html[data-density="compact"] .field {
 }
 
 .opsPanelBlock {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.042);
   padding-top: 10px;
   display: grid;
   gap: 5px;
@@ -2175,8 +2210,11 @@ html[data-density="compact"] .field {
   grid-template-columns: 28px 1fr auto;
   align-items: center;
   gap: 8px;
-  border: 1px solid var(--diffuse-stroke);
-  background: var(--surface-diffuse-1);
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  background:
+    radial-gradient(130% 120% at 6% -30%, rgba(132, 163, 255, 0.13), transparent 60%),
+    linear-gradient(168deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.017) 44%, rgba(255, 255, 255, 0.007) 100%),
+    rgba(17, 22, 33, 0.68);
   border-radius: 12px;
   padding: 0 10px;
   box-shadow: var(--shadow-diffuse-soft);
@@ -2220,7 +2258,7 @@ html[data-density="compact"] .field {
 
 .opsTodayPolish .opsTopbar {
   padding-bottom: 14px;
-  border-bottom-color: rgba(255, 255, 255, 0.045);
+  border-bottom-color: rgba(255, 255, 255, 0.036);
 }
 
 .opsTodayPolish .opsTopActions {
@@ -2237,18 +2275,20 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsTopActions .btnGhost {
-  border-color: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.048);
   color: rgba(255, 255, 255, 0.76);
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.008)),
-    rgba(18, 24, 34, 0.4);
+    radial-gradient(122% 110% at 8% -28%, rgba(131, 163, 255, 0.12), transparent 60%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.009)),
+    rgba(18, 24, 34, 0.42);
 }
 
 .opsTodayPolish .opsTopActions .btnGhost:hover {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.078);
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
-    rgba(22, 28, 40, 0.44);
+    radial-gradient(122% 110% at 8% -28%, rgba(132, 164, 255, 0.14), transparent 58%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.038), rgba(255, 255, 255, 0.011)),
+    rgba(22, 28, 40, 0.45);
 }
 
 .opsTodayPolish .opsTopActions .btnPrimary {
@@ -2263,9 +2303,12 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsSummaryRow {
-  border: 1px solid var(--diffuse-stroke);
+  border: 1px solid rgba(255, 255, 255, 0.042);
   border-radius: 14px;
-  background: var(--surface-diffuse-1);
+  background:
+    radial-gradient(122% 120% at 6% -30%, rgba(133, 164, 255, 0.14), transparent 58%),
+    linear-gradient(170deg, rgba(255, 255, 255, 0.054), rgba(255, 255, 255, 0.018) 46%, rgba(255, 255, 255, 0.007) 100%),
+    rgba(17, 22, 33, 0.66);
   box-shadow: var(--shadow-diffuse-soft);
   padding: 10px 0;
 }
@@ -2276,7 +2319,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsSummaryCell + .opsSummaryCell {
-  border-left-color: rgba(255, 255, 255, 0.055);
+  border-left-color: rgba(255, 255, 255, 0.038);
 }
 
 .opsTodayPolish .opsSummaryLabel {
@@ -2312,22 +2355,27 @@ html[data-density="compact"] .field {
 .opsTodayPolish .opsFilters {
   gap: 10px;
   padding: 6px 8px;
-  border: 1px solid var(--diffuse-stroke);
+  border: 1px solid rgba(255, 255, 255, 0.043);
   border-radius: 12px;
-  background: var(--surface-diffuse-1);
+  background:
+    radial-gradient(126% 120% at 6% -28%, rgba(131, 163, 255, 0.14), transparent 57%),
+    linear-gradient(168deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.017) 46%, rgba(255, 255, 255, 0.007) 100%),
+    rgba(17, 22, 33, 0.66);
   box-shadow: var(--shadow-diffuse-soft);
 }
 
 .opsTodayPolish .opsSearch {
-  border-color: rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.016);
+  border-color: rgba(255, 255, 255, 0.058);
+  background:
+    linear-gradient(168deg, rgba(255, 255, 255, 0.038), rgba(255, 255, 255, 0.011)),
+    rgba(20, 26, 38, 0.43);
 }
 
 .opsTodayPolish .opsTierSeg {
   padding: 2px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.045);
   border-radius: 10px;
-  background: rgba(21, 26, 37, 0.26);
+  background: rgba(20, 25, 36, 0.28);
 }
 
 .opsTodayPolish .opsTierSeg .seg {
@@ -2368,25 +2416,26 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsQueueList {
-  border-top-color: rgba(255, 255, 255, 0.05);
+  border-top-color: rgba(255, 255, 255, 0.034);
 }
 
 .opsTodayPolish .opsQueueItem {
   grid-template-columns: 120px minmax(0, 1fr) auto;
   gap: 18px;
   padding: 22px 0;
-  border-bottom-color: rgba(255, 255, 255, 0.055);
+  border-bottom-color: rgba(255, 255, 255, 0.04);
 }
 
 .opsTodayPolish .opsQueueItem:hover {
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+  border-bottom-color: rgba(255, 255, 255, 0.082);
 }
 
 .opsTodayPolish .opsQueueItem.active {
   background:
-    linear-gradient(150deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.008)),
-    rgba(26, 32, 45, 0.22);
-  border-bottom-color: rgba(255, 255, 255, 0.11);
+    radial-gradient(124% 120% at 0% -26%, rgba(135, 166, 255, 0.12), transparent 58%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.008)),
+    rgba(24, 30, 42, 0.21);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 .opsTodayPolish .opsQueueStatusBadge {
@@ -2470,7 +2519,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsContext {
-  border-color: var(--diffuse-stroke);
+  border-color: rgba(255, 255, 255, 0.043);
 }
 
 .opsTodayPolish .opsContextIntel {
@@ -2514,7 +2563,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsIntelDivider {
-  background: rgba(255, 255, 255, 0.055);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .opsTodayPolish .opsIntelPrimaryAction {
@@ -2524,9 +2573,12 @@ html[data-density="compact"] .field {
 
 .opsTodayPolish .opsCommandBar {
   height: 40px;
-  border: 1px solid var(--diffuse-stroke);
+  border: 1px solid rgba(255, 255, 255, 0.043);
   border-radius: 12px;
-  background: var(--surface-diffuse-1);
+  background:
+    radial-gradient(126% 120% at 6% -28%, rgba(131, 163, 255, 0.13), transparent 59%),
+    linear-gradient(168deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.017) 44%, rgba(255, 255, 255, 0.007) 100%),
+    rgba(17, 22, 33, 0.67);
   padding: 0 10px;
   box-shadow: var(--shadow-diffuse-soft);
 }
@@ -2573,9 +2625,12 @@ html[data-density="compact"] .field {
 }
 
 .opsMiniRow {
-  border: 1px solid var(--diffuse-stroke);
+  border: 1px solid rgba(255, 255, 255, 0.042);
   border-radius: 12px;
-  background: var(--surface-diffuse-1);
+  background:
+    radial-gradient(124% 118% at 8% -28%, rgba(132, 164, 255, 0.14), transparent 58%),
+    linear-gradient(168deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.017) 45%, rgba(255, 255, 255, 0.007) 100%),
+    rgba(17, 22, 33, 0.66);
   padding: 12px 12px;
   box-shadow: var(--shadow-diffuse-soft);
   display: flex;
@@ -2801,9 +2856,12 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsWorkspacePanel {
-  border: 1px solid var(--diffuse-stroke);
+  border: 1px solid rgba(255, 255, 255, 0.042);
   border-radius: 18px;
-  background: var(--surface-diffuse-2);
+  background:
+    radial-gradient(128% 124% at 8% -24%, rgba(134, 165, 255, 0.16), transparent 58%),
+    linear-gradient(166deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.023) 42%, rgba(255, 255, 255, 0.009) 100%),
+    rgba(20, 26, 38, 0.77);
   padding: 28px;
   display: flex;
   flex-direction: column;
@@ -2845,7 +2903,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsWorkspaceSection {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.048);
   padding-top: 14px;
   display: grid;
   gap: 8px;
@@ -2892,8 +2950,8 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsQueueList {
-  border-top-color: rgba(255, 255, 255, 0.045);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0));
+  border-top-color: rgba(255, 255, 255, 0.03);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0));
   border-radius: 12px;
 }
 
@@ -2962,9 +3020,12 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsRightIntel {
   padding: 18px;
-  border: 1px solid var(--diffuse-stroke);
+  border: 1px solid rgba(255, 255, 255, 0.042);
   border-radius: 16px;
-  background: var(--surface-diffuse-1);
+  background:
+    radial-gradient(124% 118% at 8% -26%, rgba(133, 164, 255, 0.14), transparent 58%),
+    linear-gradient(167deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.018) 44%, rgba(255, 255, 255, 0.008) 100%),
+    rgba(18, 23, 34, 0.67);
   box-shadow: var(--shadow-diffuse-soft);
   gap: 18px;
 }
@@ -3006,11 +3067,12 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotCard {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.042);
   border-radius: 14px;
   background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
-    rgba(24, 30, 43, 0.42);
+    radial-gradient(126% 122% at 8% -24%, rgba(132, 164, 255, 0.14), transparent 58%),
+    linear-gradient(167deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.018) 44%, rgba(255, 255, 255, 0.008) 100%),
+    rgba(19, 24, 35, 0.65);
   box-shadow: var(--shadow-diffuse-soft);
   padding: 14px;
   display: grid;
@@ -3027,10 +3089,10 @@ html[data-density="compact"] .field {
   width: 48px;
   height: 48px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.04)),
-    rgba(34, 41, 56, 0.62);
+    linear-gradient(155deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.03)),
+    rgba(32, 39, 54, 0.6);
   color: rgba(255, 255, 255, 0.92);
   font-size: 14px;
   font-weight: 670;
@@ -3082,11 +3144,12 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotMessageSurface {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.042);
   border-radius: 12px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.012)),
-    rgba(18, 24, 35, 0.52);
+    radial-gradient(120% 100% at 6% -24%, rgba(130, 162, 255, 0.12), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0.01)),
+    rgba(17, 23, 34, 0.55);
   padding: 10px;
 }
 
@@ -3111,10 +3174,10 @@ html[data-density="compact"] .field {
 .opsCopilotSendBtn {
   height: 34px;
   border-radius: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.012)),
-    rgba(23, 29, 41, 0.5);
+    linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+    rgba(22, 28, 39, 0.52);
   color: rgba(255, 255, 255, 0.84);
   font-size: 11px;
   font-weight: 560;
@@ -3127,10 +3190,10 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotSendBtn.primary {
-  border-color: rgba(175, 205, 255, 0.26);
+  border-color: rgba(175, 205, 255, 0.18);
   background:
-    linear-gradient(160deg, rgba(116, 165, 255, 0.28), rgba(255, 255, 255, 0.06)),
-    rgba(42, 60, 96, 0.58);
+    linear-gradient(160deg, rgba(116, 165, 255, 0.2), rgba(255, 255, 255, 0.05)),
+    rgba(38, 56, 92, 0.54);
   color: rgba(242, 248, 255, 0.98);
 }
 
@@ -3158,7 +3221,7 @@ html[data-density="compact"] .field {
   background:
     linear-gradient(155deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.03)),
     rgba(35, 42, 58, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.065);
   color: rgba(255, 255, 255, 0.9);
   font-size: 10px;
   font-weight: 660;
