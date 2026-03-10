@@ -1,6 +1,6 @@
 :root {
-  --bg: #0b0f16;
-  --bg-alt: #111826;
+  --bg: #0a0d12;
+  --bg-alt: #0e1117;
   --surface: rgba(17, 22, 33, 0.9);
   --surface-elevated: rgba(24, 30, 43, 0.92);
   --surface-urgent: rgba(54, 24, 29, 0.92);
@@ -17,25 +17,14 @@
   --surface-diffuse-urgent:
     linear-gradient(155deg, rgba(255, 172, 172, 0.08), rgba(255, 116, 124, 0.04) 40%, rgba(255, 255, 255, 0.01) 100%),
     rgba(49, 30, 37, 0.75);
-  --surface-panel:
-    radial-gradient(130% 120% at 8% -28%, rgba(128, 160, 255, 0.12), transparent 60%),
-    linear-gradient(168deg, rgba(255, 255, 255, 0.048), rgba(255, 255, 255, 0.016) 46%, rgba(255, 255, 255, 0.006) 100%),
-    rgba(17, 22, 33, 0.66);
-  --surface-panel-strong:
-    radial-gradient(126% 122% at 8% -24%, rgba(130, 162, 255, 0.15), transparent 58%),
-    linear-gradient(166deg, rgba(255, 255, 255, 0.056), rgba(255, 255, 255, 0.021) 43%, rgba(255, 255, 255, 0.008) 100%),
-    rgba(19, 24, 35, 0.72);
+  --surface-panel: linear-gradient(180deg, rgba(32, 36, 48, 0.95), rgba(18, 20, 28, 0.95));
+  --surface-panel-strong: linear-gradient(180deg, rgba(32, 36, 48, 0.95), rgba(18, 20, 28, 0.95));
+  --surface-secondary: rgba(28, 32, 44, 0.75);
 
   --diffuse-stroke: rgba(255, 255, 255, 0.055);
   --diffuse-stroke-strong: rgba(255, 255, 255, 0.095);
-  --shadow-diffuse-soft:
-    0 14px 34px rgba(2, 7, 15, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.042),
-    0 0 0 1px rgba(112, 145, 214, 0.032);
-  --shadow-diffuse:
-    0 20px 52px rgba(2, 7, 16, 0.38),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 0 0 1px rgba(122, 154, 224, 0.044);
+  --shadow-diffuse-soft: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --shadow-diffuse: 0 10px 40px rgba(0, 0, 0, 0.5);
 
   --panel: rgba(255, 255, 255, 0.06);
   --panel-strong: rgba(255, 255, 255, 0.09);
@@ -82,7 +71,7 @@ body {
 body {
   margin: 0;
   color: var(--text);
-  background: var(--bg);
+  background: #0a0d12;
 
   font-family:
     ui-sans-serif,
@@ -108,11 +97,7 @@ body::before {
   z-index: -2;
   pointer-events: none;
 
-  background:
-    radial-gradient(1280px 760px at 8% -22%, rgba(136, 166, 255, 0.2), transparent 64%),
-    radial-gradient(980px 620px at 92% -8%, rgba(176, 156, 255, 0.12), transparent 64%),
-    radial-gradient(1180px 660px at 46% 118%, rgba(117, 179, 255, 0.11), transparent 74%),
-    linear-gradient(180deg, var(--bg-alt) 0%, var(--bg) 48%, #090d14 100%);
+  background: radial-gradient(1200px 600px at 50% -200px, #1c2333 0%, #0e1117 60%, #0a0d12 100%);
 }
 
 body::after {
@@ -183,9 +168,7 @@ textarea {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background:
-    radial-gradient(1200px 700px at 8% -20%, rgba(132, 164, 255, 0.16), transparent 64%),
-    linear-gradient(180deg, #101522 0%, #0b0f16 55%, #090d14 100%);
+  background: radial-gradient(1200px 600px at 50% -200px, #1c2333 0%, #0e1117 60%, #0a0d12 100%);
 }
 
 .forgeSplashInner {
@@ -239,14 +222,12 @@ html[data-density="compact"] .h1 {
 
 /* Card */
 .card {
-  border: 1px solid rgba(255, 255, 255, 0.038);
+  border: none;
   background: var(--surface-panel);
-  border-radius: 12px;
+  border-radius: 18px;
   padding: 14px;
   box-shadow: var(--shadow-diffuse-soft);
-  backdrop-filter: blur(8px) saturate(112%);
-  -webkit-backdrop-filter: blur(8px) saturate(112%);
-  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  transition: background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 html[data-density="compact"] .card {
@@ -263,12 +244,12 @@ html[data-density="compact"] .card {
 }
 
 .card:hover {
-  border-color: var(--diffuse-stroke-strong);
   box-shadow: var(--shadow-diffuse);
+  transform: translateY(-1px);
 }
 
 .card + .card {
-  margin-top: 10px;
+  margin-top: 32px;
 }
 
 /* Buttons */
@@ -1653,15 +1634,10 @@ html[data-density="compact"] .field {
 .opsSummaryRow {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  border: 1px solid rgba(255, 255, 255, 0.045);
-  border-radius: 14px;
-  background:
-    radial-gradient(120% 120% at 6% -28%, rgba(132, 163, 255, 0.16), transparent 56%),
-    linear-gradient(170deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018) 46%, rgba(255, 255, 255, 0.009) 100%),
-    rgba(17, 22, 33, 0.68);
+  border: none;
+  border-radius: 18px;
+  background: var(--surface-panel);
   box-shadow: var(--shadow-diffuse-soft);
-  backdrop-filter: blur(8px) saturate(112%);
-  -webkit-backdrop-filter: blur(8px) saturate(112%);
   padding: 10px 0;
 }
 
@@ -1699,7 +1675,7 @@ html[data-density="compact"] .field {
 .opsShell {
   display: grid;
   grid-template-columns: 148px minmax(0, 1fr) 286px;
-  gap: var(--space-6);
+  gap: 32px 24px;
   align-items: start;
 }
 
@@ -1755,23 +1731,21 @@ html[data-density="compact"] .field {
 .opsMain {
   padding: 0;
   display: grid;
-  gap: var(--space-4);
+  gap: 32px;
 }
 
 .opsBlock {
-  border: 1px solid rgba(255, 255, 255, 0.038);
+  border: none;
   background: var(--surface-panel);
-  border-radius: 14px;
+  border-radius: 18px;
   padding: var(--space-4);
   box-shadow: var(--shadow-diffuse-soft);
-  backdrop-filter: blur(8px) saturate(110%);
-  -webkit-backdrop-filter: blur(8px) saturate(110%);
   display: grid;
   gap: var(--space-4);
 }
 
 .opsBlock + .opsBlock {
-  margin-top: var(--space-3);
+  margin-top: 32px;
 }
 
 .opsFormGrid {
@@ -1819,12 +1793,10 @@ html[data-density="compact"] .field {
   gap: var(--space-3);
   align-items: center;
   padding: 8px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.038);
-  border-radius: 12px;
+  border: none;
+  border-radius: 18px;
   background: var(--surface-panel);
   box-shadow: var(--shadow-diffuse-soft);
-  backdrop-filter: blur(8px) saturate(110%);
-  -webkit-backdrop-filter: blur(8px) saturate(110%);
 }
 
 .opsSearch {
@@ -2052,12 +2024,10 @@ html[data-density="compact"] .field {
   display: grid;
   gap: var(--space-4);
   align-content: start;
-  border: 1px solid rgba(255, 255, 255, 0.038);
-  border-radius: 14px;
+  border: none;
+  border-radius: 18px;
   background: var(--surface-panel);
   box-shadow: var(--shadow-diffuse-soft);
-  backdrop-filter: blur(8px) saturate(112%);
-  -webkit-backdrop-filter: blur(8px) saturate(112%);
 }
 
 .opsPanelTitle {
@@ -2215,13 +2185,13 @@ html[data-density="compact"] .field {
   grid-template-columns: 28px 1fr auto;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.038);
-  background: var(--surface-panel);
-  border-radius: 12px;
+  border: none;
+  background: var(--surface-secondary);
+  border-radius: 14px;
   padding: 0 10px;
   box-shadow: var(--shadow-diffuse-soft);
-  backdrop-filter: blur(8px) saturate(112%);
-  -webkit-backdrop-filter: blur(8px) saturate(112%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   z-index: 1;
 }
 
@@ -2305,8 +2275,8 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsSummaryRow {
-  border: 1px solid rgba(255, 255, 255, 0.036);
-  border-radius: 14px;
+  border: none;
+  border-radius: 18px;
   background: var(--surface-panel);
   box-shadow: var(--shadow-diffuse-soft);
   padding: 10px 0;
@@ -2334,7 +2304,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsShell {
-  gap: var(--space-6);
+  gap: 32px 24px;
 }
 
 .opsTodayPolish .opsRailItem {
@@ -2348,14 +2318,14 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsMain {
-  gap: var(--space-5);
+  gap: 32px;
 }
 
 .opsTodayPolish .opsFilters {
   gap: var(--space-3);
   padding: 8px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.036);
-  border-radius: 12px;
+  border: none;
+  border-radius: 18px;
   background: var(--surface-panel);
   box-shadow: var(--shadow-diffuse-soft);
 }
@@ -2519,7 +2489,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsContext {
-  border-color: rgba(255, 255, 255, 0.036);
+  border: none;
 }
 
 .opsTodayPolish .opsContextIntel {
@@ -2573,11 +2543,13 @@ html[data-density="compact"] .field {
 
 .opsTodayPolish .opsCommandBar {
   height: 42px;
-  border: 1px solid rgba(255, 255, 255, 0.036);
-  border-radius: 12px;
-  background: var(--surface-panel);
+  border: none;
+  border-radius: 14px;
+  background: var(--surface-secondary);
   padding: 0 10px;
   box-shadow: var(--shadow-diffuse-soft);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .opsTodayPolish .opsCommandHint {
@@ -2808,12 +2780,12 @@ html[data-density="compact"] .field {
 /* -------------------- Today Focus Workspace -------------------- */
 .opsTodayFocus .opsShell {
   grid-template-columns: 220px minmax(0, 1fr) 360px;
-  gap: 30px;
+  gap: 32px 24px;
   align-items: start;
 }
 
 .opsTodayFocus .opsMain {
-  gap: var(--space-5);
+  gap: 32px;
 }
 
 .opsTodayFocus .opsFilters {
@@ -2825,13 +2797,9 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsWorkspacePanel {
-  border: 1px solid rgba(255, 255, 255, 0.036);
+  border: none;
   border-radius: 18px;
-  background: linear-gradient(
-    180deg,
-    rgba(35, 40, 52, 0.95) 0%,
-    rgba(18, 20, 28, 0.95) 100%
-  );
+  background: var(--surface-panel);
   padding: 48px 40px;
   display: flex;
   flex-direction: column;
@@ -2841,9 +2809,7 @@ html[data-density="compact"] .field {
   min-width: 720px;
   max-width: 840px;
   justify-self: center;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(10px) saturate(116%);
-  -webkit-backdrop-filter: blur(10px) saturate(116%);
+  box-shadow: var(--shadow-diffuse-soft);
 }
 
 .opsTodayFocus .opsWorkspaceHero {
@@ -2934,7 +2900,7 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsQueueSection {
   gap: 12px;
-  margin-top: 18px;
+  margin-top: 32px;
   width: 100%;
   max-width: 840px;
   justify-self: center;
@@ -3030,8 +2996,8 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsRightIntel {
   padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.036);
-  border-radius: 16px;
+  border: none;
+  border-radius: 18px;
   background: var(--surface-panel);
   box-shadow: var(--shadow-diffuse-soft);
   gap: var(--space-5);
@@ -3074,10 +3040,12 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotCard {
-  border: 1px solid rgba(255, 255, 255, 0.036);
+  border: none;
   border-radius: 14px;
-  background: var(--surface-panel);
-  box-shadow: var(--shadow-diffuse-soft);
+  background: var(--surface-secondary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   padding: 14px;
   display: grid;
   gap: var(--space-3);
