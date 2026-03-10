@@ -15,15 +15,10 @@ type ScorePillProps = {
 };
 
 export function ScorePill({ total, label, tone }: ScorePillProps) {
-  const styles =
-    tone === "good"
-      ? { borderColor: "rgba(80,220,160,0.35)", background: "rgba(80,220,160,0.08)" }
-      : tone === "warn"
-      ? { borderColor: "rgba(255,120,120,0.35)", background: "rgba(255,120,120,0.08)" }
-      : { borderColor: "rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.06)" };
+  const toneClass = tone === "good" ? "good" : tone === "warn" ? "warn" : "neutral";
 
   return (
-    <span className="pill" style={{ ...styles, opacity: 0.95 }}>
+    <span className={`scoreInlineBadge ${toneClass}`}>
       {total} {label}
     </span>
   );
@@ -37,21 +32,15 @@ type CoverageChipsProps = {
 
 export function CoverageChips({ counts }: CoverageChipsProps) {
   return (
-    <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
+    <div className="coverageList">
       {AREAS.map((ar) => {
         const n = counts[ar] ?? 0;
         const ok = n > 0;
         return (
           <span
             key={ar}
-            className="pill"
-            style={{
-              opacity: 0.95,
-              borderColor: ok ? "rgba(80,220,160,0.35)" : "rgba(255,120,120,0.35)",
-              background: ok ? "rgba(80,220,160,0.08)" : "rgba(255,120,120,0.08)",
-              color: "rgba(255,255,255,0.92)",
-            }}
-            title={ok ? `${ar}: ${n}` : `${ar}: falta`}
+            className={`coverageTag ${ok ? "ok" : "missing"}`}
+            title={ok ? `${ar}: ${n}` : `${ar}: missing`}
           >
             {areaShort(ar)} {n}
           </span>

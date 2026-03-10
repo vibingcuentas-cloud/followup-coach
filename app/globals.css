@@ -198,14 +198,12 @@ html[data-density="compact"] .h1 {
 
 /* Card */
 .card {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: var(--surface);
-  border-radius: var(--radius);
-  padding: 16px;
-  box-shadow:
-    0 10px 28px rgba(0, 0, 0, 0.42),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  transition: border-color 180ms ease, box-shadow 180ms ease, transform 120ms ease;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.016);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: none;
+  transition: border-color 160ms ease, background 160ms ease;
 }
 
 html[data-density="compact"] .card {
@@ -213,16 +211,17 @@ html[data-density="compact"] .card {
 }
 
 .cardElevated {
-  background: var(--surface-elevated);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .cardUrgent {
-  background: var(--surface-urgent);
-  border-color: rgba(255, 120, 120, 0.22);
+  background: rgba(130, 56, 66, 0.14);
+  border-color: rgba(255, 140, 140, 0.2);
 }
 
 .card:hover {
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .card + .card {
@@ -231,19 +230,15 @@ html[data-density="compact"] .card {
 
 /* Buttons */
 .btn {
-  height: 42px;
-  padding: 0 14px;
-  border-radius: 14px;
-  border: 1px solid var(--stroke);
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   background: transparent;
   color: var(--text);
   cursor: pointer;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  transition:
-    transform 0.08s ease,
-    border-color 0.18s ease,
-    background 0.18s ease,
-    box-shadow 0.18s ease;
+  box-shadow: none;
+  transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease;
 }
 
 html[data-density="compact"] .btn {
@@ -251,43 +246,41 @@ html[data-density="compact"] .btn {
 }
 
 .btn:hover {
-  border-color: var(--stroke-strong);
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow:
-    0 10px 28px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .btn:active {
-  transform: scale(0.985);
+  opacity: 0.9;
 }
 
 .btnPrimary {
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.96);
-  color: rgba(0, 0, 0, 0.9);
-  font-weight: 900;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.9);
+  color: rgba(7, 10, 14, 0.92);
+  font-weight: 650;
 }
 
 .btnPrimary:hover {
-  background: white;
+  background: rgba(255, 255, 255, 0.96);
 }
 
 .btnDanger {
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(210, 122, 122, 0.26);
+  color: rgba(255, 210, 210, 0.9);
+  background: rgba(210, 122, 122, 0.07);
 }
 
 .btnGhost {
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.08);
   background: transparent;
-  color: rgba(255, 255, 255, 0.86);
+  color: rgba(255, 255, 255, 0.8);
   box-shadow: none;
 }
 
 .btnGhost:hover {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.13);
+  background: rgba(255, 255, 255, 0.025);
   box-shadow: none;
 }
 
@@ -334,22 +327,89 @@ html[data-density="compact"] .field {
 }
 
 .pill {
-  font-size: 12px;
-  padding: 6px 10px;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.scoreInlineBadge {
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.74);
+  padding-left: 10px;
+  position: relative;
+}
+
+.scoreInlineBadge::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
   border-radius: 999px;
-  border: 1px solid var(--stroke);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--muted);
+  background: currentColor;
+  transform: translateY(-50%);
+}
+
+.scoreInlineBadge.good {
+  color: rgba(166, 230, 189, 0.9);
+}
+
+.scoreInlineBadge.neutral {
+  color: rgba(255, 220, 178, 0.85);
+}
+
+.scoreInlineBadge.warn {
+  color: rgba(255, 198, 202, 0.9);
+}
+
+.coverageList {
+  display: flex;
+  gap: 8px 12px;
+  flex-wrap: wrap;
+}
+
+.coverageTag {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.72);
+  letter-spacing: 0.01em;
+  padding-left: 10px;
+  position: relative;
+}
+
+.coverageTag::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.coverageTag.ok::before {
+  background: rgba(166, 230, 189, 0.9);
+}
+
+.coverageTag.missing::before {
+  background: rgba(255, 198, 202, 0.9);
 }
 
 /* Segmented control */
 .segmented {
   display: flex;
-  gap: 8px;
-  padding: 8px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
+  gap: 4px;
+  padding: 2px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -362,60 +422,60 @@ html[data-density="compact"] .field {
 }
 
 .seg {
-  height: 38px;
-  border-radius: 12px;
-  padding: 0 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  color: white;
-  font-weight: 900;
+  height: 32px;
+  border-radius: 8px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.84);
+  font-weight: 620;
   cursor: pointer;
   white-space: nowrap;
-  transition: border-color 0.18s ease, background 0.18s ease, transform 0.08s ease;
+  transition: border-color 0.16s ease, background 0.16s ease;
 }
 
 .seg:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.13);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .seg:active {
-  transform: scale(0.985);
+  opacity: 0.9;
 }
 
 .seg.active {
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.96);
 }
 
 /* Account detail segmented buttons */
 .segBtn {
-  height: 38px;
-  border-radius: 12px;
-  padding: 0 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  color: white;
-  font-weight: 900;
+  height: 32px;
+  border-radius: 8px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.84);
+  font-weight: 620;
   cursor: pointer;
   white-space: nowrap;
 }
 
 .segBtnActive {
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.96);
 }
 
 /* -------------------- Today / Account Cards (premium) -------------------- */
 .accCard {
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  background: var(--surface-elevated);
-  border-radius: 22px;
-  padding: 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.018);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: none;
+  transition: border-color 160ms ease, background 160ms ease;
 }
 
 .accCompact {
@@ -441,33 +501,21 @@ html[data-density="compact"] .field {
 }
 
 .accCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.5);
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.022);
 }
 
 .accCardMust {
-  position: relative;
-  overflow: hidden;
-  border-color: rgba(255, 120, 120, 0.26);
-  background: linear-gradient(180deg, rgba(78, 30, 38, 0.92), rgba(44, 25, 32, 0.9));
+  border-color: rgba(255, 150, 150, 0.2);
+  background: rgba(134, 57, 68, 0.13);
 }
 
 .accCardMust::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 12px;
-  bottom: 12px;
-  width: 4px;
-  border-radius: 999px;
-  background: rgba(255, 120, 120, 0.9);
-  box-shadow: 0 0 0 6px rgba(255, 120, 120, 0.08);
+  content: none;
 }
 
 .accCardMust .scoreCircle {
-  border-color: rgba(255, 120, 120, 0.3);
-  box-shadow: 0 0 0 8px rgba(255, 120, 120, 0.1);
+  border-color: rgba(255, 165, 165, 0.26);
 }
 
 .accCardRow {
@@ -483,24 +531,24 @@ html[data-density="compact"] .field {
   border-radius: 999px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .scoreCircle.healthy {
-  box-shadow: 0 0 0 6px rgba(120, 255, 180, 0.06);
+  border-color: rgba(166, 230, 189, 0.3);
 }
 
 .scoreCircle.watch {
-  box-shadow: 0 0 0 6px rgba(255, 210, 120, 0.06);
+  border-color: rgba(255, 220, 178, 0.26);
 }
 
 .scoreCircle.risk {
-  box-shadow: 0 0 0 6px rgba(255, 120, 120, 0.06);
+  border-color: rgba(255, 198, 202, 0.28);
 }
 
 .scoreNum {
-  font-weight: 900;
+  font-weight: 700;
   font-size: 22px;
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -508,7 +556,7 @@ html[data-density="compact"] .field {
 
 .scoreLbl {
   font-size: 11px;
-  opacity: 0.72;
+  opacity: 0.6;
   margin-top: -2px;
 }
 
@@ -540,15 +588,15 @@ html[data-density="compact"] .field {
 }
 
 .accName {
-  font-weight: 900;
+  font-weight: 740;
   font-size: 18px;
   line-height: 1;
 }
 
 .accMeta {
-  font-weight: 700;
-  font-size: 13px;
-  opacity: 0.7;
+  font-weight: 520;
+  font-size: 12px;
+  opacity: 0.56;
 }
 
 .accBadges {
@@ -561,21 +609,36 @@ html[data-density="compact"] .field {
 .accBadge {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
+  padding: 2px 0 2px 11px;
+  border-radius: 0;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 560;
+  border: none;
+  background: transparent;
+  opacity: 0.9;
+  position: relative;
+}
+
+.accBadge::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
   border-radius: 999px;
-  font-size: 12px;
-  font-weight: 800;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background: rgba(255, 255, 255, 0.04);
-  opacity: 0.95;
+  background: currentColor;
+  transform: translateY(-50%);
 }
 
 .accBadge.ok {
-  box-shadow: 0 0 0 4px rgba(120, 255, 180, 0.06);
+  color: rgba(166, 230, 189, 0.88);
 }
 
 .accBadge.due {
-  box-shadow: 0 0 0 4px rgba(255, 120, 120, 0.06);
+  color: rgba(255, 198, 202, 0.88);
 }
 
 .accActions {
@@ -587,16 +650,16 @@ html[data-density="compact"] .field {
 }
 
 .accActionBtn {
-  height: 40px;
-  min-width: 108px;
-  border-radius: 14px;
+  height: 36px;
+  min-width: 90px;
+  border-radius: 10px;
 }
 
 .accToggleBtn {
-  height: 40px;
-  width: 44px;
-  min-width: 44px;
-  border-radius: 14px;
+  height: 36px;
+  width: 38px;
+  min-width: 38px;
+  border-radius: 10px;
   padding: 0;
   display: grid;
   place-items: center;
@@ -642,10 +705,11 @@ html[data-density="compact"] .field {
 }
 
 .accRecBox {
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 16px;
-  padding: 12px;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+  border-radius: 0;
+  padding: 10px 0 0;
 }
 
 .todayKpiGrid {
@@ -887,17 +951,34 @@ html[data-density="compact"] .field {
 }
 
 .stepDot {
-  font-size: 11px;
-  padding: 4px 8px;
+  font-size: 10px;
+  padding: 0 0 0 10px;
+  border-radius: 0;
+  border: none;
+  color: rgba(255, 255, 255, 0.52);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  position: relative;
+}
+
+.stepDot::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 5px;
+  height: 5px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: var(--muted);
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.28);
 }
 
 .stepDot.done {
-  border-color: rgba(96, 231, 164, 0.5);
-  color: rgba(96, 231, 164, 0.95);
-  background: rgba(96, 231, 164, 0.12);
+  color: rgba(166, 230, 189, 0.95);
+}
+
+.stepDot.done::before {
+  background: rgba(166, 230, 189, 0.95);
 }
 
 .stepProgress {
@@ -924,16 +1005,16 @@ html[data-density="compact"] .field {
   bottom: calc(14px + env(safe-area-inset-bottom));
   transform: translateX(-50%);
   width: min(94vw, 520px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(18, 20, 27, 0.96);
-  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(18, 20, 27, 0.92);
+  border-radius: 10px;
   padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   z-index: 120;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  box-shadow: none;
 }
 
 .todayStickyActions {
@@ -1456,12 +1537,18 @@ html[data-density="compact"] .field {
 }
 
 .opsBlock {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.015);
-  border-radius: 12px;
-  padding: 12px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
   display: grid;
-  gap: 10px;
+  gap: 12px;
+}
+
+.opsBlock + .opsBlock {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .opsFormGrid {
@@ -1482,105 +1569,108 @@ html[data-density="compact"] .field {
 
 .opsStack {
   display: grid;
-  gap: 8px;
+  gap: 0;
 }
 
 .opsListRow {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.015);
-  padding: 10px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0;
+  background: transparent;
+  padding: 14px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
 }
 
 .opsListActions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
 }
 
 .opsFilters {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 2px;
+  border-bottom: none;
 }
 
 .opsSearch {
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(255, 255, 255, 0.015);
 }
 
 .opsTierSeg {
   border-radius: 10px;
-  padding: 4px;
-  background: rgba(255, 255, 255, 0.02);
+  padding: 2px;
+  background: transparent;
 }
 
 .opsTierSeg .seg {
-  height: 32px;
+  height: 30px;
   border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 620;
 }
 
 .opsSectionHeaderRow {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 12px;
-  padding-top: 2px;
+  gap: 16px;
+  padding-top: 4px;
 }
 
 .opsSectionMeta {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.56);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.48);
   font-weight: 500;
 }
 
 .opsDivider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .opsQueueSection {
   display: grid;
-  gap: 8px;
+  gap: 14px;
 }
 
 .opsSectionTitle {
   margin: 0;
-  font-size: 22px;
-  font-weight: 750;
+  font-size: 21px;
+  font-weight: 640;
   letter-spacing: -0.02em;
 }
 
 .opsSectionSubtitle {
-  margin-top: 4px;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.56);
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.48);
 }
 
 .opsCount {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 999px;
-  min-width: 32px;
-  height: 32px;
-  display: grid;
-  place-items: center;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.44);
+  border: none;
+  border-radius: 0;
+  min-width: 0;
+  height: auto;
+  display: block;
+  padding: 0;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .opsQueueList {
   display: grid;
   gap: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .opsQueueItem {
@@ -1589,22 +1679,22 @@ html[data-density="compact"] .field {
   gap: 14px;
   align-items: center;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
   background: transparent;
   border-radius: 0;
-  padding: 18px 0;
+  padding: 20px 0;
   cursor: pointer;
   transition: border-color 140ms ease, background 140ms ease;
 }
 
 .opsQueueItem:hover {
-  border-bottom-color: rgba(255, 255, 255, 0.14);
+  border-bottom-color: rgba(255, 255, 255, 0.11);
   background: transparent;
 }
 
 .opsQueueItem.active {
-  border-bottom-color: rgba(255, 255, 255, 0.24);
-  background: rgba(255, 255, 255, 0.012);
+  border-bottom-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.008);
 }
 
 .opsQueueState {
@@ -1616,38 +1706,52 @@ html[data-density="compact"] .field {
 .opsQueueStatusBadge {
   width: fit-content;
   max-width: 100%;
-  height: 23px;
-  padding: 0 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  height: auto;
+  padding: 0 0 0 11px;
+  border-radius: 0;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 580;
+  letter-spacing: 0.07em;
   display: inline-flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.82);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
   white-space: nowrap;
+  position: relative;
+}
+
+.opsQueueStatusBadge::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translateY(-50%);
 }
 
 .opsQueueStatusBadge.risk {
-  background: rgba(194, 84, 90, 0.22);
-  color: rgba(255, 205, 208, 0.97);
+  background: transparent;
+  color: rgba(255, 198, 202, 0.88);
 }
 
 .opsQueueStatusBadge.due {
-  background: rgba(178, 125, 64, 0.2);
-  color: rgba(255, 218, 179, 0.95);
+  background: transparent;
+  color: rgba(255, 220, 174, 0.84);
 }
 
 .opsQueueStatusBadge.ok {
-  background: rgba(88, 140, 104, 0.2);
-  color: rgba(189, 237, 203, 0.92);
+  background: transparent;
+  color: rgba(189, 239, 203, 0.84);
 }
 
 .opsQueueStateText {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.47);
-  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.38);
+  letter-spacing: 0;
   line-height: 1.3;
 }
 
@@ -1658,40 +1762,40 @@ html[data-density="compact"] .field {
 }
 
 .opsQueueTitle {
-  font-size: 25px;
-  font-weight: 690;
+  font-size: 28px;
+  font-weight: 700;
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  line-height: 1.05;
   min-width: 0;
 }
 
 .opsQueueMeta {
   margin-left: 0;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.5);
-  font-weight: 540;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.42);
+  font-weight: 500;
 }
 
 .opsQueueSub {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.44);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.34);
   white-space: normal;
   line-height: 1.3;
 }
 
 .opsQueueActions {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
-  opacity: 0.92;
+  opacity: 0.9;
 }
 
 .opsQueueActionBtn {
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.76);
-  font-size: 14px;
-  font-weight: 580;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 560;
   letter-spacing: 0.01em;
   cursor: pointer;
   padding: 2px 0;
@@ -1702,16 +1806,16 @@ html[data-density="compact"] .field {
 }
 
 .opsQueueActionBtn.strong {
-  color: rgba(255, 255, 255, 0.95);
-  font-weight: 650;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 620;
 }
 
 .opsContext {
   padding: 0 0 0 16px;
   display: grid;
-  gap: 10px;
+  gap: 14px;
   align-content: start;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .opsPanelTitle {
@@ -1852,23 +1956,24 @@ html[data-density="compact"] .field {
 }
 
 .opsInlineHint {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.52);
   padding: 12px 0;
 }
 
 .opsCommandBar {
   position: static;
   width: 100%;
-  height: 44px;
+  height: 40px;
   display: grid;
   grid-template-columns: 28px 1fr auto;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 10px;
-  padding: 0 10px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: transparent;
+  border-radius: 0;
+  padding: 0 2px;
   z-index: 1;
 }
 
@@ -1891,11 +1996,11 @@ html[data-density="compact"] .field {
 }
 
 .opsCommandHint {
-  font-size: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: rgba(255, 255, 255, 0.64);
-  border-radius: 8px;
-  padding: 4px 8px;
+  font-size: 11px;
+  border: none;
+  color: rgba(255, 255, 255, 0.46);
+  border-radius: 0;
+  padding: 0;
 }
 
 .opsTodayPolish {
@@ -2232,13 +2337,14 @@ html[data-density="compact"] .field {
 }
 
 .opsMiniRow {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.02);
-  padding: 10px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0;
+  background: transparent;
+  padding: 14px 0;
   display: flex;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
 }
 
