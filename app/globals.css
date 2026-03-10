@@ -73,16 +73,7 @@ body {
   color: var(--text);
   background: #0a0d12;
 
-  font-family:
-    ui-sans-serif,
-    -apple-system,
-    BlinkMacSystemFont,
-    "SF Pro Display",
-    "SF Pro Text",
-    "Helvetica Neue",
-    Arial,
-    system-ui,
-    sans-serif;
+  font-family: Inter, system-ui, sans-serif;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -215,7 +206,7 @@ html[data-density="compact"] .h1 {
 }
 
 .subtle {
-  color: var(--muted);
+  color: #98a1b5;
   margin-top: 4px;
   font-size: 13px;
 }
@@ -361,11 +352,11 @@ html[data-density="compact"] .field {
 }
 
 .label {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 590;
-  letter-spacing: 0.11em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.56);
+  color: #8b93a7;
   margin-bottom: 6px;
 }
 
@@ -657,15 +648,17 @@ html[data-density="compact"] .field {
 }
 
 .accName {
-  font-weight: 740;
+  font-weight: 600;
   font-size: 18px;
   line-height: 1;
+  color: #e8ecf5;
 }
 
 .accMeta {
   font-weight: 520;
-  font-size: 12px;
-  opacity: 0.56;
+  font-size: 13px;
+  color: #98a1b5;
+  opacity: 1;
 }
 
 .accBadges {
@@ -748,8 +741,9 @@ html[data-density="compact"] .field {
 }
 
 .accSub {
-  font-size: 12px;
-  opacity: 0.82;
+  font-size: 13px;
+  color: #98a1b5;
+  opacity: 1;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -765,8 +759,9 @@ html[data-density="compact"] .field {
 }
 
 .accMissing {
-  font-size: 12px;
-  opacity: 0.82;
+  font-size: 13px;
+  color: #7f889e;
+  opacity: 1;
 }
 
 .accMissing.ok {
@@ -1577,17 +1572,18 @@ html[data-density="compact"] .field {
 
 .opsTitle {
   margin: 0;
-  font-size: clamp(2.35rem, 2.2vw + 1.7rem, 3.35rem);
-  line-height: 0.97;
-  letter-spacing: -0.038em;
-  font-weight: 760;
+  font-size: 42px;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: #f4f6fa;
 }
 
 .opsSubtitle {
   margin-top: 8px;
   font-size: 13px;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.55);
+  color: #98a1b5;
 }
 
 .opsEntityTitle {
@@ -1658,11 +1654,11 @@ html[data-density="compact"] .field {
 }
 
 .opsSummaryLabel {
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   font-weight: 600;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.52);
+  color: #8b93a7;
 }
 
 .opsSummaryValue {
@@ -1852,9 +1848,9 @@ html[data-density="compact"] .field {
 
 .opsSectionSubtitle {
   margin-top: 6px;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.47);
+  color: #98a1b5;
 }
 
 .opsCount {
@@ -1969,27 +1965,28 @@ html[data-density="compact"] .field {
 }
 
 .opsQueueTitle {
-  font-size: clamp(1.45rem, 1vw + 1.08rem, 2rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.04;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: #e8ecf5;
   min-width: 0;
 }
 
 .opsQueueMeta {
   margin-left: 0;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  color: #98a1b5;
   font-weight: 520;
   letter-spacing: 0.01em;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .opsQueueSub {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.4);
+  font-size: 13px;
+  color: #7f889e;
   white-space: normal;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .opsQueueActions {
@@ -2056,11 +2053,11 @@ html[data-density="compact"] .field {
 }
 
 .opsIntelEyebrow {
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   font-weight: 600;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: #8b93a7;
 }
 
 .opsIntelAccountName {
@@ -2076,17 +2073,17 @@ html[data-density="compact"] .field {
 }
 
 .opsIntelLabel {
-  font-size: 10px;
-  letter-spacing: 0.11em;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   font-weight: 590;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: #8b93a7;
 }
 
 .opsIntelValue {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.78);
-  line-height: 1.45;
+  font-size: 14px;
+  color: #c9ceda;
+  line-height: 1.6;
   font-weight: 480;
 }
 
@@ -2158,17 +2155,17 @@ html[data-density="compact"] .field {
 }
 
 .opsPanelLabel {
-  font-size: 10px;
-  letter-spacing: 0.11em;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   font-weight: 590;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: #8b93a7;
 }
 
 .opsPanelValue {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.76);
-  line-height: 1.45;
+  font-size: 14px;
+  color: #c9ceda;
+  line-height: 1.6;
 }
 
 .opsInlineHint {
@@ -2292,10 +2289,10 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsSummaryLabel {
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.46);
+  color: #8b93a7;
 }
 
 .opsTodayPolish .opsSummaryValue {
@@ -2370,10 +2367,10 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsSectionMeta {
-  font-size: 10px;
-  letter-spacing: 0.08em;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.46);
+  color: #8b93a7;
   font-weight: 560;
 }
 
@@ -2454,22 +2451,23 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsQueueTitle {
-  font-size: clamp(1.55rem, 1vw + 1.12rem, 2.15rem);
-  font-weight: 720;
-  line-height: 1.02;
-  letter-spacing: -0.032em;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #e8ecf5;
 }
 
 .opsTodayPolish .opsQueueMeta {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  color: #98a1b5;
   font-weight: 520;
   line-height: 1.45;
 }
 
 .opsTodayPolish .opsQueueSub {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.4);
+  font-size: 13px;
+  color: #7f889e;
 }
 
 .opsTodayPolish .opsQueueActions {
@@ -2498,10 +2496,10 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsIntelEyebrow {
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
+  color: #8b93a7;
 }
 
 .opsTodayPolish .opsIntelAccountName {
@@ -2511,16 +2509,18 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsIntelLabel {
-  font-size: 10px;
-  letter-spacing: 0.11em;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   font-weight: 590;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: #8b93a7;
 }
 
 .opsTodayPolish .opsIntelValue {
   font-weight: 460;
-  color: rgba(255, 255, 255, 0.78);
+  color: #c9ceda;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .opsTodayPolish .opsIntelRecommendation {
@@ -2574,17 +2574,18 @@ html[data-density="compact"] .field {
 }
 
 .opsAccountName {
-  font-size: clamp(1.45rem, 1vw + 1.08rem, 2.05rem);
-  font-weight: 710;
-  letter-spacing: -0.032em;
-  line-height: 1.04;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: #e8ecf5;
 }
 
 .opsMiniMeta {
   margin-top: 4px;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
-  line-height: 1.4;
+  font-size: 13px;
+  color: #98a1b5;
+  line-height: 1.45;
 }
 
 .opsMiniSub {
@@ -2640,7 +2641,7 @@ html[data-density="compact"] .field {
   }
 
   .opsQueueTitle {
-    font-size: 22px;
+    font-size: 18px;
   }
 
   .opsCommandBar {
@@ -2658,7 +2659,7 @@ html[data-density="compact"] .field {
   }
 
   .opsTitle {
-    font-size: 2.05rem;
+    font-size: 42px;
   }
 
   .opsSubtitle {
@@ -2689,12 +2690,12 @@ html[data-density="compact"] .field {
   }
 
   .opsQueueTitle {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .opsQueueMeta {
     margin-left: 0;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .opsQueueSub {
@@ -2728,7 +2729,7 @@ html[data-density="compact"] .field {
   }
 
   .opsTodayPolish .opsQueueTitle {
-    font-size: 22px;
+    font-size: 18px;
   }
 }
 
@@ -2760,7 +2761,7 @@ html[data-density="compact"] .field {
   }
 
   .opsTodayPolish .opsSummaryLabel {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .opsTodayPolish .opsSummaryValue {
@@ -2768,12 +2769,12 @@ html[data-density="compact"] .field {
   }
 
   .opsTodayPolish .opsQueueTitle {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .opsTodayPolish .opsQueueMeta,
   .opsTodayPolish .opsQueueSub {
-    font-size: 11px;
+    font-size: 13px;
   }
 }
 
@@ -2838,8 +2839,8 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsWorkspaceMeta {
   margin-top: 2px;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.54);
+  font-size: 13px;
+  color: #98a1b5;
   line-height: 1.45;
 }
 
@@ -2857,7 +2858,7 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsWorkspaceLabel {
   font-size: 11px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   font-weight: 600;
   text-transform: uppercase;
   color: #8b93a7;
@@ -2865,24 +2866,30 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsWorkspacePrimary {
   margin: 0;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.6;
   color: #c9ceda;
   font-weight: 500;
 }
 
 .opsTodayFocus .opsWorkspaceValue {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.6;
   color: #c9ceda;
   font-weight: 500;
 }
 
 .opsTodayFocus .opsWorkspaceSubtle {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.6;
   color: #c9ceda;
   opacity: 0.9;
+}
+
+.opsTodayFocus .opsWorkspaceSection:last-child .opsWorkspaceValue,
+.opsTodayFocus .opsWorkspaceSection:last-child .opsWorkspaceSubtle {
+  font-size: 13px;
+  color: #7f889e;
 }
 
 .opsTodayFocus .opsWorkspacePrimaryCta {
@@ -2913,17 +2920,17 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsQueueSection .opsSectionTitle {
-  font-size: 12px;
-  font-weight: 620;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.52);
+  color: #8b93a7;
 }
 
 .opsTodayFocus .opsQueueSection .opsSectionSubtitle {
-  font-size: 10px;
+  font-size: 13px;
   margin-top: 4px;
-  color: rgba(255, 255, 255, 0.44);
+  color: #98a1b5;
 }
 
 .opsTodayFocus .opsQueueItem {
@@ -2949,16 +2956,17 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsQueueTitle {
-  font-size: 20px;
-  line-height: 1.03;
-  font-weight: 690;
-  letter-spacing: -0.028em;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #e8ecf5;
 }
 
 .opsTodayFocus .opsQueueMeta {
   margin-top: 2px;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.52);
+  font-size: 13px;
+  color: #98a1b5;
   line-height: 1.45;
 }
 
@@ -3098,7 +3106,7 @@ html[data-density="compact"] .field {
 .opsCopilotContactRole {
   margin-top: 2px;
   font-size: 13px;
-  color: #9aa3b7;
+  color: #98a1b5;
   line-height: 1.45;
 }
 
@@ -3108,19 +3116,19 @@ html[data-density="compact"] .field {
   letter-spacing: 0.14em;
   font-weight: 600;
   text-transform: uppercase;
-  color: #8f97ab;
+  color: #8b93a7;
 }
 
 .opsCopilotText {
-  font-size: 13px;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.83);
+  font-size: 14px;
+  line-height: 1.6;
+  color: #c9ceda;
 }
 
 .opsCopilotSubtle {
-  font-size: 11px;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.54);
+  font-size: 13px;
+  line-height: 1.45;
+  color: #98a1b5;
 }
 
 .opsCopilotMessageCard {
@@ -3222,8 +3230,8 @@ html[data-density="compact"] .field {
 
 .opsCopilotHistoryMeta {
   margin-top: 2px;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.52);
+  font-size: 13px;
+  color: #98a1b5;
 }
 
 .opsCopilotMissingList {
@@ -3234,8 +3242,8 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotMissingList li {
-  font-size: 11px;
-  color: rgba(255, 210, 210, 0.82);
+  font-size: 13px;
+  color: #7f889e;
 }
 
 @media (max-width: 1180px) {
@@ -3288,7 +3296,7 @@ html[data-density="compact"] .field {
   }
 
   .opsTodayFocus .opsWorkspacePrimary {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .opsTodayFocus .opsWorkspacePrimaryCta {
