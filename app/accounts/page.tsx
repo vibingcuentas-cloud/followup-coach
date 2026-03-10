@@ -139,11 +139,9 @@ export default function AccountsPage() {
               accounts.map((a) => (
                 <article key={a.id} className="opsListRow">
                   <div>
-                    <div className="opsMiniTitle">
-                      {a.name}
-                      <span className="opsQueueMeta">
-                        {a.tier} • {a.country ?? "—"}
-                      </span>
+                    <div className="opsMiniTitle opsAccountName">{a.name}</div>
+                    <div className="opsMiniMeta">
+                      {a.tier} • {a.country ?? "—"}
                     </div>
                     <div className="opsMiniSub">
                       Value: {a.valueFormatted} • Last touch: {a.lastTouch} • Status: {a.badge}

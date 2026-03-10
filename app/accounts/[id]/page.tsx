@@ -61,8 +61,8 @@ export default function AccountDetailPage() {
       <header className="opsTopbar">
         <div style={{ minWidth: 0 }}>
           <BrandWordmark />
-          <h1 className="opsTitle" style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-            <span style={{ minWidth: 0, overflowWrap: "anywhere", whiteSpace: "normal" }}>
+          <h1 className="opsTitle opsEntityTitle">
+            <span className="opsEntityHeadline">
               {account?.name ?? "Account"}
             </span>
             {score && <ScorePill total={score.total} label={score.label} tone={score.tone} />}
@@ -145,11 +145,9 @@ export default function AccountDetailPage() {
                 {contacts.map((c) => (
                   <article key={c.id} className="opsListRow">
                     <div>
-                      <div className="opsMiniTitle">
-                        {c.name}
-                        <span className="opsQueueMeta">
-                          {c.area} • {channelLabel(c.preferred_channel)} • {fmtLastTouch(daysSince(c.last_touch_at))}
-                        </span>
+                      <div className="opsMiniTitle">{c.name}</div>
+                      <div className="opsMiniMeta">
+                        {c.area} • {channelLabel(c.preferred_channel)} • {fmtLastTouch(daysSince(c.last_touch_at))}
                       </div>
                       <div className="opsMiniSub">Hook: {c.personal_hook ?? "—"}</div>
                       {c.email && <div className="opsMiniSub">{c.email}</div>}
@@ -193,7 +191,7 @@ export default function AccountDetailPage() {
                   return (
                     <article key={it.id} className="opsListRow">
                       <div>
-                        <div className="opsMiniTitle">
+                        <div className="opsMiniMeta">
                           {it.channel.toUpperCase()} • {new Date(it.created_at).toLocaleDateString("en-US")}
                         </div>
                         <div className="opsMiniSub">{contactName ?? "No contact"}</div>
