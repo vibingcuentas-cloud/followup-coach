@@ -13,10 +13,10 @@ export default function Loading() {
           className="forgeSplashIcon"
         />
         <Image
-          src="/forge-logo.svg"
+          src="/forge-wordmark.svg?v=1"
           alt="Forge"
-          width={140}
-          height={40}
+          width={124}
+          height={22}
           priority
           className="brandWordmark"
         />

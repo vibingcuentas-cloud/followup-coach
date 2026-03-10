@@ -109,7 +109,7 @@ textarea {
 /* App container */
 .app-shell {
   min-height: 100vh;
-  padding: 28px 20px 80px;
+  padding: 28px 20px calc(96px + env(safe-area-inset-bottom));
   display: flex;
   justify-content: center;
 }
@@ -145,8 +145,8 @@ textarea {
 
 .brandWordmark {
   width: auto;
-  height: 20px;
-  margin-bottom: 8px;
+  height: 18px;
+  margin-bottom: 10px;
   display: block;
 }
 
@@ -920,7 +920,7 @@ html[data-density="compact"] .field {
 /* -------------------- MOBILE FIXES (Account page + global) -------------------- */
 @media (max-width: 720px) {
   .app-shell {
-    padding: 18px 14px 80px;
+    padding: 18px 14px calc(118px + env(safe-area-inset-bottom));
   }
 
   .topbar {
@@ -1033,7 +1033,7 @@ html[data-density="compact"] .field {
 /* Extra small phones */
 @media (max-width: 380px) {
   .app-shell {
-    padding: 16px 12px 80px;
+    padding: 16px 12px calc(118px + env(safe-area-inset-bottom));
   }
 
   .seg {
