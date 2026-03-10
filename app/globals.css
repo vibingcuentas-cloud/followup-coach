@@ -3090,11 +3090,11 @@ html[data-density="compact"] .field {
   width: 360px;
   min-width: 360px;
   max-width: 360px;
-  padding: 24px 20px;
+  padding: 0;
   border: none;
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(30, 34, 46, 0.95), rgba(18, 20, 28, 0.95));
-  box-shadow: var(--shadow-diffuse-soft);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   gap: 20px;
 }
 
