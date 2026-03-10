@@ -3090,16 +3090,16 @@ html[data-density="compact"] .field {
   width: 360px;
   min-width: 360px;
   max-width: 360px;
-  padding: 26px;
+  padding: 24px;
   border: none;
   border-radius: 18px;
   background: linear-gradient(180deg, rgba(30, 34, 46, 0.95), rgba(18, 20, 28, 0.95));
   box-shadow: var(--shadow-diffuse-soft);
-  gap: 24px;
+  gap: 20px;
 }
 
 .opsTodayFocus .opsContextIntel {
-  gap: 24px;
+  gap: 20px;
   padding-left: 0;
 }
 
@@ -3137,12 +3137,12 @@ html[data-density="compact"] .field {
 
 .opsCopilotPanel {
   display: grid;
-  gap: 24px;
+  gap: 20px;
   align-content: start;
 }
 
 .opsCopilotPanel > .opsIntelEyebrow {
-  padding: 0 10px;
+  padding: 0;
   margin: 0;
 }
 
@@ -3153,7 +3153,7 @@ html[data-density="compact"] .field {
   box-shadow: var(--shadow-diffuse-soft);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  padding: 20px;
+  padding: 18px;
   display: grid;
   gap: 12px;
 }
@@ -3245,7 +3245,7 @@ html[data-density="compact"] .field {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .opsCopilotSendBtn {
@@ -3297,6 +3297,7 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsIntelPrimaryAction {
   width: 100%;
+  margin-top: 2px;
 }
 
 .opsTodayFocus .opsWorkspacePrimaryCta:hover:not(:disabled),
