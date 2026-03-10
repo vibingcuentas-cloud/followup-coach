@@ -649,6 +649,7 @@ html[data-density="compact"] .field {
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
 }
 
 .todayPage {
@@ -702,12 +703,12 @@ html[data-density="compact"] .field {
 
 .todayKpiCard {
   padding: 12px 14px;
-  height: 84px;
-  min-height: 84px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
+  height: 88px;
+  min-height: 88px;
+  display: grid;
+  grid-template-rows: 14px 1fr;
+  align-content: center;
+  gap: 8px;
 }
 
 .todayKpiLabel {
@@ -715,14 +716,18 @@ html[data-density="compact"] .field {
   color: var(--faint);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  line-height: 14px;
+  min-height: 14px;
 }
 
 .todayKpiValue {
-  margin-top: 0;
   font-size: 28px;
   font-weight: 950;
   letter-spacing: -0.03em;
-  line-height: 1;
+  line-height: 28px;
+  min-height: 28px;
+  display: flex;
+  align-items: flex-end;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1109,10 +1114,10 @@ html[data-density="compact"] .field {
 
   .todayKpiCard {
     padding: 10px 12px;
-    height: 80px;
-    min-height: 80px;
-    justify-content: center;
-    gap: 6px;
+    height: 82px;
+    min-height: 82px;
+    grid-template-rows: 13px 1fr;
+    gap: 7px;
   }
 
   .todayPage {
@@ -1216,11 +1221,11 @@ html[data-density="compact"] .field {
   }
 
   .todayKpiCard {
-    height: 76px;
-    min-height: 76px;
+    height: 78px;
+    min-height: 78px;
     padding: 8px 10px;
-    justify-content: center;
-    gap: 5px;
+    grid-template-rows: 12px 1fr;
+    gap: 6px;
   }
 
   .todayKpiLabel {
