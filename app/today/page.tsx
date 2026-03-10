@@ -186,6 +186,8 @@ export default function TodayPage() {
             <button className="btn btnGhost" onClick={() => setSearch("")}>Reset</button>
           </div>
 
+          <div className="opsDivider" />
+
           <div className="opsCommandBar">
             <span className="opsCommandIcon">&gt;</span>
             <input
@@ -196,31 +198,35 @@ export default function TodayPage() {
             <span className="opsCommandHint">Cmd K</span>
           </div>
 
-          <div className="opsSectionHeaderRow">
-            <div>
-              <h2 className="opsSectionTitle">Fire queue</h2>
-              <div className="opsSectionSubtitle">Who to contact now, ranked by urgency.</div>
-            </div>
-            <div className="opsCount">{mustContact.length}</div>
-          </div>
+          <div className="opsDivider" />
 
-          <div className="opsQueueList">
-            {loading && <div className="opsInlineHint">Loading queue…</div>}
-            {!loading && mustContact.length === 0 && (
-              <div className="opsInlineHint">No due accounts right now.</div>
-            )}
-            {!loading &&
-              mustContact.map((a) => (
-                <QueueItem
-                  key={a.id}
-                  account={a}
-                  active={selectedAccount?.id === a.id}
-                  onSelect={() => setSelectedId(a.id)}
-                  onOpen={() => router.push(`/accounts/${a.id}`)}
-                  onLog={() => openQuickLog(a)}
-                />
-              ))}
-          </div>
+          <section className="opsQueueSection">
+            <div className="opsSectionHeaderRow">
+              <div>
+                <h2 className="opsSectionTitle">Fire queue</h2>
+                <div className="opsSectionSubtitle">Who to contact now, ranked by urgency.</div>
+              </div>
+              <div className="opsSectionMeta">{mustContact.length} due</div>
+            </div>
+
+            <div className="opsQueueList">
+              {loading && <div className="opsInlineHint">Loading queue…</div>}
+              {!loading && mustContact.length === 0 && (
+                <div className="opsInlineHint">No due accounts right now.</div>
+              )}
+              {!loading &&
+                mustContact.map((a) => (
+                  <QueueItem
+                    key={a.id}
+                    account={a}
+                    active={selectedAccount?.id === a.id}
+                    onSelect={() => setSelectedId(a.id)}
+                    onOpen={() => router.push(`/accounts/${a.id}`)}
+                    onLog={() => openQuickLog(a)}
+                  />
+                ))}
+            </div>
+          </section>
         </section>
 
         <aside className="opsContext desktopOnly">
