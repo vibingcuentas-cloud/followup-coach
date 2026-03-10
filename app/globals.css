@@ -70,6 +70,15 @@ html,
 body {
   min-height: 100%;
   height: auto;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+@supports (overflow: clip) {
+  html,
+  body {
+    overflow-x: clip;
+  }
 }
 
 body {
@@ -1585,6 +1594,7 @@ html[data-density="compact"] .field {
   display: grid;
   gap: 40px;
   padding-bottom: var(--space-4);
+  min-width: 0;
 }
 
 .opsTopbar {
@@ -1699,6 +1709,7 @@ html[data-density="compact"] .field {
   grid-template-columns: 148px minmax(0, 1fr) 286px;
   gap: 40px 24px;
   align-items: start;
+  min-width: 0;
 }
 
 .opsRail,
@@ -1754,6 +1765,7 @@ html[data-density="compact"] .field {
   padding: 0;
   display: grid;
   gap: 40px;
+  min-width: 0;
 }
 
 .opsBlock {
@@ -2821,6 +2833,13 @@ html[data-density="compact"] .field {
   position: relative;
   isolation: isolate;
   gap: 40px;
+  overflow-x: hidden;
+}
+
+@supports (overflow: clip) {
+  .opsTodayFocus .opsMain {
+    overflow-x: clip;
+  }
 }
 
 .opsTodayFocus .opsMain::before {
