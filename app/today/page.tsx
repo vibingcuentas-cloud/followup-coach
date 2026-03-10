@@ -1,15 +1,66 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToday, type EnrichedAccount } from "../../hooks/useToday";
-import AccountCard from "../../components/AccountCard";
 import QuickLogModal from "../../components/QuickLogModal";
 import BrandWordmark from "../../components/BrandWordmark";
-import { supabase } from "../../lib/supabaseClient";
 
 export const dynamic = "force-dynamic";
-const DENSITY_KEY = "forge-density";
+
+type MobileTab = "fire" | "next" | "gaps";
+
+function QueueItem({
+  account,
+  active,
+  onSelect,
+  onOpen,
+  onLog,
+}: {
+  account: EnrichedAccount;
+  active: boolean;
+  onSelect: () => void;
+  onOpen: () => void;
+  onLog: () => void;
+}) {
+  return (
+    <article className={`opsQueueItem ${active ? "active" : ""}`} onClick={onSelect}>
+      <div className="opsQueueScore">{account.score.total}</div>
+
+      <div className="opsQueueBody">
+        <div className="opsQueueTitleRow">
+          <div className="opsQueueTitle">
+            {account.name}
+            <span className="opsQueueMeta">
+              {account.tier} • {account.country ?? "—"}
+            </span>
+          </div>
+
+          <div className="opsQueueBadges">
+            <span className={`opsQueueBadge ${account.isDue ? "due" : "ok"}`}>
+              {account.isDue ? "Due" : "On track"}
+            </span>
+            <span className="opsQueueBadge">Coverage {account.score.coveredAreas}/5</span>
+          </div>
+        </div>
+
+        <div className="opsQueueSub">{account.urgencyReason}</div>
+        <div className="opsQueueSub">
+          Missing: {account.missingAreas.length > 0 ? account.missingAreas.join(", ") : "None"}
+        </div>
+      </div>
+
+      <div className="opsQueueActions" onClick={(e) => e.stopPropagation()}>
+        <button className="btn btnGhost" onClick={onOpen}>
+          Open
+        </button>
+        <button className="btn btnPrimary btnTight" onClick={onLog}>
+          Log now
+        </button>
+      </div>
+    </article>
+  );
+}
 
 export default function TodayPage() {
   const router = useRouter();
@@ -30,18 +81,9 @@ export default function TodayPage() {
 
   const [qlOpen, setQlOpen] = useState(false);
   const [qlAccount, setQlAccount] = useState<EnrichedAccount | null>(null);
-  const [compact, setCompact] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return localStorage.getItem(DENSITY_KEY) === "compact";
-  });
-  const [toast, setToast] = useState<{
-    text: string;
-    undo?: () => Promise<void>;
-  } | null>(null);
-  const [showFilters, setShowFilters] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return window.innerWidth > 720;
-  });
+  const [toast, setToast] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [mobileTab, setMobileTab] = useState<MobileTab>("fire");
 
   const healthyCount = useMemo(
     () => allSorted.filter((a) => a.score.total >= 80).length,
@@ -52,231 +94,247 @@ export default function TodayPage() {
     [allSorted]
   );
 
+  const selectedAccount =
+    mustContact.find((a) => a.id === selectedId) ?? mustContact[0] ?? allSorted[0] ?? null;
+
+  const nextList = useMemo(
+    () => allSorted.filter((a) => a.recommendedContact).slice(0, 8),
+    [allSorted]
+  );
+
+  const gapsList = useMemo(
+    () =>
+      [...allSorted]
+        .filter((a) => a.missingAreas.length > 0)
+        .sort((a, b) => b.missingAreas.length - a.missingAreas.length)
+        .slice(0, 8),
+    [allSorted]
+  );
+
   function openQuickLog(acc: EnrichedAccount) {
     setQlAccount(acc);
     setQlOpen(true);
   }
 
-  function toggleDensity() {
-    setCompact((v) => {
-      const next = !v;
-      const density = next ? "compact" : "comfortable";
-      localStorage.setItem(DENSITY_KEY, density);
-      document.documentElement.setAttribute("data-density", density);
-      return next;
-    });
-  }
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-density", compact ? "compact" : "comfortable");
-  }, [compact]);
-
-  async function handleQuickLogSaved(meta: {
-    interactionId: string;
-    accountId: string;
-    contactId: string;
-    previousAccountLastInteractionAt: string | null;
-    previousContactLastTouchAt: string | null;
-  }) {
+  async function handleQuickLogSaved() {
     await loadAll();
-    setToast({
-      text: "Interaction logged.",
-      undo: async () => {
-        await supabase.from("interactions").delete().eq("id", meta.interactionId);
-        await supabase
-          .from("accounts")
-          .update({ last_interaction_at: meta.previousAccountLastInteractionAt })
-          .eq("id", meta.accountId);
-        await supabase
-          .from("contacts")
-          .update({ last_touch_at: meta.previousContactLastTouchAt })
-          .eq("id", meta.contactId);
-        await loadAll();
-      },
-    });
-    setTimeout(() => setToast(null), 5000);
+    setToast("Interaction logged.");
+    setTimeout(() => setToast(null), 4000);
   }
 
   return (
-    <main className="todayPage">
-      <div className="topbar">
-        <div className="topbarTitle">
-          <BrandWordmark />
-          <h1 className="h1">Today</h1>
-          <div className="subtle">Intimacy command center • A=7d • B=14d • C=30d</div>
-        </div>
-
-        <div className="topbarActions">
-          <button className="btn" onClick={() => router.push("/accounts")}>
-            Accounts
-          </button>
-          <button className="btn" onClick={() => router.push("/weekly")}>
-            Weekly Pack
-          </button>
-          <button className="btn" onClick={loadAll} disabled={loading}>
-            Refresh
-          </button>
-          <button className="btn btnPrimary" onClick={signOut}>
-            Sign out
-          </button>
-        </div>
-      </div>
-
-      {error && (
-        <div className="card">
-          <div style={{ fontSize: 13, opacity: 0.95 }}>{error}</div>
-        </div>
-      )}
-
-      <div className="todayKpiStrip todayCommandBar todayTopKpis">
-        <div className="todayKpiCell">
-          <div className="todayKpiCellLabel">Must contact</div>
-          <div className="todayKpiCellValue">{mustContact.length}</div>
-        </div>
-        <div className="todayKpiCell todayKpiCellRisk">
-          <div className="todayKpiCellLabel">At risk</div>
-          <div className="todayKpiCellValue">{riskCount}</div>
-        </div>
-        <div className="todayKpiCell">
-          <div className="todayKpiCellLabel">Healthy</div>
-          <div className="todayKpiCellValue">{healthyCount}</div>
-        </div>
-        <div className="todayKpiCell">
-          <div className="todayKpiCellLabel">Total</div>
-          <div className="todayKpiCellValue">{totalShowing}</div>
-        </div>
-      </div>
-
-      <div className="card todayFiltersCard">
-        <div className="row todayFiltersHeader">
-          <div className="label" style={{ marginBottom: 0 }}>
-            Filters
-          </div>
-          <button className="btn" onClick={() => setShowFilters((v) => !v)}>
-            {showFilters ? "Hide" : "Show"}
-          </button>
-        </div>
-        {showFilters && (
-          <div className="todayFiltersGrid">
-            <div className="todayFilterSearch">
-              <div className="label" style={{ marginBottom: 6 }}>
-                Search
-              </div>
-              <input
-                className="field"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Account name or country"
-              />
-            </div>
-
-            <div className="todayFilterTier">
-              <div className="label" style={{ marginBottom: 6 }}>
-                Tier
-              </div>
-              <div className="segmented scroll">
-                {(["all", "A", "B", "C"] as const).map((t) => (
-                  <button
-                    key={t}
-                    className={`seg ${tierFilter === t ? "active" : ""}`}
-                    onClick={() => setTierFilter(t)}
-                  >
-                    {t === "all" ? "All" : t}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="row todayFilterActions">
-              <button className="btn" onClick={() => setSearch("")}>
-                Clear
-              </button>
-              <button className="btn" onClick={toggleDensity}>
-                {compact ? "Comfort view" : "Compact view"}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="row todaySectionHeader">
+    <main className="opsPage">
+      <header className="opsTopbar">
         <div>
-          <h2 className="h2">Must contact</h2>
-          <div className="subtle" style={{ marginTop: 4 }}>
-            Highest risk accounts first. Keep cadence and coverage disciplined.
-          </div>
+          <BrandWordmark />
+          <h1 className="opsTitle">Today</h1>
+          <div className="opsSubtitle">Intimacy command center • A=7d • B=14d • C=30d</div>
         </div>
-        <span className="pill todaySectionCount" style={{ opacity: 0.95 }}>
-          {mustContact.length}
-        </span>
+
+        <div className="opsTopActions">
+          <button className="btn btnGhost" onClick={() => router.push("/accounts")}>Accounts</button>
+          <button className="btn btnGhost" onClick={() => router.push("/weekly")}>Weekly Pack</button>
+          <button className="btn btnGhost" onClick={loadAll} disabled={loading}>Refresh</button>
+          <button className="btn btnPrimary" onClick={signOut}>Sign out</button>
+        </div>
+      </header>
+
+      {error && <div className="opsInlineError">{error}</div>}
+
+      <section className="opsSummaryRow">
+        <div className="opsSummaryCell">
+          <div className="opsSummaryLabel">Must contact</div>
+          <div className="opsSummaryValue">{mustContact.length}</div>
+        </div>
+        <div className="opsSummaryCell risk">
+          <div className="opsSummaryLabel">At risk</div>
+          <div className="opsSummaryValue">{riskCount}</div>
+        </div>
+        <div className="opsSummaryCell">
+          <div className="opsSummaryLabel">Healthy</div>
+          <div className="opsSummaryValue">{healthyCount}</div>
+        </div>
+        <div className="opsSummaryCell">
+          <div className="opsSummaryLabel">Total</div>
+          <div className="opsSummaryValue">{totalShowing}</div>
+        </div>
+      </section>
+
+      <div className="opsShell">
+        <aside className="opsRail desktopOnly">
+          <button className="opsRailItem active">Fire Queue</button>
+          <button className="opsRailItem">Accounts</button>
+          <button className="opsRailItem">Next</button>
+          <button className="opsRailItem">Insights</button>
+          <button className="opsRailItem">Week</button>
+        </aside>
+
+        <section className="opsMain">
+          <div className="opsFilters">
+            <input
+              className="field opsSearch"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search account or country"
+            />
+            <div className="segmented opsTierSeg">
+              {(["all", "A", "B", "C"] as const).map((t) => (
+                <button
+                  key={t}
+                  className={`seg ${tierFilter === t ? "active" : ""}`}
+                  onClick={() => setTierFilter(t)}
+                >
+                  {t === "all" ? "All" : t}
+                </button>
+              ))}
+            </div>
+            <button className="btn btnGhost" onClick={() => setSearch("")}>Reset</button>
+          </div>
+
+          <div className="opsSectionHeaderRow">
+            <div>
+              <h2 className="opsSectionTitle">Fire queue</h2>
+              <div className="opsSectionSubtitle">Who to contact now, ranked by urgency.</div>
+            </div>
+            <div className="opsCount">{mustContact.length}</div>
+          </div>
+
+          <div className="opsQueueList">
+            {loading && <div className="opsInlineHint">Loading queue…</div>}
+            {!loading && mustContact.length === 0 && (
+              <div className="opsInlineHint">No due accounts right now.</div>
+            )}
+            {!loading &&
+              mustContact.map((a) => (
+                <QueueItem
+                  key={a.id}
+                  account={a}
+                  active={selectedAccount?.id === a.id}
+                  onSelect={() => setSelectedId(a.id)}
+                  onOpen={() => router.push(`/accounts/${a.id}`)}
+                  onLog={() => openQuickLog(a)}
+                />
+              ))}
+          </div>
+        </section>
+
+        <aside className="opsContext desktopOnly">
+          <div className="opsPanelTitle">Context</div>
+          {selectedAccount ? (
+            <>
+              <div className="opsContextAccount">{selectedAccount.name}</div>
+              <div className="opsContextSub">{selectedAccount.urgencyReason}</div>
+
+              <div className="opsPanelBlock">
+                <div className="opsPanelLabel">Next best contact</div>
+                <div className="opsPanelValue">
+                  {selectedAccount.recommendedContact
+                    ? `${selectedAccount.recommendedContact.name} (${selectedAccount.recommendedContact.area})`
+                    : "No contact yet"}
+                </div>
+              </div>
+
+              <div className="opsPanelBlock">
+                <div className="opsPanelLabel">Recommended action</div>
+                <div className="opsPanelValue">
+                  {selectedAccount.recommendedContact
+                    ? `Reach out via ${selectedAccount.recommendedContact.preferred_channel ?? "preferred channel"}`
+                    : "Add a contact in missing functions first."}
+                </div>
+              </div>
+
+              <div className="opsPanelBlock">
+                <div className="opsPanelLabel">Coverage gaps</div>
+                <div className="opsPanelValue">
+                  {selectedAccount.missingAreas.length > 0
+                    ? selectedAccount.missingAreas.join(", ")
+                    : "No gaps"}
+                </div>
+              </div>
+
+              <button className="btn btnPrimary" onClick={() => openQuickLog(selectedAccount)}>
+                Log interaction
+              </button>
+            </>
+          ) : (
+            <div className="opsInlineHint">Select an account to view context.</div>
+          )}
+        </aside>
       </div>
 
-      {loading && (
-        <div className="todayList">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="card skeletonCard" />
-          ))}
-        </div>
-      )}
+      <section className="opsMobileTabs mobileOnly">
+        <button
+          className={`opsMobileTab ${mobileTab === "fire" ? "active" : ""}`}
+          onClick={() => setMobileTab("fire")}
+        >
+          Fire
+        </button>
+        <button
+          className={`opsMobileTab ${mobileTab === "next" ? "active" : ""}`}
+          onClick={() => setMobileTab("next")}
+        >
+          Next
+        </button>
+        <button
+          className={`opsMobileTab ${mobileTab === "gaps" ? "active" : ""}`}
+          onClick={() => setMobileTab("gaps")}
+        >
+          Gaps
+        </button>
+      </section>
 
-      {!loading && mustContact.length === 0 && (
-        <div className="card emptyState">
-          <div className="emptyStateIcon">◎</div>
-          <div style={{ fontSize: 13, opacity: 0.9 }}>
-            No accounts are due right now.
-          </div>
-          <div className="row" style={{ marginTop: 10 }}>
-            <button className="btn" onClick={() => router.push("/accounts")}>
-              Add account
-            </button>
-            <button className="btn" onClick={() => router.push("/weekly")}>
-              Open weekly pack
-            </button>
-          </div>
-        </div>
-      )}
-
-      <div className="todayList">
-        {!loading &&
-          mustContact.map((a, idx) => (
-            <AccountCard
-              key={`${a.id}-${compact ? "c" : "o"}`}
+      <section className="opsMobilePane mobileOnly">
+        {mobileTab === "fire" &&
+          mustContact.slice(0, 8).map((a) => (
+            <QueueItem
+              key={`m-fire-${a.id}`}
               account={a}
-              contacts={a.contacts}
-              missingAreas={a.missingAreas}
-              dueLabel={a.dueLabel}
-              urgencyReason={a.urgencyReason}
-              compact={compact}
-              variant={idx < 2 ? "must" : "default"}
+              active={false}
+              onSelect={() => setSelectedId(a.id)}
               onOpen={() => router.push(`/accounts/${a.id}`)}
               onLog={() => openQuickLog(a)}
             />
           ))}
-      </div>
 
-      <div className="row todaySectionHeader">
-        <h2 className="h2">All accounts</h2>
-        <span className="pill todaySectionCount" style={{ opacity: 0.95 }}>
-          {allSorted.length}
-        </span>
-      </div>
-
-      <div className="todayList todayListTight">
-        {!loading &&
-          allSorted.map((a) => (
-            <AccountCard
-              key={`${a.id}-${compact ? "c" : "o"}`}
-              account={a}
-              contacts={a.contacts}
-              missingAreas={a.missingAreas}
-              dueLabel={a.dueLabel}
-              urgencyReason={a.urgencyReason}
-              compact={compact}
-              variant="default"
-              onOpen={() => router.push(`/accounts/${a.id}`)}
-              onLog={() => openQuickLog(a)}
-            />
+        {mobileTab === "next" &&
+          nextList.map((a) => (
+            <div key={`m-next-${a.id}`} className="opsMiniRow">
+              <div>
+                <div className="opsMiniTitle">{a.name}</div>
+                <div className="opsMiniSub">
+                  {a.recommendedContact
+                    ? `${a.recommendedContact.name} • ${a.recommendedContact.area}`
+                    : "No contact"}
+                </div>
+              </div>
+              <button className="btn btnGhost" onClick={() => openQuickLog(a)}>
+                Log
+              </button>
+            </div>
           ))}
+
+        {mobileTab === "gaps" &&
+          gapsList.map((a) => (
+            <div key={`m-gaps-${a.id}`} className="opsMiniRow">
+              <div>
+                <div className="opsMiniTitle">{a.name}</div>
+                <div className="opsMiniSub">Missing: {a.missingAreas.join(", ")}</div>
+              </div>
+              <button className="btn btnGhost" onClick={() => router.push(`/accounts/${a.id}`)}>
+                Open
+              </button>
+            </div>
+          ))}
+      </section>
+
+      <div className="opsCommandBar">
+        <span className="opsCommandIcon">&gt;</span>
+        <input
+          className="opsCommandInput"
+          placeholder="Log probrands whatsapp outcome"
+          aria-label="Command"
+        />
+        <span className="opsCommandHint">Cmd K</span>
       </div>
 
       {qlAccount && (
@@ -291,24 +349,7 @@ export default function TodayPage() {
         />
       )}
 
-      {toast && (
-        <div className="toastBar">
-          <span>{toast.text}</span>
-          {toast.undo && (
-            <button
-              className="btn"
-              style={{ height: 34 }}
-              onClick={() => {
-                void toast.undo?.();
-                setToast(null);
-              }}
-            >
-              Undo
-            </button>
-          )}
-        </div>
-      )}
-
+      {toast && <div className="toastBar">{toast}</div>}
     </main>
   );
 }

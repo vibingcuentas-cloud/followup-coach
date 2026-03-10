@@ -71,23 +71,13 @@ body::before {
   pointer-events: none;
 
   background:
-    radial-gradient(1000px 680px at 16% -8%, rgba(255, 255, 255, 0.09), transparent 62%),
-    radial-gradient(820px 560px at 88% 2%, rgba(255, 255, 255, 0.05), transparent 62%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 36%),
+    radial-gradient(860px 460px at 8% -8%, rgba(255, 255, 255, 0.045), transparent 64%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 40%),
     var(--bg);
 }
 
-/* Subtle grain for premium depth */
 body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.08;
-  mix-blend-mode: overlay;
-
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  content: none;
 }
 
 a {
@@ -286,6 +276,19 @@ html[data-density="compact"] .btn {
 .btnDanger {
   border: 1px solid rgba(255, 255, 255, 0.16);
   color: rgba(255, 255, 255, 0.92);
+}
+
+.btnGhost {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.86);
+  box-shadow: none;
+}
+
+.btnGhost:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: none;
 }
 
 /* Inputs */
@@ -1305,5 +1308,537 @@ html[data-density="compact"] .field {
 
   .todaySectionCount {
     display: none;
+  }
+}
+
+/* -------------------- Forge Operator Workspace -------------------- */
+.opsPage {
+  display: grid;
+  gap: 14px;
+  padding-bottom: 84px;
+}
+
+.opsTopbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.opsTitle {
+  margin: 0;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-weight: 800;
+}
+
+.opsSubtitle {
+  margin-top: 8px;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.opsTopActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.opsInlineError {
+  border: 1px solid rgba(255, 120, 120, 0.22);
+  background: rgba(65, 31, 36, 0.34);
+  color: rgba(255, 205, 205, 0.92);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.opsSummaryRow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(19, 23, 32, 0.72);
+}
+
+.opsSummaryCell {
+  min-height: 64px;
+  padding: 10px 12px;
+  display: grid;
+  align-content: center;
+  gap: 6px;
+}
+
+.opsSummaryCell + .opsSummaryCell {
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.opsSummaryCell.risk {
+  background: rgba(83, 37, 45, 0.5);
+}
+
+.opsSummaryLabel {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.opsSummaryValue {
+  font-size: 44px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.opsShell {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 310px;
+  gap: 12px;
+  align-items: start;
+}
+
+.opsRail,
+.opsMain,
+.opsContext {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 21, 30, 0.74);
+  border-radius: 14px;
+}
+
+.opsRail {
+  padding: 8px;
+  display: grid;
+  gap: 4px;
+}
+
+.opsRailItem {
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: left;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.opsRailItem.active {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.opsMain {
+  padding: 12px;
+  display: grid;
+  gap: 12px;
+}
+
+.opsFilters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.opsSearch {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.opsTierSeg {
+  border-radius: 10px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.opsTierSeg .seg {
+  height: 32px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.opsSectionHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.opsSectionTitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.opsSectionSubtitle {
+  margin-top: 4px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.opsCount {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  min-width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+}
+
+.opsQueueList {
+  display: grid;
+  gap: 6px;
+}
+
+.opsQueueItem {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.012);
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.opsQueueItem:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.opsQueueItem.active {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.038);
+}
+
+.opsQueueScore {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  font-weight: 780;
+  line-height: 1;
+}
+
+.opsQueueBody {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.opsQueueTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.opsQueueTitle {
+  font-size: 30px;
+  font-weight: 760;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  min-width: 0;
+}
+
+.opsQueueMeta {
+  margin-left: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.56);
+  font-weight: 600;
+}
+
+.opsQueueBadges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.opsQueueBadge {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  font-size: 11px;
+  padding: 4px 9px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.opsQueueBadge.due {
+  border-color: rgba(255, 143, 143, 0.36);
+  color: rgba(255, 186, 186, 0.92);
+}
+
+.opsQueueSub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.64);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.opsQueueActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btnTight {
+  min-width: 112px;
+}
+
+.opsContext {
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.opsPanelTitle {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.opsContextAccount {
+  font-size: 34px;
+  font-weight: 760;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.opsContextSub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.opsPanelBlock {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+  display: grid;
+  gap: 5px;
+}
+
+.opsPanelLabel {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.opsPanelValue {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.4;
+}
+
+.opsInlineHint {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.62);
+  border: 1px dashed rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.opsCommandBar {
+  position: fixed;
+  left: 50%;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(960px, calc(100vw - 28px));
+  height: 48px;
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(17, 21, 30, 0.92);
+  border-radius: 12px;
+  padding: 0 10px;
+  z-index: 70;
+}
+
+.opsCommandIcon {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 14px;
+}
+
+.opsCommandInput {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+}
+
+.opsCommandInput::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.opsCommandHint {
+  font-size: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.64);
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.mobileOnly {
+  display: none;
+}
+
+.opsMobileTabs {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  gap: 6px;
+  z-index: 40;
+}
+
+.opsMobileTab {
+  flex: 1;
+  height: 36px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.opsMobileTab.active {
+  background: rgba(255, 255, 255, 0.11);
+  color: white;
+}
+
+.opsMobilePane {
+  display: grid;
+  gap: 8px;
+}
+
+.opsMiniRow {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+
+.opsMiniTitle {
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.opsMiniSub {
+  margin-top: 3px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+@media (max-width: 1180px) {
+  .opsShell {
+    grid-template-columns: 1fr;
+  }
+
+  .desktopOnly {
+    display: none;
+  }
+
+  .mobileOnly {
+    display: grid;
+  }
+
+  .opsSummaryRow {
+    overflow-x: auto;
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+  }
+
+  .opsFilters {
+    grid-template-columns: 1fr;
+  }
+
+  .opsQueueItem {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+
+  .opsQueueActions {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .opsQueueTitle {
+    font-size: 22px;
+  }
+
+  .opsCommandBar {
+    width: min(680px, calc(100vw - 24px));
+  }
+}
+
+@media (max-width: 720px) {
+  .opsPage {
+    gap: 10px;
+  }
+
+  .opsTopbar {
+    gap: 10px;
+  }
+
+  .opsTitle {
+    font-size: 34px;
+  }
+
+  .opsSubtitle {
+    font-size: 13px;
+  }
+
+  .opsTopActions .btn {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .opsSummaryCell {
+    min-height: 62px;
+  }
+
+  .opsSummaryValue {
+    font-size: 36px;
+  }
+
+  .opsQueueTitle {
+    font-size: 20px;
+  }
+
+  .opsQueueMeta {
+    margin-left: 6px;
+    font-size: 12px;
+  }
+
+  .opsQueueSub {
+    white-space: normal;
+  }
+
+  .opsCommandBar {
+    height: 46px;
+    width: calc(100vw - 20px);
   }
 }
