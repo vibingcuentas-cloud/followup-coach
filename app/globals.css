@@ -2851,9 +2851,13 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsWorkspacePanel {
   border: none;
-  border-radius: 18px;
-  background: var(--surface-panel);
-  padding: 48px 40px;
+  border-radius: 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(50, 60, 90, 0.45) 0%,
+    rgba(25, 30, 50, 0.85) 100%
+  );
+  padding: 48px 44px;
   display: flex;
   flex-direction: column;
   gap: 22px;
@@ -2862,7 +2866,9 @@ html[data-density="compact"] .field {
   min-width: 720px;
   max-width: 840px;
   justify-self: center;
-  box-shadow: var(--shadow-diffuse-soft);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .opsTodayFocus .opsWorkspaceHero {
