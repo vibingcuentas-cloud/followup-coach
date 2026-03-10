@@ -17,17 +17,25 @@
   --surface-diffuse-urgent:
     linear-gradient(155deg, rgba(255, 172, 172, 0.08), rgba(255, 116, 124, 0.04) 40%, rgba(255, 255, 255, 0.01) 100%),
     rgba(49, 30, 37, 0.75);
+  --surface-panel:
+    radial-gradient(130% 120% at 8% -28%, rgba(128, 160, 255, 0.12), transparent 60%),
+    linear-gradient(168deg, rgba(255, 255, 255, 0.048), rgba(255, 255, 255, 0.016) 46%, rgba(255, 255, 255, 0.006) 100%),
+    rgba(17, 22, 33, 0.66);
+  --surface-panel-strong:
+    radial-gradient(126% 122% at 8% -24%, rgba(130, 162, 255, 0.15), transparent 58%),
+    linear-gradient(166deg, rgba(255, 255, 255, 0.056), rgba(255, 255, 255, 0.021) 43%, rgba(255, 255, 255, 0.008) 100%),
+    rgba(19, 24, 35, 0.72);
 
   --diffuse-stroke: rgba(255, 255, 255, 0.055);
   --diffuse-stroke-strong: rgba(255, 255, 255, 0.095);
   --shadow-diffuse-soft:
-    0 18px 44px rgba(2, 7, 15, 0.38),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 0 0 1px rgba(112, 145, 214, 0.045);
+    0 14px 34px rgba(2, 7, 15, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.042),
+    0 0 0 1px rgba(112, 145, 214, 0.032);
   --shadow-diffuse:
-    0 24px 60px rgba(2, 7, 16, 0.44),
-    inset 0 1px 0 rgba(255, 255, 255, 0.055),
-    0 0 0 1px rgba(122, 154, 224, 0.058);
+    0 20px 52px rgba(2, 7, 16, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 1px rgba(122, 154, 224, 0.044);
 
   --panel: rgba(255, 255, 255, 0.06);
   --panel-strong: rgba(255, 255, 255, 0.09);
@@ -41,6 +49,11 @@
 
   --radius: 18px;
   --radius-sm: 14px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
 
   --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
   --shadow-soft: 0 8px 18px rgba(0, 0, 0, 0.25);
@@ -132,7 +145,7 @@ textarea {
 
 .app {
   width: 100%;
-  max-width: 980px;
+  max-width: 1280px;
 }
 
 /* Top bar */
@@ -143,7 +156,7 @@ textarea {
   gap: 12px;
   margin-bottom: 14px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .topbarTitle {
@@ -170,7 +183,9 @@ textarea {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background: #0b0b0c;
+  background:
+    radial-gradient(1200px 700px at 8% -20%, rgba(132, 164, 255, 0.16), transparent 64%),
+    linear-gradient(180deg, #101522 0%, #0b0f16 55%, #090d14 100%);
 }
 
 .forgeSplashInner {
@@ -224,8 +239,8 @@ html[data-density="compact"] .h1 {
 
 /* Card */
 .card {
-  border: 1px solid var(--diffuse-stroke);
-  background: var(--surface-diffuse-1);
+  border: 1px solid rgba(255, 255, 255, 0.038);
+  background: var(--surface-panel);
   border-radius: 12px;
   padding: 14px;
   box-shadow: var(--shadow-diffuse-soft);
@@ -261,16 +276,16 @@ html[data-density="compact"] .card {
   height: 38px;
   padding: 0 12px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   background:
-    radial-gradient(122% 108% at 8% -24%, rgba(132, 164, 255, 0.11), transparent 62%),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.012)),
-    rgba(21, 26, 36, 0.46);
+    radial-gradient(122% 108% at 8% -24%, rgba(132, 164, 255, 0.08), transparent 63%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.032), rgba(255, 255, 255, 0.01)),
+    rgba(21, 26, 36, 0.45);
   color: var(--text);
   cursor: pointer;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.045),
-    0 10px 24px rgba(3, 8, 16, 0.22);
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 7px 18px rgba(3, 8, 16, 0.18);
   transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
 }
 
@@ -279,14 +294,14 @@ html[data-density="compact"] .btn {
 }
 
 .btn:hover {
-  border-color: rgba(255, 255, 255, 0.082);
+  border-color: rgba(255, 255, 255, 0.068);
   background:
-    radial-gradient(122% 108% at 8% -24%, rgba(136, 168, 255, 0.14), transparent 60%),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.017)),
+    radial-gradient(122% 108% at 8% -24%, rgba(136, 168, 255, 0.1), transparent 61%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.042), rgba(255, 255, 255, 0.013)),
     rgba(24, 30, 42, 0.5);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 12px 30px rgba(3, 8, 16, 0.26);
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 9px 24px rgba(3, 8, 16, 0.2);
 }
 
 .btn:active {
@@ -311,36 +326,36 @@ html[data-density="compact"] .btn {
 }
 
 .btnGhost {
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.04);
   background:
-    radial-gradient(122% 108% at 8% -24%, rgba(130, 162, 255, 0.11), transparent 62%),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.008)),
+    radial-gradient(122% 108% at 8% -24%, rgba(130, 162, 255, 0.08), transparent 63%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.022), rgba(255, 255, 255, 0.007)),
     rgba(18, 24, 34, 0.44);
   color: rgba(255, 255, 255, 0.8);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.035),
-    0 10px 24px rgba(3, 8, 16, 0.2);
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 7px 18px rgba(3, 8, 16, 0.16);
 }
 
 .btnGhost:hover {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.065);
   background:
-    radial-gradient(122% 108% at 8% -24%, rgba(132, 164, 255, 0.13), transparent 60%),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.012)),
+    radial-gradient(122% 108% at 8% -24%, rgba(132, 164, 255, 0.1), transparent 61%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.032), rgba(255, 255, 255, 0.01)),
     rgba(22, 28, 40, 0.45);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.045),
-    0 12px 28px rgba(3, 8, 16, 0.24);
+    inset 0 1px 0 rgba(255, 255, 255, 0.038),
+    0 9px 22px rgba(3, 8, 16, 0.18);
 }
 
 /* Inputs */
 .field {
   width: 100%;
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.042);
   background:
-    radial-gradient(122% 108% at 8% -24%, rgba(130, 162, 255, 0.1), transparent 62%),
-    linear-gradient(165deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.017)),
+    radial-gradient(122% 108% at 8% -24%, rgba(130, 162, 255, 0.08), transparent 63%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.014)),
     rgba(19, 24, 34, 0.54);
   color: var(--text);
   padding: 12px;
@@ -356,11 +371,11 @@ html[data-density="compact"] .field {
 }
 
 .field:focus {
-  border-color: rgba(255, 255, 255, 0.085);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.072);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.045);
   background:
-    radial-gradient(122% 108% at 8% -24%, rgba(132, 164, 255, 0.13), transparent 60%),
-    linear-gradient(165deg, rgba(255, 255, 255, 0.062), rgba(255, 255, 255, 0.022)),
+    radial-gradient(122% 108% at 8% -24%, rgba(132, 164, 255, 0.1), transparent 61%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.019)),
     rgba(22, 28, 40, 0.58);
 }
 
@@ -1566,7 +1581,7 @@ html[data-density="compact"] .field {
 /* -------------------- Forge Operator Workspace -------------------- */
 .opsPage {
   display: grid;
-  gap: 18px;
+  gap: var(--space-5);
   padding-bottom: 28px;
 }
 
@@ -1574,9 +1589,9 @@ html[data-density="compact"] .field {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 18px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  gap: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.032);
 }
 
 .opsTitle {
@@ -1684,7 +1699,7 @@ html[data-density="compact"] .field {
 .opsShell {
   display: grid;
   grid-template-columns: 148px minmax(0, 1fr) 286px;
-  gap: 20px;
+  gap: var(--space-6);
   align-items: start;
 }
 
@@ -1740,26 +1755,23 @@ html[data-density="compact"] .field {
 .opsMain {
   padding: 0;
   display: grid;
-  gap: 10px;
+  gap: var(--space-4);
 }
 
 .opsBlock {
-  border: 1px solid rgba(255, 255, 255, 0.045);
-  background:
-    radial-gradient(125% 115% at 8% -26%, rgba(129, 160, 255, 0.15), transparent 56%),
-    linear-gradient(168deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.018) 44%, rgba(255, 255, 255, 0.008) 100%),
-    rgba(18, 23, 34, 0.66);
+  border: 1px solid rgba(255, 255, 255, 0.038);
+  background: var(--surface-panel);
   border-radius: 14px;
-  padding: 14px;
+  padding: var(--space-4);
   box-shadow: var(--shadow-diffuse-soft);
   backdrop-filter: blur(8px) saturate(110%);
   -webkit-backdrop-filter: blur(8px) saturate(110%);
   display: grid;
-  gap: 12px;
+  gap: var(--space-4);
 }
 
 .opsBlock + .opsBlock {
-  margin-top: 10px;
+  margin-top: var(--space-3);
 }
 
 .opsFormGrid {
@@ -1788,11 +1800,11 @@ html[data-density="compact"] .field {
   border-bottom: 1px solid rgba(255, 255, 255, 0.045);
   border-radius: 0;
   background: transparent;
-  padding: 14px 0;
+  padding: var(--space-4) 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-4);
 }
 
 .opsListActions {
@@ -1804,15 +1816,12 @@ html[data-density="compact"] .field {
 .opsFilters {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
-  gap: 10px;
+  gap: var(--space-3);
   align-items: center;
-  padding: 6px 8px;
-  border: 1px solid rgba(255, 255, 255, 0.045);
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.038);
   border-radius: 12px;
-  background:
-    radial-gradient(130% 120% at 7% -30%, rgba(132, 164, 255, 0.14), transparent 58%),
-    linear-gradient(168deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.017) 46%, rgba(255, 255, 255, 0.007) 100%),
-    rgba(17, 22, 33, 0.66);
+  background: var(--surface-panel);
   box-shadow: var(--shadow-diffuse-soft);
   backdrop-filter: blur(8px) saturate(110%);
   -webkit-backdrop-filter: blur(8px) saturate(110%);
@@ -1842,7 +1851,7 @@ html[data-density="compact"] .field {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 16px;
+  gap: var(--space-4);
   padding-top: 4px;
 }
 
@@ -1859,7 +1868,7 @@ html[data-density="compact"] .field {
 
 .opsQueueSection {
   display: grid;
-  gap: 14px;
+  gap: var(--space-4);
 }
 
 .opsSectionTitle {
@@ -1892,21 +1901,21 @@ html[data-density="compact"] .field {
 .opsQueueList {
   display: grid;
   gap: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.032);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.013), rgba(255, 255, 255, 0));
+  border-top: 1px solid rgba(255, 255, 255, 0.026);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0));
   border-radius: 10px;
 }
 
 .opsQueueItem {
   display: grid;
   grid-template-columns: 132px minmax(0, 1fr) auto;
-  gap: 14px;
+  gap: var(--space-4);
   align-items: center;
   border: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   background: transparent;
   border-radius: 0;
-  padding: 20px 0;
+  padding: 18px 0;
   cursor: pointer;
   transition: border-color 140ms ease, background 140ms ease;
 }
@@ -1919,9 +1928,8 @@ html[data-density="compact"] .field {
 .opsQueueItem.active {
   border-bottom-color: rgba(255, 255, 255, 0.08);
   background:
-    radial-gradient(120% 120% at 0% -24%, rgba(136, 166, 255, 0.12), transparent 58%),
-    linear-gradient(165deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)),
-    rgba(24, 30, 42, 0.22);
+    linear-gradient(165deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.006)),
+    rgba(24, 30, 42, 0.18);
 }
 
 .opsQueueState {
@@ -2040,16 +2048,13 @@ html[data-density="compact"] .field {
 }
 
 .opsContext {
-  padding: 14px 14px 14px 16px;
+  padding: var(--space-4);
   display: grid;
-  gap: 14px;
+  gap: var(--space-4);
   align-content: start;
-  border: 1px solid rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.038);
   border-radius: 14px;
-  background:
-    radial-gradient(125% 118% at 8% -30%, rgba(130, 163, 255, 0.14), transparent 56%),
-    linear-gradient(168deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.017) 45%, rgba(255, 255, 255, 0.007) 100%),
-    rgba(18, 23, 34, 0.66);
+  background: var(--surface-panel);
   box-shadow: var(--shadow-diffuse-soft);
   backdrop-filter: blur(8px) saturate(112%);
   -webkit-backdrop-filter: blur(8px) saturate(112%);
@@ -2076,8 +2081,8 @@ html[data-density="compact"] .field {
 }
 
 .opsContextIntel {
-  gap: 18px;
-  padding-left: 18px;
+  gap: var(--space-5);
+  padding-left: var(--space-5);
 }
 
 .opsIntelEyebrow {
@@ -2151,7 +2156,7 @@ html[data-density="compact"] .field {
 .opsIntelPrimaryAction {
   width: 100%;
   height: 38px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.92);
   color: rgba(7, 10, 16, 0.95);
@@ -2170,14 +2175,14 @@ html[data-density="compact"] .field {
 .opsIntelPrimaryAction:disabled {
   background: rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.4);
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.08);
   cursor: not-allowed;
   transform: none;
 }
 
 .opsPanelBlock {
-  border-top: 1px solid rgba(255, 255, 255, 0.042);
-  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.036);
+  padding-top: var(--space-3);
   display: grid;
   gap: 5px;
 }
@@ -2205,16 +2210,13 @@ html[data-density="compact"] .field {
 .opsCommandBar {
   position: static;
   width: 100%;
-  height: 40px;
+  height: 42px;
   display: grid;
   grid-template-columns: 28px 1fr auto;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.045);
-  background:
-    radial-gradient(130% 120% at 6% -30%, rgba(132, 163, 255, 0.13), transparent 60%),
-    linear-gradient(168deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.017) 44%, rgba(255, 255, 255, 0.007) 100%),
-    rgba(17, 22, 33, 0.68);
+  border: 1px solid rgba(255, 255, 255, 0.038);
+  background: var(--surface-panel);
   border-radius: 12px;
   padding: 0 10px;
   box-shadow: var(--shadow-diffuse-soft);
@@ -2253,12 +2255,12 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish {
-  gap: 24px;
+  gap: 22px;
 }
 
 .opsTodayPolish .opsTopbar {
   padding-bottom: 14px;
-  border-bottom-color: rgba(255, 255, 255, 0.036);
+  border-bottom-color: rgba(255, 255, 255, 0.03);
 }
 
 .opsTodayPolish .opsTopActions {
@@ -2303,12 +2305,9 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsSummaryRow {
-  border: 1px solid rgba(255, 255, 255, 0.042);
+  border: 1px solid rgba(255, 255, 255, 0.036);
   border-radius: 14px;
-  background:
-    radial-gradient(122% 120% at 6% -30%, rgba(133, 164, 255, 0.14), transparent 58%),
-    linear-gradient(170deg, rgba(255, 255, 255, 0.054), rgba(255, 255, 255, 0.018) 46%, rgba(255, 255, 255, 0.007) 100%),
-    rgba(17, 22, 33, 0.66);
+  background: var(--surface-panel);
   box-shadow: var(--shadow-diffuse-soft);
   padding: 10px 0;
 }
@@ -2335,7 +2334,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsShell {
-  gap: 24px;
+  gap: var(--space-6);
 }
 
 .opsTodayPolish .opsRailItem {
@@ -2349,33 +2348,30 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsMain {
-  gap: 18px;
+  gap: var(--space-5);
 }
 
 .opsTodayPolish .opsFilters {
-  gap: 10px;
-  padding: 6px 8px;
-  border: 1px solid rgba(255, 255, 255, 0.043);
+  gap: var(--space-3);
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.036);
   border-radius: 12px;
-  background:
-    radial-gradient(126% 120% at 6% -28%, rgba(131, 163, 255, 0.14), transparent 57%),
-    linear-gradient(168deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.017) 46%, rgba(255, 255, 255, 0.007) 100%),
-    rgba(17, 22, 33, 0.66);
+  background: var(--surface-panel);
   box-shadow: var(--shadow-diffuse-soft);
 }
 
 .opsTodayPolish .opsSearch {
-  border-color: rgba(255, 255, 255, 0.058);
+  border-color: rgba(255, 255, 255, 0.048);
   background:
-    linear-gradient(168deg, rgba(255, 255, 255, 0.038), rgba(255, 255, 255, 0.011)),
+    linear-gradient(168deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.009)),
     rgba(20, 26, 38, 0.43);
 }
 
 .opsTodayPolish .opsTierSeg {
   padding: 2px;
-  border: 1px solid rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.038);
   border-radius: 10px;
-  background: rgba(20, 25, 36, 0.28);
+  background: rgba(20, 25, 36, 0.25);
 }
 
 .opsTodayPolish .opsTierSeg .seg {
@@ -2416,7 +2412,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsQueueList {
-  border-top-color: rgba(255, 255, 255, 0.034);
+  border-top-color: rgba(255, 255, 255, 0.026);
 }
 
 .opsTodayPolish .opsQueueItem {
@@ -2432,9 +2428,8 @@ html[data-density="compact"] .field {
 
 .opsTodayPolish .opsQueueItem.active {
   background:
-    radial-gradient(124% 120% at 0% -26%, rgba(135, 166, 255, 0.12), transparent 58%),
-    linear-gradient(165deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.008)),
-    rgba(24, 30, 42, 0.21);
+    linear-gradient(165deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.006)),
+    rgba(24, 30, 42, 0.17);
   border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
@@ -2519,7 +2514,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsContext {
-  border-color: rgba(255, 255, 255, 0.043);
+  border-color: rgba(255, 255, 255, 0.036);
 }
 
 .opsTodayPolish .opsContextIntel {
@@ -2572,13 +2567,10 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsCommandBar {
-  height: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.043);
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.036);
   border-radius: 12px;
-  background:
-    radial-gradient(126% 120% at 6% -28%, rgba(131, 163, 255, 0.13), transparent 59%),
-    linear-gradient(168deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.017) 44%, rgba(255, 255, 255, 0.007) 100%),
-    rgba(17, 22, 33, 0.67);
+  background: var(--surface-panel);
   padding: 0 10px;
   box-shadow: var(--shadow-diffuse-soft);
 }
@@ -2609,13 +2601,13 @@ html[data-density="compact"] .field {
   flex: 1;
   height: 36px;
   border-radius: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   background: rgba(255, 255, 255, 0.03);
   color: rgba(255, 255, 255, 0.72);
 }
 
 .opsMobileTab.active {
-  background: rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.08);
   color: white;
 }
 
@@ -2625,12 +2617,9 @@ html[data-density="compact"] .field {
 }
 
 .opsMiniRow {
-  border: 1px solid rgba(255, 255, 255, 0.042);
+  border: 1px solid rgba(255, 255, 255, 0.036);
   border-radius: 12px;
-  background:
-    radial-gradient(124% 118% at 8% -28%, rgba(132, 164, 255, 0.14), transparent 58%),
-    linear-gradient(168deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.017) 45%, rgba(255, 255, 255, 0.007) 100%),
-    rgba(17, 22, 33, 0.66);
+  background: var(--surface-panel);
   padding: 12px 12px;
   box-shadow: var(--shadow-diffuse-soft);
   display: flex;
@@ -2839,12 +2828,12 @@ html[data-density="compact"] .field {
 /* -------------------- Today Focus Workspace -------------------- */
 .opsTodayFocus .opsShell {
   grid-template-columns: 220px minmax(0, 1fr) 360px;
-  gap: 28px;
+  gap: 30px;
   align-items: start;
 }
 
 .opsTodayFocus .opsMain {
-  gap: 18px;
+  gap: var(--space-5);
 }
 
 .opsTodayFocus .opsFilters {
@@ -2856,16 +2845,13 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsWorkspacePanel {
-  border: 1px solid rgba(255, 255, 255, 0.042);
+  border: 1px solid rgba(255, 255, 255, 0.036);
   border-radius: 18px;
-  background:
-    radial-gradient(128% 124% at 8% -24%, rgba(134, 165, 255, 0.16), transparent 58%),
-    linear-gradient(166deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.023) 42%, rgba(255, 255, 255, 0.009) 100%),
-    rgba(20, 26, 38, 0.77);
+  background: var(--surface-panel-strong);
   padding: 28px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 22px;
   min-height: 560px;
   box-shadow: var(--shadow-diffuse);
   backdrop-filter: blur(10px) saturate(116%);
@@ -2903,7 +2889,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsWorkspaceSection {
-  border-top: 1px solid rgba(255, 255, 255, 0.048);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
   padding-top: 14px;
   display: grid;
   gap: 8px;
@@ -2950,7 +2936,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsQueueList {
-  border-top-color: rgba(255, 255, 255, 0.03);
+  border-top-color: rgba(255, 255, 255, 0.024);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0));
   border-radius: 12px;
 }
@@ -3020,14 +3006,11 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsRightIntel {
   padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.042);
+  border: 1px solid rgba(255, 255, 255, 0.036);
   border-radius: 16px;
-  background:
-    radial-gradient(124% 118% at 8% -26%, rgba(133, 164, 255, 0.14), transparent 58%),
-    linear-gradient(167deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.018) 44%, rgba(255, 255, 255, 0.008) 100%),
-    rgba(18, 23, 34, 0.67);
+  background: var(--surface-panel);
   box-shadow: var(--shadow-diffuse-soft);
-  gap: 18px;
+  gap: var(--space-5);
 }
 
 .opsTodayFocus .opsRightIntel .opsIntelAccountName {
@@ -3067,16 +3050,13 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotCard {
-  border: 1px solid rgba(255, 255, 255, 0.042);
+  border: 1px solid rgba(255, 255, 255, 0.036);
   border-radius: 14px;
-  background:
-    radial-gradient(126% 122% at 8% -24%, rgba(132, 164, 255, 0.14), transparent 58%),
-    linear-gradient(167deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.018) 44%, rgba(255, 255, 255, 0.008) 100%),
-    rgba(19, 24, 35, 0.65);
+  background: var(--surface-panel);
   box-shadow: var(--shadow-diffuse-soft);
   padding: 14px;
   display: grid;
-  gap: 10px;
+  gap: var(--space-3);
 }
 
 .opsCopilotContactCard {
@@ -3144,12 +3124,11 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotMessageSurface {
-  border: 1px solid rgba(255, 255, 255, 0.042);
+  border: 1px solid rgba(255, 255, 255, 0.034);
   border-radius: 12px;
   background:
-    radial-gradient(120% 100% at 6% -24%, rgba(130, 162, 255, 0.12), transparent 60%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0.01)),
-    rgba(17, 23, 34, 0.55);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), rgba(255, 255, 255, 0.007)),
+    rgba(17, 23, 34, 0.5);
   padding: 10px;
 }
 
@@ -3158,7 +3137,7 @@ html[data-density="compact"] .field {
   background:
     linear-gradient(160deg, rgba(120, 170, 255, 0.18), rgba(255, 255, 255, 0.04)),
     rgba(44, 60, 92, 0.45);
-  border: 1px solid rgba(163, 198, 255, 0.22);
+  border: 1px solid rgba(163, 198, 255, 0.14);
   padding: 10px 11px;
   font-size: 12px;
   line-height: 1.45;
@@ -3174,7 +3153,7 @@ html[data-density="compact"] .field {
 .opsCopilotSendBtn {
   height: 34px;
   border-radius: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.046);
   background:
     linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
     rgba(22, 28, 39, 0.52);
@@ -3190,10 +3169,10 @@ html[data-density="compact"] .field {
 }
 
 .opsCopilotSendBtn.primary {
-  border-color: rgba(175, 205, 255, 0.18);
+  border-color: rgba(175, 205, 255, 0.13);
   background:
-    linear-gradient(160deg, rgba(116, 165, 255, 0.2), rgba(255, 255, 255, 0.05)),
-    rgba(38, 56, 92, 0.54);
+    linear-gradient(160deg, rgba(116, 165, 255, 0.15), rgba(255, 255, 255, 0.04)),
+    rgba(38, 56, 92, 0.5);
   color: rgba(242, 248, 255, 0.98);
 }
 
