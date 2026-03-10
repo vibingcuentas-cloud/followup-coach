@@ -23,8 +23,12 @@
 
   --diffuse-stroke: rgba(255, 255, 255, 0.055);
   --diffuse-stroke-strong: rgba(255, 255, 255, 0.095);
-  --shadow-diffuse-soft: 0 10px 40px rgba(0, 0, 0, 0.5);
-  --shadow-diffuse: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --shadow-diffuse-soft:
+    0 10px 40px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --shadow-diffuse:
+    0 10px 40px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
   --panel: rgba(255, 255, 255, 0.06);
   --panel-strong: rgba(255, 255, 255, 0.09);
@@ -1567,7 +1571,7 @@ html[data-density="compact"] .field {
   justify-content: space-between;
   gap: var(--space-5);
   padding-bottom: var(--space-3);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.032);
+  border-bottom: none;
 }
 
 .opsTitle {
@@ -1646,7 +1650,7 @@ html[data-density="compact"] .field {
 }
 
 .opsSummaryCell + .opsSummaryCell {
-  border-left: 1px solid rgba(255, 255, 255, 0.04);
+  border-left: none;
 }
 
 .opsSummaryCell.risk {
@@ -1767,7 +1771,8 @@ html[data-density="compact"] .field {
 
 .opsListRow {
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+  border-bottom: none;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.045);
   border-radius: 0;
   background: transparent;
   padding: var(--space-4) 0;
@@ -1869,7 +1874,7 @@ html[data-density="compact"] .field {
 .opsQueueList {
   display: grid;
   gap: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.026);
+  border-top: none;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0));
   border-radius: 10px;
 }
@@ -1880,21 +1885,22 @@ html[data-density="compact"] .field {
   gap: var(--space-4);
   align-items: center;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: none;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04);
   background: transparent;
   border-radius: 0;
   padding: 18px 0;
   cursor: pointer;
-  transition: border-color 140ms ease, background 140ms ease;
+  transition: background 140ms ease, box-shadow 140ms ease;
 }
 
 .opsQueueItem:hover {
-  border-bottom-color: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
   background: transparent;
 }
 
 .opsQueueItem.active {
-  border-bottom-color: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
   background:
     linear-gradient(165deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.006)),
     rgba(24, 30, 42, 0.18);
@@ -2227,7 +2233,7 @@ html[data-density="compact"] .field {
 
 .opsTodayPolish .opsTopbar {
   padding-bottom: 14px;
-  border-bottom-color: rgba(255, 255, 255, 0.03);
+  border-bottom: none;
 }
 
 .opsTodayPolish .opsTopActions {
@@ -2384,25 +2390,25 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayPolish .opsQueueList {
-  border-top-color: rgba(255, 255, 255, 0.026);
+  border-top: none;
 }
 
 .opsTodayPolish .opsQueueItem {
   grid-template-columns: 120px minmax(0, 1fr) auto;
   gap: 18px;
   padding: 22px 0;
-  border-bottom-color: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .opsTodayPolish .opsQueueItem:hover {
-  border-bottom-color: rgba(255, 255, 255, 0.082);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.082);
 }
 
 .opsTodayPolish .opsQueueItem.active {
   background:
     linear-gradient(165deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.006)),
     rgba(24, 30, 42, 0.17);
-  border-bottom-color: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .opsTodayPolish .opsQueueStatusBadge {
@@ -2786,7 +2792,27 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsMain {
+  position: relative;
+  isolation: isolate;
   gap: 32px;
+}
+
+.opsTodayFocus .opsMain::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -220px;
+  width: 960px;
+  height: 640px;
+  transform: translateX(-50%);
+  background: radial-gradient(800px 500px at 50% 120px, rgba(90, 120, 180, 0.12), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.opsTodayFocus .opsMain > * {
+  position: relative;
+  z-index: 1;
 }
 
 .opsTodayFocus .opsFilters {
@@ -2850,7 +2876,8 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsWorkspaceSection {
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  border-top: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   padding-top: 14px;
   display: grid;
   gap: 8px;
@@ -2914,7 +2941,7 @@ html[data-density="compact"] .field {
 }
 
 .opsTodayFocus .opsQueueList {
-  border-top-color: rgba(255, 255, 255, 0.024);
+  border-top: none;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0));
   border-radius: 12px;
 }
