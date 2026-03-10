@@ -2986,14 +2986,7 @@ html[data-density="compact"] .field {
 .opsTodayFocus .opsWorkspacePrimaryCta {
   width: fit-content;
   min-width: 0;
-  height: 44px;
-  padding: 0 24px;
-  border-radius: 10px;
   margin-top: auto;
-  border-color: transparent;
-  background: #e8edf7;
-  color: #0e1117;
-  font-weight: 600;
 }
 
 .opsTodayFocus .opsQueueSection {
@@ -3288,14 +3281,38 @@ html[data-density="compact"] .field {
   transform: translateY(-1px);
 }
 
-.opsIntelPrimaryAction {
-  height: 36px;
-  padding: 0 14px;
+.opsTodayFocus .opsWorkspacePrimaryCta,
+.opsTodayFocus .opsIntelPrimaryAction {
+  height: 44px;
+  padding: 0 26px;
   border-radius: 10px;
   border: none;
-  background: #2d6cdf;
-  color: #ffffff;
+  background: linear-gradient(180deg, #e9eef8, #c9d3eb);
+  color: #0f1420;
+  font-size: 14px;
   font-weight: 600;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+  transition: transform 120ms ease, filter 120ms ease, background 120ms ease;
+}
+
+.opsTodayFocus .opsIntelPrimaryAction {
+  width: 100%;
+}
+
+.opsTodayFocus .opsWorkspacePrimaryCta:hover:not(:disabled),
+.opsTodayFocus .opsIntelPrimaryAction:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f2f6ff, #d8e1f7);
+  filter: brightness(1.02);
+  transform: translateY(-1px);
+}
+
+.opsTodayFocus .opsWorkspacePrimaryCta:disabled,
+.opsTodayFocus .opsIntelPrimaryAction:disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(214, 220, 231, 0.66);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .opsCopilotSendBtn:disabled {
