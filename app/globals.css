@@ -130,13 +130,13 @@ textarea {
 .app-shell {
   min-height: 100vh;
   padding: 28px 20px calc(56px + env(safe-area-inset-bottom));
-  display: flex;
-  justify-content: center;
+  display: block;
 }
 
 .app {
-  width: 100%;
+  width: min(100%, 1520px);
   max-width: 1520px;
+  margin: 0 auto;
 }
 
 /* Top bar */
@@ -2863,12 +2863,18 @@ html[data-density="compact"] .field {
   gap: 22px;
   min-height: 560px;
   width: 100%;
-  min-width: 720px;
+  min-width: 0;
   max-width: 840px;
   justify-self: center;
   box-shadow:
     0 25px 60px rgba(0, 0, 0, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+@media (min-width: 1460px) {
+  .opsTodayFocus .opsWorkspacePanel {
+    min-width: 720px;
+  }
 }
 
 .opsTodayFocus .opsWorkspaceHero {
