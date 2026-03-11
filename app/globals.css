@@ -3838,6 +3838,10 @@ html[data-density="compact"] .field {
 }
 
 @media (max-width: 1024px) {
+  .opsTodayFocus .opsTopActions.desktopOnly {
+    display: none !important;
+  }
+
   .opsTodayFocus .opsTopbar {
     gap: 10px;
   }
@@ -3878,9 +3882,9 @@ html[data-density="compact"] .field {
 
   .opsTodayFocus .opsSummaryRow {
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(120px, 1fr);
-    overflow-x: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row;
+    overflow: visible;
     gap: 8px;
     padding: 8px;
     border-radius: 14px;
@@ -3891,10 +3895,17 @@ html[data-density="compact"] .field {
     padding: 8px 10px;
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.015);
+    gap: 6px;
   }
 
   .opsTodayFocus .opsSummaryValue {
     font-size: 22px;
+  }
+
+  .opsTodayFocus .opsSummaryLabel {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    line-height: 1.1;
   }
 
   .opsTodayFocus .opsFilters {
