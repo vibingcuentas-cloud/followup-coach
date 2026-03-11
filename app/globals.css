@@ -4328,3 +4328,267 @@ body::before {
     border-radius: 12px;
   }
 }
+
+/* -------------------- Black Premium Theme Lock -------------------- */
+:root {
+  --mono-bg-0: #06070a;
+  --mono-bg-1: #0b0c11;
+  --mono-surface-0: #12141a;
+  --mono-surface-1: #171a22;
+  --mono-surface-2: #1b1f29;
+  --mono-border: rgba(255, 255, 255, 0.08);
+  --mono-border-soft: rgba(255, 255, 255, 0.05);
+  --mono-text: #f1f3f7;
+  --mono-muted: #a1a8b7;
+  --mono-muted-2: #8b93a4;
+}
+
+body {
+  color: var(--mono-text) !important;
+  background: var(--mono-bg-0) !important;
+}
+
+body::before {
+  background:
+    radial-gradient(
+      1200px 640px at 50% -260px,
+      rgba(255, 255, 255, 0.065) 0%,
+      rgba(255, 255, 255, 0.014) 42%,
+      transparent 72%
+    ),
+    linear-gradient(180deg, var(--mono-bg-1) 0%, var(--mono-bg-0) 100%) !important;
+}
+
+.opsTodayFocus .opsMain::before {
+  content: none !important;
+}
+
+.opsTopbar {
+  border-bottom: 1px solid var(--mono-border-soft) !important;
+}
+
+.opsTitle,
+.opsSectionTitle,
+.opsQueueTitle,
+.opsWorkspaceName,
+.opsSummaryValue,
+.opsCopilotContactName,
+.opsMiniTitle {
+  color: var(--mono-text) !important;
+}
+
+.opsSubtitle,
+.opsSectionSubtitle,
+.opsQueueMeta,
+.opsQueueStateText,
+.opsMiniMeta,
+.opsMiniSub,
+.opsPanelValue,
+.opsCopilotText,
+.opsCopilotSubtle,
+.opsWorkspaceValue,
+.opsWorkspaceSubtle,
+.quickLogAccountName,
+.quickLogModal .subtle {
+  color: var(--mono-muted) !important;
+}
+
+.opsSummaryLabel,
+.opsPanelTitle,
+.opsPanelLabel,
+.opsCopilotLabel,
+.opsWorkspaceLabel,
+.opsIntelEyebrow,
+.opsFlowHint,
+.quickLogModal .label,
+.label {
+  color: var(--mono-muted-2) !important;
+}
+
+.card,
+.opsSummaryRow,
+.opsFilters,
+.opsBlock,
+.opsContext,
+.opsTodayFocus .opsWorkspacePanel,
+.opsTodayFocus .opsRightIntel,
+.opsCopilotCard,
+.opsCommandBar,
+.opsFlowNav,
+.segmented,
+.quickLogModal {
+  background: linear-gradient(
+    180deg,
+    rgba(30, 34, 44, 0.94) 0%,
+    rgba(16, 18, 24, 0.94) 100%
+  ) !important;
+  border: 1px solid var(--mono-border) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.36) !important;
+}
+
+.quickLogHeader {
+  background: linear-gradient(
+    180deg,
+    rgba(24, 27, 35, 0.96) 0%,
+    rgba(16, 18, 24, 0.94) 100%
+  ) !important;
+  border-bottom: 1px solid var(--mono-border-soft) !important;
+}
+
+.quickLogOverlayShell {
+  background: rgba(7, 8, 11, 0.74) !important;
+}
+
+.field,
+.opsSearch,
+.opsTextarea,
+.opsCopilotMessageSurface,
+.opsTierSeg,
+.quickLogModal .field,
+.quickLogModal select.field,
+.quickLogModal textarea.field {
+  background: rgba(255, 255, 255, 0.032) !important;
+  border: 1px solid var(--mono-border) !important;
+  color: var(--mono-text) !important;
+}
+
+.field::placeholder,
+.quickLogModal .field::placeholder,
+.opsCommandInput::placeholder {
+  color: rgba(241, 243, 247, 0.42) !important;
+}
+
+.field:focus,
+.quickLogModal .field:focus {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.045) !important;
+}
+
+.btn,
+.btnGhost,
+.btnDanger,
+.opsQueueActionBtn,
+.opsFlowStep,
+.opsCopilotSendBtn,
+.quickLogModal .btn:not(.btnPrimary) {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid var(--mono-border) !important;
+  color: rgba(241, 243, 247, 0.9) !important;
+  box-shadow: none !important;
+}
+
+.btn:hover,
+.btnGhost:hover,
+.btnDanger:hover,
+.opsFlowStep:hover,
+.opsQueueActionBtn:hover,
+.opsCopilotSendBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+.btnPrimary,
+.opsTodayFocus .opsWorkspacePrimaryCta,
+.opsTodayFocus .opsIntelPrimaryAction,
+.quickLogModal .btnPrimary {
+  background: linear-gradient(180deg, #f2f4f7, #dde1e9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.32) !important;
+  color: #101318 !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28) !important;
+}
+
+.btnPrimary:hover,
+.opsTodayFocus .opsWorkspacePrimaryCta:hover:not(:disabled),
+.opsTodayFocus .opsIntelPrimaryAction:hover:not(:disabled),
+.quickLogModal .btnPrimary:hover {
+  background: linear-gradient(180deg, #f7f8fb, #e7ebf2) !important;
+  transform: none !important;
+}
+
+.opsCopilotSendBtn.primary {
+  background: linear-gradient(180deg, #f2f4f7, #dde1e9) !important;
+  color: #101318 !important;
+}
+
+.opsCopilotSendBtn:disabled,
+.btn:disabled,
+.opsTodayFocus .opsWorkspacePrimaryCta:disabled,
+.opsTodayFocus .opsIntelPrimaryAction:disabled {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(241, 243, 247, 0.45) !important;
+  box-shadow: none !important;
+}
+
+.opsSummaryCell.risk {
+  background: transparent !important;
+}
+
+.opsFlowStep.active,
+.seg.active,
+.opsTodayFocus .opsQueueActionBtn.strong {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.96) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+.opsQueueItem,
+.opsQueueItem.active,
+.opsListRow {
+  background: transparent !important;
+  box-shadow: inset 0 -1px 0 var(--mono-border-soft) !important;
+  border-radius: 0 !important;
+}
+
+.opsQueueStatusBadge,
+.opsTodayFocus .opsWorkspaceHero .opsQueueStatusBadge {
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+
+.opsQueueStatusBadge.due,
+.opsTodayFocus .opsWorkspaceHero .opsQueueStatusBadge.due {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(236, 239, 246, 0.9) !important;
+}
+
+.opsQueueStatusBadge.risk,
+.opsTodayFocus .opsWorkspaceHero .opsQueueStatusBadge.risk {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: rgba(243, 245, 249, 0.94) !important;
+}
+
+.opsQueueStatusBadge.ok,
+.opsTodayFocus .opsWorkspaceHero .opsQueueStatusBadge.ok {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(214, 220, 231, 0.92) !important;
+}
+
+.opsCopilotAvatar,
+.opsCopilotHistoryAvatar {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.opsCopilotMessageSurface {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.opsCopilotMessageBubble {
+  color: rgba(232, 236, 244, 0.9) !important;
+}
+
+.quickLogMessage {
+  border: 1px solid var(--mono-border) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: rgba(241, 243, 247, 0.88) !important;
+}
+
+.stepDot.done {
+  color: rgba(241, 243, 247, 0.9) !important;
+}
+
+.stepDot.done::before {
+  background: rgba(241, 243, 247, 0.72) !important;
+}
