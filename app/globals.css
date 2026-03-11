@@ -4113,3 +4113,218 @@ html[data-density="compact"] .field {
     color: rgba(255, 255, 255, 0.96);
   }
 }
+
+/* -------------------- Unified Sober Premium Theme -------------------- */
+:root {
+  --unified-bg-0: #0d1016;
+  --unified-bg-1: #111621;
+  --unified-surface: #171d2a;
+  --unified-surface-2: #1a2130;
+  --unified-border: rgba(255, 255, 255, 0.08);
+  --unified-border-soft: rgba(255, 255, 255, 0.05);
+  --unified-text: #eef2f8;
+  --unified-muted: #9ea8bb;
+  --unified-pill-due: #b79a63;
+  --unified-pill-risk: #b1827a;
+  --unified-radius-lg: 14px;
+  --unified-radius-md: 10px;
+}
+
+body {
+  color: var(--unified-text);
+}
+
+body::before {
+  background:
+    radial-gradient(960px 520px at 50% -240px, rgba(74, 95, 138, 0.16) 0%, rgba(20, 27, 40, 0.12) 45%, rgba(12, 16, 24, 0.9) 78%),
+    linear-gradient(180deg, var(--unified-bg-1) 0%, var(--unified-bg-0) 100%);
+}
+
+.opsPage {
+  gap: 18px;
+}
+
+.opsTopbar {
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--unified-border-soft);
+}
+
+.opsTitle {
+  font-size: 48px;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  color: var(--unified-text);
+}
+
+.opsSubtitle {
+  margin-top: 4px;
+  color: var(--unified-muted);
+}
+
+.opsTopActions .btn {
+  height: 34px;
+  border-radius: var(--unified-radius-md);
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 560;
+}
+
+.btnGhost {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--unified-border);
+  color: rgba(236, 243, 255, 0.82);
+}
+
+.btnGhost:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.btnPrimary,
+.opsTodayFocus .opsWorkspacePrimaryCta,
+.opsTodayFocus .opsIntelPrimaryAction {
+  background: linear-gradient(180deg, #f2f5fb, #dfe6f3);
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  color: #0f1420;
+  box-shadow: none;
+}
+
+.opsSummaryRow,
+.opsFilters,
+.opsBlock,
+.opsContext,
+.opsTodayFocus .opsWorkspacePanel,
+.opsTodayFocus .opsRightIntel,
+.opsCopilotCard {
+  background: linear-gradient(180deg, var(--unified-surface-2), var(--unified-surface));
+  border: 1px solid var(--unified-border);
+  border-radius: var(--unified-radius-lg);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.opsSummaryRow {
+  padding: 8px;
+}
+
+.opsSummaryCell {
+  padding: 10px 12px;
+  border-radius: var(--unified-radius-md);
+  background: transparent;
+}
+
+.opsSummaryCell + .opsSummaryCell {
+  border-left: 1px solid var(--unified-border-soft);
+}
+
+.opsSummaryCell.risk {
+  background: transparent;
+}
+
+.opsSummaryLabel,
+.opsPanelTitle,
+.opsPanelLabel,
+.opsCopilotLabel,
+.opsWorkspaceLabel {
+  color: #93a0b6;
+}
+
+.opsSummaryValue,
+.opsSectionTitle,
+.opsQueueTitle,
+.opsWorkspaceName {
+  color: var(--unified-text);
+}
+
+.field,
+.opsSearch,
+.opsTextarea,
+.opsCopilotMessageSurface {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--unified-border);
+  color: var(--unified-text);
+}
+
+.opsTierSeg {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--unified-border);
+}
+
+.opsQueueList {
+  background: transparent;
+  border-radius: 0;
+}
+
+.opsQueueItem,
+.opsQueueItem.active {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: inset 0 -1px 0 var(--unified-border-soft);
+  padding: 12px 0;
+}
+
+.opsQueueStatusBadge.due,
+.opsTodayFocus .opsWorkspaceHero .opsQueueStatusBadge.due {
+  background: rgba(183, 154, 99, 0.16);
+  color: var(--unified-pill-due);
+}
+
+.opsQueueStatusBadge.risk,
+.opsTodayFocus .opsWorkspaceHero .opsQueueStatusBadge.risk {
+  background: rgba(177, 130, 122, 0.16);
+  color: var(--unified-pill-risk);
+}
+
+.opsQueueStatusBadge.ok,
+.opsTodayFocus .opsWorkspaceHero .opsQueueStatusBadge.ok {
+  background: rgba(146, 166, 146, 0.16);
+  color: #9ab09a;
+}
+
+.opsQueueMeta,
+.opsMiniMeta,
+.opsMiniSub,
+.opsPanelValue,
+.opsCopilotText,
+.opsCopilotSubtle,
+.opsWorkspaceValue,
+.opsWorkspaceSubtle,
+.opsSectionSubtitle {
+  color: var(--unified-muted);
+}
+
+.opsCommandBar {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--unified-border);
+  box-shadow: none;
+}
+
+.opsFlowNav {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--unified-border);
+  box-shadow: none;
+}
+
+.opsFlowStep.active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 1024px) {
+  .opsTopbar {
+    gap: 10px;
+  }
+
+  .opsTitle {
+    font-size: 46px;
+  }
+
+  .opsSummaryRow,
+  .opsFilters,
+  .opsBlock,
+  .opsContext,
+  .opsTodayFocus .opsWorkspacePanel,
+  .opsTodayFocus .opsRightIntel,
+  .opsCopilotCard {
+    border-radius: 12px;
+  }
+}
