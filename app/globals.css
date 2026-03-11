@@ -3701,3 +3701,38 @@ html[data-density="compact"] .field {
     margin-top: 24px;
   }
 }
+
+/* Final consistency pass across non-Today pages */
+.opsPage:not(.opsTodayFocus) .opsSectionTitle {
+  font-size: 22px;
+  font-weight: 660;
+  letter-spacing: -0.025em;
+}
+
+.opsPage:not(.opsTodayFocus) .opsPanelTitle,
+.opsPage:not(.opsTodayFocus) .opsPanelLabel {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8b93a7;
+  font-weight: 600;
+}
+
+.opsPage:not(.opsTodayFocus) .opsBlock,
+.opsPage:not(.opsTodayFocus) .opsContext {
+  padding: 24px;
+  gap: 24px;
+  border-radius: 18px;
+}
+
+.opsPage:not(.opsTodayFocus) .opsCommandBar {
+  height: 42px;
+  border-radius: 16px;
+  padding: 0 12px;
+}
+
+.opsPage:not(.opsTodayFocus) .opsMiniMeta,
+.opsPage:not(.opsTodayFocus) .opsMiniSub,
+.opsPage:not(.opsTodayFocus) .opsPanelValue {
+  color: #98a1b5;
+}
