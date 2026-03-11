@@ -55,6 +55,18 @@
   --good: rgba(96, 231, 164, 0.9);
   --warn: rgba(255, 132, 132, 0.95);
   --neutral: rgba(255, 210, 120, 0.9);
+
+  /* Design freeze tokens */
+  --ops-freeze-radius-panel: 18px;
+  --ops-freeze-radius-card: 14px;
+  --ops-freeze-radius-btn: 10px;
+  --ops-freeze-gap-section: 20px;
+  --ops-freeze-gap-block: 24px;
+  --ops-freeze-btn-height: 36px;
+  --ops-freeze-command-height: 42px;
+  --ops-freeze-eyebrow-size: 11px;
+  --ops-freeze-meta-size: 13px;
+  --ops-freeze-title-size: 22px;
 }
 
 html[data-density="compact"] {
@@ -3735,4 +3747,68 @@ html[data-density="compact"] .field {
 .opsPage:not(.opsTodayFocus) .opsMiniSub,
 .opsPage:not(.opsTodayFocus) .opsPanelValue {
   color: #98a1b5;
+}
+
+/* -------------------- DESIGN FREEZE (global consistency lock) -------------------- */
+.opsPage {
+  gap: var(--ops-freeze-gap-section);
+}
+
+.opsTopActions {
+  gap: 6px;
+}
+
+.opsTopActions .btn {
+  height: var(--ops-freeze-btn-height);
+  border-radius: var(--ops-freeze-radius-btn);
+}
+
+.opsBlock,
+.opsContext {
+  border-radius: var(--ops-freeze-radius-panel);
+  padding: var(--ops-freeze-gap-block);
+  gap: var(--ops-freeze-gap-block);
+}
+
+.opsCommandBar {
+  height: var(--ops-freeze-command-height);
+  border-radius: var(--ops-freeze-radius-panel);
+}
+
+.opsSectionTitle {
+  font-size: var(--ops-freeze-title-size);
+  letter-spacing: -0.025em;
+  font-weight: 660;
+}
+
+.opsPanelTitle,
+.opsPanelLabel,
+.opsSummaryLabel {
+  font-size: var(--ops-freeze-eyebrow-size);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8b93a7;
+  font-weight: 600;
+}
+
+.opsMiniMeta,
+.opsMiniSub,
+.opsPanelValue,
+.opsSectionSubtitle,
+.opsSubtitle {
+  font-size: var(--ops-freeze-meta-size);
+  color: #98a1b5;
+}
+
+.opsCopilotCard {
+  border-radius: var(--ops-freeze-radius-card);
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --ops-freeze-gap-section: 14px;
+    --ops-freeze-gap-block: 16px;
+    --ops-freeze-title-size: 20px;
+    --ops-freeze-command-height: 40px;
+  }
 }
