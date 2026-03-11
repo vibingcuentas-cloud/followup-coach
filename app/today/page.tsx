@@ -120,6 +120,8 @@ export default function TodayPage() {
   const [toast, setToast] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileTab, setMobileTab] = useState<MobileTab>("fire");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const healthyCount = useMemo(
     () => allSorted.filter((a) => a.score.total >= 80).length,
@@ -204,13 +206,28 @@ export default function TodayPage() {
           <div className="opsSubtitle">Intimacy command center • A=7d • B=14d • C=30d</div>
         </div>
 
-        <div className="opsTopActions">
+        <div className="opsTopActions desktopOnly">
           <button className="btn btnGhost" onClick={() => router.push("/accounts")}>Accounts</button>
           <button className="btn btnGhost" onClick={() => router.push("/weekly")}>Weekly Pack</button>
           <button className="btn btnGhost" onClick={loadAll} disabled={loading}>Refresh</button>
           <button className="btn btnPrimary" onClick={signOut}>Sign out</button>
         </div>
+
+        <div className="opsTodayMobileActions mobileOnly">
+          <button className="btn btnGhost" onClick={loadAll} disabled={loading}>Refresh</button>
+          <button className="btn btnPrimary" onClick={() => setMobileMenuOpen((v) => !v)}>
+            {mobileMenuOpen ? "Close" : "Menu"}
+          </button>
+        </div>
       </header>
+
+      {mobileMenuOpen && (
+        <div className="opsTodayMobileMenu mobileOnly">
+          <button className="btn btnGhost" onClick={() => router.push("/accounts")}>Accounts</button>
+          <button className="btn btnGhost" onClick={() => router.push("/weekly")}>Weekly Pack</button>
+          <button className="btn btnPrimary" onClick={signOut}>Sign out</button>
+        </div>
+      )}
 
       {error && <div className="opsInlineError">{error}</div>}
 
@@ -237,25 +254,35 @@ export default function TodayPage() {
         <WorkspaceRail active="fire" />
 
         <section className="opsMain">
-          <div className="opsFilters">
-            <input
-              className="field opsSearch"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search account or country"
-            />
-            <div className="segmented opsTierSeg">
-              {(["all", "A", "B", "C"] as const).map((t) => (
-                <button
-                  key={t}
-                  className={`seg ${tierFilter === t ? "active" : ""}`}
-                  onClick={() => setTierFilter(t)}
-                >
-                  {t === "all" ? "All" : t}
-                </button>
-              ))}
+          <div className={`opsFilters ${filtersOpen ? "expanded" : "collapsed"}`}>
+            <div className="opsFiltersTop">
+              <input
+                className="field opsSearch"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search account or country"
+              />
+              <button
+                className="btn btnGhost opsFiltersToggle mobileOnly"
+                onClick={() => setFiltersOpen((v) => !v)}
+              >
+                {filtersOpen ? "Hide" : "Filters"}
+              </button>
             </div>
-            <button className="btn btnGhost" onClick={() => setSearch("")}>Reset</button>
+            <div className={`opsFiltersAdvanced ${filtersOpen ? "show" : ""}`}>
+              <div className="segmented opsTierSeg">
+                {(["all", "A", "B", "C"] as const).map((t) => (
+                  <button
+                    key={t}
+                    className={`seg ${tierFilter === t ? "active" : ""}`}
+                    onClick={() => setTierFilter(t)}
+                  >
+                    {t === "all" ? "All" : t}
+                  </button>
+                ))}
+              </div>
+              <button className="btn btnGhost" onClick={() => setSearch("")}>Reset</button>
+            </div>
           </div>
 
           <div className="opsCommandBar">
