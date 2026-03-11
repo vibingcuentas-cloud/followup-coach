@@ -92,15 +92,6 @@ export default function WeeklyPage() {
         </aside>
       </div>
 
-      <div className="opsCommandBar">
-        <span className="opsCommandIcon">&gt;</span>
-        <input
-          className="opsCommandInput"
-          placeholder="Generate weekly for tier A accounts"
-          aria-label="Command"
-        />
-        <span className="opsCommandHint">Cmd K</span>
-      </div>
     </main>
   );
 }

@@ -234,16 +234,6 @@ export default function AccountDetailPage() {
         </aside>
       </div>
 
-      <div className="opsCommandBar">
-        <span className="opsCommandIcon">&gt;</span>
-        <input
-          className="opsCommandInput"
-          placeholder={`Log ${account?.name ?? "account"} whatsapp outcome`}
-          aria-label="Command"
-        />
-        <span className="opsCommandHint">Cmd K</span>
-      </div>
-
       {account && (
         <QuickLogModal
           open={logOpen}

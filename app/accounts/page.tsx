@@ -183,15 +183,6 @@ export default function AccountsPage() {
         </aside>
       </div>
 
-      <div className="opsCommandBar">
-        <span className="opsCommandIcon">&gt;</span>
-        <input
-          className="opsCommandInput"
-          placeholder="Add account ajeper tier A peru value 10000"
-          aria-label="Command"
-        />
-        <span className="opsCommandHint">Cmd K</span>
-      </div>
     </main>
   );
 }

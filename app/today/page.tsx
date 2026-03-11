@@ -28,17 +28,6 @@ function touchLabel(iso: string | null | undefined): string {
   return `${d}d ago`;
 }
 
-function buildSuggestedMessage(account: EnrichedAccount): string {
-  const contact = account.recommendedContact;
-  if (!contact) {
-    return `Hi team, I'd like to reconnect and map the right stakeholder for ${account.name}. Who should I start with this week?`;
-  }
-
-  const hook = contact.personal_hook ? ` I remember ${contact.personal_hook}.` : "";
-  const urgency = account.isDue ? "quick check-in" : "brief follow-up";
-  return `Hi ${contact.name}, sharing a ${urgency} on ${account.name}.${hook} Are you available for a short sync this week?`;
-}
-
 function getAccountStatus(account: EnrichedAccount) {
   const cadence = cadenceDays(account.tier);
   const tone =
@@ -175,14 +164,6 @@ export default function TodayPage() {
   const selectedStatus = selectedAccount ? getAccountStatus(selectedAccount) : null;
   const copilotContact = selectedAccount?.recommendedContact ?? null;
   const copilotAvatar = initialsFromName(copilotContact?.name ?? selectedAccount?.name ?? "F");
-  const suggestedMessage = selectedAccount ? buildSuggestedMessage(selectedAccount) : "";
-  const phoneFromHook = copilotContact?.personal_hook?.match(
-    /(?:phone|tel|whatsapp)\s*:\s*([+0-9()\-\s]{6,})/i
-  )?.[1]?.trim();
-  const normalizedPhone = phoneFromHook?.replace(/[^\d+]/g, "") ?? "";
-  const waHref = normalizedPhone ? `https://wa.me/${normalizedPhone.replace(/^\+/, "")}` : null;
-  const telHref = normalizedPhone ? `tel:${normalizedPhone}` : null;
-  const mailHref = copilotContact?.email ? `mailto:${copilotContact.email}` : null;
   const relationshipHistory = useMemo(() => {
     if (!selectedAccount) return [];
     return [...selectedAccount.contacts]
@@ -283,16 +264,6 @@ export default function TodayPage() {
               </div>
               <button className="btn btnGhost" onClick={() => setSearch("")}>Reset</button>
             </div>
-          </div>
-
-          <div className="opsCommandBar">
-            <span className="opsCommandIcon">&gt;</span>
-            <input
-              className="opsCommandInput"
-              placeholder="Log account outcome or ask for next best action"
-              aria-label="Command"
-            />
-            <span className="opsCommandHint">Cmd K</span>
           </div>
 
           <section className="opsWorkspacePanel">
@@ -414,7 +385,7 @@ export default function TodayPage() {
         </section>
 
         <aside className="opsContext opsContextIntel opsRightIntel opsCopilotPanel desktopOnly">
-          <div className="opsIntelEyebrow">AI Copilot</div>
+          <div className="opsIntelEyebrow">Relationship context</div>
           {selectedAccount ? (
             <>
               <section className="opsCopilotCard opsCopilotContactCard">
@@ -439,42 +410,6 @@ export default function TodayPage() {
                     : `Last interaction ${selectedAccount.lastTouch}.`}
                 </div>
                 <div className="opsCopilotSubtle">{selectedAccount.urgencyReason}</div>
-              </section>
-
-              <section className="opsCopilotCard opsCopilotMessageCard">
-                <div className="opsCopilotLabel">Suggested outreach message</div>
-                <div className="opsCopilotMessageSurface">
-                  <div className="opsCopilotMessageBubble">{suggestedMessage}</div>
-                </div>
-                <div className="opsCopilotSendActions">
-                  {waHref ? (
-                    <a className="opsCopilotSendBtn primary" href={waHref} target="_blank" rel="noreferrer">
-                      WhatsApp
-                    </a>
-                  ) : (
-                    <button className="opsCopilotSendBtn primary" disabled>
-                      WhatsApp
-                    </button>
-                  )}
-                  {mailHref ? (
-                    <a className="opsCopilotSendBtn" href={mailHref}>
-                      Email
-                    </a>
-                  ) : (
-                    <button className="opsCopilotSendBtn" disabled>
-                      Email
-                    </button>
-                  )}
-                  {telHref ? (
-                    <a className="opsCopilotSendBtn" href={telHref}>
-                      Call
-                    </a>
-                  ) : (
-                    <button className="opsCopilotSendBtn" disabled>
-                      Call
-                    </button>
-                  )}
-                </div>
               </section>
 
               <section className="opsCopilotCard">
