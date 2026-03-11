@@ -2685,6 +2685,49 @@ html[data-density="compact"] .field {
   background: var(--surface-secondary);
 }
 
+/* -------------------- Flow Cycle -------------------- */
+.opsFlowRow {
+  display: grid;
+  gap: 8px;
+}
+
+.opsFlowHint {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8b93a7;
+  font-weight: 600;
+}
+
+.opsFlowNav {
+  display: inline-flex;
+  gap: 6px;
+  width: fit-content;
+  padding: 2px;
+  border-radius: 12px;
+  background: rgba(18, 24, 34, 0.42);
+  box-shadow: var(--shadow-diffuse-soft);
+}
+
+.opsFlowStep {
+  height: 32px;
+  min-width: 104px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+}
+
+.opsFlowStep.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.95);
+}
+
 /* -------------------- Auth + Legal -------------------- */
 .authPage,
 .legalPage {
@@ -3015,6 +3058,7 @@ html[data-density="compact"] .field {
   box-shadow:
     0 25px 60px rgba(0, 0, 0, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  order: 2;
 }
 
 @media (min-width: 1460px) {
@@ -3111,10 +3155,11 @@ html[data-density="compact"] .field {
 
 .opsTodayFocus .opsQueueSection {
   gap: 28px;
-  margin-top: 40px;
+  margin-top: 0;
   width: 100%;
   max-width: 840px;
   justify-self: center;
+  order: 1;
 }
 
 .opsTodayFocus .opsQueueList {
@@ -3810,6 +3855,17 @@ html[data-density="compact"] .field {
     --ops-freeze-gap-block: 16px;
     --ops-freeze-title-size: 20px;
     --ops-freeze-command-height: 40px;
+  }
+
+  .opsFlowNav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .opsFlowStep {
+    min-width: 0;
+    width: 100%;
   }
 }
 

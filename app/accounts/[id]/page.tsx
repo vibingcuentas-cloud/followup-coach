@@ -7,6 +7,7 @@ import QuickLogModal from "../../../components/QuickLogModal";
 import AddContactSheet from "../../../components/AddContactSheet";
 import BrandWordmark from "../../../components/BrandWordmark";
 import WorkspaceRail from "../../../components/WorkspaceRail";
+import FlowCycleNav from "../../../components/FlowCycleNav";
 import { ScorePill, CoverageChips } from "../../../components/IntimacyWidgets";
 import {
   fmtMoney,
@@ -50,6 +51,7 @@ export default function AccountDetailPage() {
             <h1 className="opsTitle">Account</h1>
           </div>
         </header>
+        <FlowCycleNav active="setup" />
         <div className="opsInlineHint">No account id. Go back to Accounts.</div>
         <button className="btn btnGhost" onClick={() => router.push("/accounts")}>Back to Accounts</button>
       </main>
@@ -85,13 +87,12 @@ export default function AccountDetailPage() {
         </div>
 
         <div className="opsTopActions">
-          <button className="btn btnGhost" onClick={() => router.push("/today")}>Today</button>
-          <button className="btn btnGhost" onClick={() => router.push("/accounts")}>Accounts</button>
-          <button className="btn btnGhost" onClick={() => router.push("/weekly")}>Weekly Pack</button>
           <button className="btn btnGhost" onClick={loadAll} disabled={loading}>Refresh</button>
-          <button className="btn btnPrimary" onClick={signOut}>Sign out</button>
+          <button className="btn btnGhost" onClick={signOut}>Sign out</button>
         </div>
       </header>
+
+      <FlowCycleNav active="setup" />
 
       {error && <div className="opsInlineError">{error}</div>}
 

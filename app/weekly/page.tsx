@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import { useWeekly } from "../../hooks/useWeekly";
 import BrandWordmark from "../../components/BrandWordmark";
 import WorkspaceRail from "../../components/WorkspaceRail";
+import FlowCycleNav from "../../components/FlowCycleNav";
 
 export const dynamic = "force-dynamic";
 
 export default function WeeklyPage() {
   const router = useRouter();
-  const { weeklyText, loading, error, loadAll } = useWeekly();
+  const { weeklyText, riskAccounts, loading, error, loadAll } = useWeekly();
   const [copied, setCopied] = useState(false);
 
   const lineCount = useMemo(
@@ -38,14 +39,14 @@ export default function WeeklyPage() {
         </div>
 
         <div className="opsTopActions">
-          <button className="btn btnGhost" onClick={() => router.push("/today")}>Today</button>
-          <button className="btn btnGhost" onClick={() => router.push("/accounts")}>Accounts</button>
           <button className="btn btnGhost" onClick={loadAll}>Refresh</button>
           <button className="btn btnPrimary" onClick={copyToClipboard}>
             {copied ? "Copied" : "Copy"}
           </button>
         </div>
       </header>
+
+      <FlowCycleNav active="review" />
 
       {error && <div className="opsInlineError">{error}</div>}
 
@@ -84,6 +85,32 @@ export default function WeeklyPage() {
           <div className="opsPanelBlock">
             <div className="opsPanelLabel">Line count</div>
             <div className="opsPanelValue">{lineCount} non-empty lines</div>
+          </div>
+
+          <div className="opsPanelBlock">
+            <div className="opsPanelLabel">Top 3 risks</div>
+            {riskAccounts.length === 0 ? (
+              <div className="opsPanelValue">No overdue accounts this week.</div>
+            ) : (
+              <div className="opsStack">
+                {riskAccounts.map((risk) => (
+                  <article key={risk.id} className="opsListRow">
+                    <div>
+                      <div className="opsMiniTitle">{risk.name}</div>
+                      <div className="opsMiniMeta">
+                        {risk.tier} • {risk.country ?? "—"} •{" "}
+                        {risk.lastTouchDays == null ? "never touched" : `${risk.lastTouchDays}d since touch`}
+                      </div>
+                    </div>
+                    <div className="opsListActions">
+                      <button className="btn btnGhost" onClick={() => router.push(`/accounts/${risk.id}`)}>
+                        Open
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
           </div>
 
           <button className="btn btnPrimary" onClick={copyToClipboard}>

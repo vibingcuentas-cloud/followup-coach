@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-type RailKey = "fire" | "accounts" | "next" | "insights" | "week";
+type RailKey = "fire" | "accounts" | "week";
 
 const ITEMS: Array<{
   key: RailKey;
@@ -10,11 +10,9 @@ const ITEMS: Array<{
   icon: string;
   href: string;
 }> = [
-  { key: "fire", label: "Fire Queue", icon: "✦", href: "/today" },
-  { key: "accounts", label: "Accounts", icon: "⌗", href: "/accounts" },
-  { key: "next", label: "Next", icon: "→", href: "/today" },
-  { key: "insights", label: "Insights", icon: "◔", href: "/today" },
-  { key: "week", label: "Week", icon: "☰", href: "/weekly" },
+  { key: "accounts", label: "Setup", icon: "⌗", href: "/accounts" },
+  { key: "fire", label: "Execute", icon: "✦", href: "/today" },
+  { key: "week", label: "Review", icon: "☰", href: "/weekly" },
 ];
 
 export default function WorkspaceRail({ active }: { active: RailKey }) {

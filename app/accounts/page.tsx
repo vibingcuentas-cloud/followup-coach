@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAccountList } from "../../hooks/useAccountList";
 import BrandWordmark from "../../components/BrandWordmark";
 import WorkspaceRail from "../../components/WorkspaceRail";
+import FlowCycleNav from "../../components/FlowCycleNav";
 import { type Tier } from "../../lib/intimacy";
 
 export const dynamic = "force-dynamic";
@@ -54,12 +55,12 @@ export default function AccountsPage() {
         </div>
 
         <div className="opsTopActions">
-          <button className="btn btnGhost" onClick={() => router.push("/today")}>Today</button>
-          <button className="btn btnGhost" onClick={() => router.push("/weekly")}>Weekly Pack</button>
           <button className="btn btnGhost" onClick={load} disabled={loading}>Refresh</button>
-          <button className="btn btnPrimary" onClick={signOut}>Sign out</button>
+          <button className="btn btnGhost" onClick={signOut}>Sign out</button>
         </div>
       </header>
+
+      <FlowCycleNav active="setup" />
 
       <div className="opsShell">
         <WorkspaceRail active="accounts" />

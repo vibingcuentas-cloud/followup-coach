@@ -6,6 +6,7 @@ import { useToday, type EnrichedAccount } from "../../hooks/useToday";
 import QuickLogModal from "../../components/QuickLogModal";
 import BrandWordmark from "../../components/BrandWordmark";
 import WorkspaceRail from "../../components/WorkspaceRail";
+import FlowCycleNav from "../../components/FlowCycleNav";
 import { cadenceDays, channelLabel, daysSince } from "../../lib/intimacy";
 
 export const dynamic = "force-dynamic";
@@ -110,7 +111,6 @@ export default function TodayPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileTab, setMobileTab] = useState<MobileTab>("fire");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const healthyCount = useMemo(
     () => allSorted.filter((a) => a.score.total >= 80).length,
@@ -156,7 +156,13 @@ export default function TodayPage() {
   }
 
   async function handleQuickLogSaved() {
+    const currentId = qlAccount?.id ?? selectedAccount?.id ?? null;
+    const currentIndex = currentId ? mustContact.findIndex((a) => a.id === currentId) : -1;
+    const nextDueId =
+      currentIndex >= 0 ? mustContact[currentIndex + 1]?.id ?? null : mustContact[0]?.id ?? null;
+
     await loadAll();
+    setSelectedId(nextDueId);
     setToast("Interaction logged.");
     setTimeout(() => setToast(null), 4000);
   }
@@ -188,27 +194,17 @@ export default function TodayPage() {
         </div>
 
         <div className="opsTopActions desktopOnly">
-          <button className="btn btnGhost" onClick={() => router.push("/accounts")}>Accounts</button>
-          <button className="btn btnGhost" onClick={() => router.push("/weekly")}>Weekly Pack</button>
           <button className="btn btnGhost" onClick={loadAll} disabled={loading}>Refresh</button>
-          <button className="btn btnPrimary" onClick={signOut}>Sign out</button>
+          <button className="btn btnGhost" onClick={signOut}>Sign out</button>
         </div>
 
         <div className="opsTodayMobileActions mobileOnly">
           <button className="btn btnGhost" onClick={loadAll} disabled={loading}>Refresh</button>
-          <button className="btn btnPrimary" onClick={() => setMobileMenuOpen((v) => !v)}>
-            {mobileMenuOpen ? "Close" : "Menu"}
-          </button>
+          <button className="btn btnGhost" onClick={signOut}>Sign out</button>
         </div>
       </header>
 
-      {mobileMenuOpen && (
-        <div className="opsTodayMobileMenu mobileOnly">
-          <button className="btn btnGhost" onClick={() => router.push("/accounts")}>Accounts</button>
-          <button className="btn btnGhost" onClick={() => router.push("/weekly")}>Weekly Pack</button>
-          <button className="btn btnPrimary" onClick={signOut}>Sign out</button>
-        </div>
-      )}
+      <FlowCycleNav active="execute" />
 
       {error && <div className="opsInlineError">{error}</div>}
 
@@ -320,7 +316,7 @@ export default function TodayPage() {
                   onClick={() => openQuickLog(selectedAccount)}
                   disabled={selectedAccount.contacts.length === 0}
                 >
-                  Log interaction
+                  Step 2 • Log interaction
                 </button>
               </>
             ) : (
@@ -331,8 +327,8 @@ export default function TodayPage() {
           <section className="opsQueueSection">
             <div className="opsSectionHeaderRow">
               <div>
-                <h2 className="opsSectionTitle">Queue selector</h2>
-                <div className="opsSectionSubtitle">Choose the next account to focus.</div>
+                <h2 className="opsSectionTitle">Step 1 • Choose account</h2>
+                <div className="opsSectionSubtitle">Pick the next relationship to execute now.</div>
               </div>
               <div className="opsSectionMeta">{queueMetaText}</div>
             </div>

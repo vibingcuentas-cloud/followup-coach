@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabaseClient";
-import { daysSince, type Tier } from "../lib/intimacy";
+import { cadenceDays, daysSince, type Tier } from "../lib/intimacy";
 
 type Account = {
   id: string;
@@ -20,6 +20,15 @@ type Interaction = {
   next_step: string;
   next_step_date: string;
   summary: string;
+};
+
+type RiskAccount = {
+  id: string;
+  name: string;
+  tier: Tier;
+  country: string | null;
+  lastTouchDays: number | null;
+  overdueDays: number;
 };
 
 function getErrorMessage(error: unknown, fallback: string): string {
@@ -123,8 +132,29 @@ export function useWeekly() {
     return lines.join("\n");
   }, [accounts, interactions]);
 
+  const riskAccounts = useMemo((): RiskAccount[] => {
+    return accounts
+      .map((a) => {
+        const d = daysSince(a.last_interaction_at);
+        const cadence = cadenceDays(a.tier);
+        const overdueDays = d == null ? cadence + 1 : Math.max(0, d - cadence);
+        return {
+          id: a.id,
+          name: a.name,
+          tier: a.tier,
+          country: a.country,
+          lastTouchDays: d,
+          overdueDays,
+        };
+      })
+      .filter((a) => a.lastTouchDays == null || a.overdueDays > 0)
+      .sort((a, b) => b.overdueDays - a.overdueDays)
+      .slice(0, 3);
+  }, [accounts]);
+
   return {
     weeklyText,
+    riskAccounts,
     loading,
     error,
     loadAll,
